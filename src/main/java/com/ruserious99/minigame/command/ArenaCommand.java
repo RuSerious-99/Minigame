@@ -32,7 +32,7 @@ public class ArenaCommand implements CommandExecutor {
             if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
                 player.sendMessage(ChatColor.GREEN + "These are your available arenas:");
                 for(Arena arena : minigame.getArenaMgr().getArenas()){
-                    System.out.println("****** in for loop list " + arena.getId());
+
                     player.sendMessage(ChatColor.GREEN + "- " + arena.getId()
                             + "("
                             + arena.getState().name()
