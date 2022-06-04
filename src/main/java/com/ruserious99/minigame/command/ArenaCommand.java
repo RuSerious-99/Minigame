@@ -25,6 +25,7 @@ public class ArenaCommand implements CommandExecutor {
                              @Nonnull String label,
                              @Nonnull String[] args) {
 
+
         if(sender instanceof Player){
             Player player = (Player) sender;
 
