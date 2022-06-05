@@ -4,6 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.kit.KitUI;
+import com.ruserious99.minigame.team.TeamUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -36,6 +37,17 @@ public class ArenaCommand implements CommandExecutor {
                             + "("
                             + arena.getState().name()
                             + ")");
+                }
+            }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
+                Arena arena = minigame.getArenaMgr().getArena(player);
+                if (arena != null) {
+                    if (arena.getState() != GameState.LIVE) {
+                        new TeamUI(arena, player);
+                    } else {
+                        player.sendMessage(ChatColor.RED + " you cant select a team at this time");
+                    }
+                } else {
+                    player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
             } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
@@ -87,6 +99,7 @@ public class ArenaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "/arena leave");
                 player.sendMessage(ChatColor.RED + "/arena join <1d>");
                 player.sendMessage(ChatColor.RED + "/arena kit");
+                player.sendMessage(ChatColor.RED + "/arena team");
 
             }
         }

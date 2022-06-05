@@ -4,6 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.kit.KitType;
+import com.ruserious99.minigame.team.Team;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,14 +37,29 @@ public class GameListener implements Listener {
                 if (activated != null && activated == type) {
                     player.sendMessage(ChatColor.RED + "You already have this kit equipped");
                 } else {
-                    player.sendMessage(ChatColor.RED + "You have equipped the " + type.getDisplay() + ChatColor.GREEN + " kit!");
+                    player.sendMessage(ChatColor.GREEN + "You have equipped the " + type.getDisplay() + ChatColor.GREEN + " kit!");
                     arena.setKit(player.getUniqueId(), type);
                 }
                 player.closeInventory();
             }
+        } else {
+            if (event.getView().getTitle().contains("Team Selection") && event.getInventory() != null && event.getCurrentItem() != null) {
+                event.setCancelled(true);
+                Team team = Team.valueOf(event.getCurrentItem().getItemMeta().getLocalizedName());
+                Arena arena = minigame.getArenaMgr().getArena(player);
+                if (arena != null) {
+                    if (arena.getTeam(player) == team) {
+                        player.sendMessage(ChatColor.RED + "You are already on this team");
+                    } else {
+                        player.sendMessage(ChatColor.AQUA + "You are now on the " + team.getDisplay() + ChatColor.AQUA + " team!");
+                        arena.setTeam(player, team);
+                    }
+
+                    player.closeInventory();
+                }
+            }
         }
     }
-
     /* MiniGame Specific Event */
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
