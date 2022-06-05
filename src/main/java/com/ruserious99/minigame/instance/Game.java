@@ -1,10 +1,12 @@
 package com.ruserious99.minigame.instance;
 
 import com.ruserious99.minigame.GameState;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Game {
@@ -21,9 +23,14 @@ public class Game {
         arena.setState(GameState.LIVE);
         arena.sendMessage("GAME HAS STARTED! Fill in objective of minigame");
 
+        for (UUID uuid : arena.getKits().keySet()) {
+            arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
+        }
+
         /* game specifc */
         for (UUID uuid : arena.getPlayers()) {
             points.put(uuid, 0);
+            Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
         }
     }
 

@@ -3,6 +3,7 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.Arena;
+import com.ruserious99.minigame.kit.KitUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,64 +25,71 @@ public class ArenaCommand implements CommandExecutor {
                              @Nonnull Command command,
                              @Nonnull String label,
                              @Nonnull String[] args) {
-
-
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             Player player = (Player) sender;
 
             if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
                 player.sendMessage(ChatColor.GREEN + "These are your available arenas:");
-                for(Arena arena : minigame.getArenaMgr().getArenas()){
+                for (Arena arena : minigame.getArenaMgr().getArenas()) {
 
                     player.sendMessage(ChatColor.GREEN + "- " + arena.getId()
                             + "("
                             + arena.getState().name()
                             + ")");
                 }
-
-            }else if(args.length == 1 && args[0].equalsIgnoreCase("leave")){
+            } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
-                if(arena != null){
+                if (arena != null) {
+                    if (arena.getState() != GameState.LIVE) {
+                        new KitUI(player);
+                    } else {
+                        player.sendMessage(ChatColor.RED + " you cant select a kit at this time");
+                    }
+                } else {
+                    player.sendMessage(ChatColor.RED + "You are not in an arena");
+                }
+            } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
+                Arena arena = minigame.getArenaMgr().getArena(player);
+                if (arena != null) {
                     player.sendMessage(ChatColor.RED + " you have left the arena");
                     arena.removePlayer(player);
-                }else{
+                } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
 
-            }else if(args.length == 2 && args[0].equalsIgnoreCase("join")){
-                if(minigame.getArenaMgr().getArena(player) != null){
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
+                if (minigame.getArenaMgr().getArena(player) != null) {
                     player.sendMessage(ChatColor.RED + " you are already in an arena");
                     return false;
                 }
                 int id = -1;
-                try{
+                try {
                     id = Integer.parseInt(args[1]);
                 } catch (Exception e) {
                     player.sendMessage(ChatColor.RED + "Invalid id given");
                 }
-                if(id >= 0 && id < minigame.getArenaMgr().getArenas().size()){
+                if (id >= 0 && id < minigame.getArenaMgr().getArenas().size()) {
                     Arena arena = minigame.getArenaMgr().getArena(id);
-                    if(arena.getState() == GameState.RECRUITING ||
-                       arena.getState() == GameState.COUNTDOWN){
+                    if (arena.getState() == GameState.RECRUITING ||
+                            arena.getState() == GameState.COUNTDOWN) {
                         player.sendMessage(ChatColor.RED + "You are now playing in Arena " + id + ".");
                         arena.addPlayer(player);
-                    }else{
+                    } else {
                         player.sendMessage(ChatColor.RED + "You cant join that arena right now.");
                     }
-                }else{
+                } else {
                     player.sendMessage(ChatColor.RED + "Invalid id given");
                 }
 
-            }else{
+            } else {
                 player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
                 player.sendMessage(ChatColor.RED + "/arena list");
                 player.sendMessage(ChatColor.RED + "/arena leave");
                 player.sendMessage(ChatColor.RED + "/arena join <1d>");
+                player.sendMessage(ChatColor.RED + "/arena kit");
 
             }
         }
-
-
         return false;
     }
 }
