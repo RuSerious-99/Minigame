@@ -89,10 +89,12 @@ public class Arena {
         player.teleport(spawn);
 
         TreeMultimap<Integer, Team> count = TreeMultimap.create();
-        for(Team t : teams.values()){
+        for(Team t : Team.values()){
            count.put(getTeamCount(t), t);
         }
         Team lowest = (Team) count.values().toArray()[0];
+
+
         setTeam(player, lowest);
         player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
 

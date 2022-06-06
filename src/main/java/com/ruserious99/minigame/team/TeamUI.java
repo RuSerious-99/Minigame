@@ -1,25 +1,24 @@
 package com.ruserious99.minigame.team;
 
 import com.ruserious99.minigame.instance.Arena;
-import com.ruserious99.minigame.kit.KitType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Arrays;
+import java.util.Objects;
 
 public class TeamUI {
 
     public TeamUI(Arena arena, Player player){
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.AQUA + "Team Selection");
 
+        System.out.println("hey hey team UI");
         for(Team team : Team.values()){
             ItemStack is = new ItemStack(team.getMaterial());
             ItemMeta isMeta = is.getItemMeta();
-            isMeta.setDisplayName(team.getDisplay() + " " + ChatColor.GRAY + "(" + arena.getTeamCount(team) + " players)");
+            Objects.requireNonNull(isMeta).setDisplayName(team.getDisplay() + " " + ChatColor.GRAY + "(" + arena.getTeamCount(team) + " players)");
             isMeta.setLocalizedName(team.name());
             is.setItemMeta(isMeta);
 

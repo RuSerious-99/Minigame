@@ -22,12 +22,11 @@ public class ArenaCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(@Nonnull CommandSender sender,
-                             @Nonnull Command command,
-                             @Nonnull String label,
-                             @Nonnull String[] args) {
+    public boolean onCommand(@Nonnull CommandSender sender, @Nonnull Command command, @Nonnull String label, @Nonnull String[] args) {
+
         if (sender instanceof Player) {
             Player player = (Player) sender;
+
 
             if (args.length == 1 && args[0].equalsIgnoreCase("list")) {
                 player.sendMessage(ChatColor.GREEN + "These are your available arenas:");
@@ -39,6 +38,9 @@ public class ArenaCommand implements CommandExecutor {
                             + ")");
                 }
             }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
+
+                System.out.println("hey hey team UI command");
+
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     if (arena.getState() != GameState.LIVE) {
