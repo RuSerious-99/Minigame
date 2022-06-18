@@ -9,8 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class Countdown extends BukkitRunnable {
 
 
-    private Minigame minigame;
-    private Arena arena;
+    private final Minigame minigame;
+    private final Arena arena;
     private int countdownSeconds;
 
     public Countdown(Minigame miniGame, Arena arena) {
@@ -32,12 +32,12 @@ public class Countdown extends BukkitRunnable {
             return;
         }
         if(countdownSeconds <= 10 || countdownSeconds % 15 == 0){
-            arena.sendMessage(ChatColor.GREEN + "Game starting in " + countdownSeconds
-            + "seconds " + (countdownSeconds == 1 ? "" : "s") + ".");
+            arena.sendMessage(ChatColor.GREEN + "Game starting in " +  ChatColor.YELLOW + countdownSeconds
+            + ChatColor.GREEN + " second" + (countdownSeconds == 1 ? "" : "s") + ".");
         }
 
-        arena.sendTitle(ChatColor.GREEN + "Game starting in " + countdownSeconds
-                + "seconds " + (countdownSeconds == 1 ? "" : "s"), ChatColor.GRAY + "Until Game starts");
+        arena.sendTitle(ChatColor.BLUE + " Starts in " + ChatColor.YELLOW +countdownSeconds
+                +ChatColor.BLUE + " second" + (countdownSeconds == 1 ? "" : "s"), ChatColor.GRAY + "Get Ready!!");
         countdownSeconds--;
     }
 }

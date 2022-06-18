@@ -14,12 +14,13 @@ public class ConfigMgr {
         ConfigMgr.config = minigame.getConfig();
         minigame.saveDefaultConfig();
     }
-
-    public static int getRequiredPlayers(){
+    public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
+    public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
+    public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }
+    public static int      getRequiredPlayers(){
         return config.getInt("required-players");
     }
-
-    public static int getCountdownSeconds(){
+    public static int      getCountdownSeconds(){
         return config.getInt("countdown-seconds");
     }
     public static Location getLobbySpawn(){

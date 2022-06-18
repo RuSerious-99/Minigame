@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 
 public class ArenaCommand implements CommandExecutor {
 
@@ -37,10 +38,9 @@ public class ArenaCommand implements CommandExecutor {
                             + arena.getState().name()
                             + ")");
                 }
+
+
             }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
-
-                System.out.println("hey hey team UI command");
-
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     if (arena.getState() != GameState.LIVE) {
@@ -51,6 +51,8 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+
+
             } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
@@ -62,14 +64,23 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+
+
+
             } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     player.sendMessage(ChatColor.RED + " you have left the arena");
-                    arena.removePlayer(player);
+                    try {
+                        arena.removePlayer(player);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+
+
 
             } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
                 if (minigame.getArenaMgr().getArena(player) != null) {
@@ -86,7 +97,7 @@ public class ArenaCommand implements CommandExecutor {
                     Arena arena = minigame.getArenaMgr().getArena(id);
                     if (arena.getState() == GameState.RECRUITING ||
                             arena.getState() == GameState.COUNTDOWN) {
-                        player.sendMessage(ChatColor.RED + "You are now playing in Arena " + id + ".");
+                        player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + id + ".");
                         arena.addPlayer(player);
                     } else {
                         player.sendMessage(ChatColor.RED + "You cant join that arena right now.");

@@ -9,8 +9,8 @@ public enum Team {
     BLUE(ChatColor.BLUE + "Blue", Material.BLUE_WOOL),
     RED(ChatColor.RED + "Red", Material.RED_WOOL);
 
-    private String display;
-    private Material material;
+    private final String display;
+    private final Material material;
 
     Team(String display, Material material) {
         this.display = display;

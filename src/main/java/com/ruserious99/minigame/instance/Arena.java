@@ -3,6 +3,9 @@ package com.ruserious99.minigame.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.instance.game.BlockGame;
+import com.ruserious99.minigame.instance.game.Game;
+import com.ruserious99.minigame.instance.game.PvpGame;
 import com.ruserious99.minigame.kit.Kit;
 import com.ruserious99.minigame.kit.KitType;
 import com.ruserious99.minigame.kit.type.FighterKit;
@@ -14,12 +17,13 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Arena {
 
     private final Minigame minigame;
-
+    private final String gameName;
     private final int id;
     private final Location spawn;
 
@@ -31,27 +35,44 @@ public class Arena {
     private Game game;
 
 
-    public Arena(Minigame minigame,int id, Location spawn) {
+    public Arena(Minigame minigame, int id, Location spawn, String gameName) {
         this.minigame = minigame;
-
+        this.gameName = gameName;
         this.id = id;
         this.spawn = spawn;
+
 
         this.state = GameState.RECRUITING;
         this.players = new ArrayList<>();
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
         this.countdown = new Countdown(minigame, this);
-        this.game = new Game(this);
+
+        startNewGameType(id);
+
     }
 
-    //Game
+    private void startNewGameType(int id) {
+        game = null;
+        switch(id){
+            case(0):
+                this.game = new BlockGame(minigame, this);
+                break;
+
+            case(1):
+                this.game = new PvpGame(minigame, this);
+                break;
+        }
+    }
+
+
     public void start() {
         game.start();
     }
 
-    public void reset(Boolean resetPlayers){
-        if(resetPlayers){
+    public void reset() {
+
+        if(state == GameState.LIVE){
             Location location = ConfigMgr.getLobbySpawn();
             for(UUID uuid : players){
                 Player player = Bukkit.getPlayer(uuid);
@@ -59,16 +80,29 @@ public class Arena {
                 removeKit(player.getUniqueId());
             }
             players.clear();
-            teams.clear();
-            kits.clear();
-        }
 
+
+            switch(Objects.requireNonNull(spawn.getWorld()).getName()){
+                case("arena1"):{
+                    minigame.getGameMapArena1().restoreFromSource();
+                    break;
+                }
+                case("arena2"):{
+                    minigame.getGameMapArena2().restoreFromSource();
+                    break;
+                }
+            }
+        }
         sendTitle("", "");
+
+        minigame.releaseLoadArena(id);
 
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(minigame, this);
-        game = new Game(this);
+
+        game.unregistar();
+        game = null;
     }
 
     //tools
@@ -86,17 +120,13 @@ public class Arena {
     //players
     public void addPlayer(Player player){
         players.add(player.getUniqueId());
+
         player.teleport(spawn);
 
-        TreeMultimap<Integer, Team> count = TreeMultimap.create();
-        for(Team t : Team.values()){
-           count.put(getTeamCount(t), t);
-        }
-        Team lowest = (Team) count.values().toArray()[0];
+        //Team lowest = getLowestTeamCount();
 
-
-        setTeam(player, lowest);
-        player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
+       // setTeam(player, lowest);
+        //player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
 
         player.sendMessage("Don't forget your kit /arena kit");
 
@@ -105,8 +135,18 @@ public class Arena {
         }
     }
 
-    public void removePlayer(Player player){
+    private Team getLowestTeamCount() {
+        TreeMultimap<Integer, Team> count = TreeMultimap.create();
+        for(Team t : Team.values()){
+            count.put(getTeamCount(t), t);
+        }
+        return (Team) count.values().toArray()[0];
+    }
+
+    public void removePlayer(Player player) throws IOException {
         players.remove(player.getUniqueId());
+
+        player.getInventory().clear();
         player.teleport(ConfigMgr.getLobbySpawn());
         player.sendTitle("", "", 0,0,0);
 
@@ -115,13 +155,13 @@ public class Arena {
 
         if(state == GameState.COUNTDOWN && players.size()  < ConfigMgr.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "There are not enough players countdown has stopped");
-            reset(false);
+            reset();
             return;
         }
 
         if(state == GameState.LIVE && players.size() < ConfigMgr.getRequiredPlayers()){
-            sendMessage(ChatColor.RED + "AWWW! Too many players have left. Game stopping.");
-            reset(false);
+            sendMessage(ChatColor.RED + "AWW! Too many players have left. Game stopping.");
+            reset();
         }
     }
 
@@ -155,9 +195,7 @@ public class Arena {
     }
 
     public void removeTeam(Player player){
-        if(teams.containsKey(player.getUniqueId())){
-            teams.remove(player.getUniqueId());
-        }
+        teams.remove(player.getUniqueId());
     }
 
     public int getTeamCount(Team team){
@@ -174,11 +212,13 @@ public class Arena {
     }
 
     //getters
+
+    public String getGameName() {return gameName;}
     public HashMap<UUID, Kit> getKits() {return kits;}
     public int getId() {return id;}
     public GameState getState() {return state;}
     public List<UUID> getPlayers() {return players;}
-    public Game getgame(){return game;}
+    public Game getGame(){return game;}
     public void setState(GameState gameState){this.state = gameState;}
 
 

@@ -8,8 +8,9 @@ public enum KitType {
     MINER(ChatColor.GOLD + "Miner", Material.DIAMOND_PICKAXE, "Best Mining kit"),
     FIGHTER(ChatColor.DARK_RED + "Fighter", Material.DIAMOND_SWORD, "best fighting kit");
 
-    private String display, description;
-    private Material material;
+    private final String display;
+    private final String description;
+    private final Material material;
 
     KitType(String display, Material material, String description){
         this.display = display;

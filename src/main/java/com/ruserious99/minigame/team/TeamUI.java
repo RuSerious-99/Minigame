@@ -14,7 +14,6 @@ public class TeamUI {
     public TeamUI(Arena arena, Player player){
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.AQUA + "Team Selection");
 
-        System.out.println("hey hey team UI");
         for(Team team : Team.values()){
             ItemStack is = new ItemStack(team.getMaterial());
             ItemMeta isMeta = is.getItemMeta();

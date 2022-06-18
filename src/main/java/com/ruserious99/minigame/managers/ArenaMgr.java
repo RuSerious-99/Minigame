@@ -1,7 +1,7 @@
 package com.ruserious99.minigame.managers;
 
-import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.instance.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,10 +13,18 @@ import java.util.Objects;
 
 public class ArenaMgr {
 
-    private final List<Arena> arenas = new ArrayList<>();
+    FileConfiguration config;
+    private  Minigame minigame;
+
+    private static List<Arena> arenas = new ArrayList<>();
 
     public ArenaMgr(Minigame minigame) {
-        FileConfiguration config = minigame.getConfig();
+        this.minigame = minigame;
+        config = minigame.getConfig();
+        populateArenas();
+    }
+
+    public void populateArenas() {
         for(String s : Objects.requireNonNull(config.getConfigurationSection("arenas")).getKeys(false)){
             arenas.add(new Arena(minigame, Integer.parseInt(s), new Location(
                     Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + s + ".world"))),
@@ -24,10 +32,8 @@ public class ArenaMgr {
                     config.getDouble("arenas." + s + ".y"),
                     config.getDouble("arenas." + s + ".z"),
                     (float) config.getDouble("arenas." + s + ".yaw"),
-                    (float) config.getDouble("arenas." + s + ".pitch"))));
-        }
-        for(Arena arena : arenas){
-            System.out.println("888888 " + arena.getId());
+                    (float) config.getDouble("arenas." + s + ".pitch")),
+                    config.getString("arenas." + s + ".game")));
         }
     }
 
@@ -51,5 +57,27 @@ public class ArenaMgr {
             }
         }
         return null;
+    }
+
+    public void clearArena(int id) {
+        Arena putBack = null;
+        for (Arena a : arenas) {
+            if (a.getId() == id) {
+                putBack = a;
+            }
+        }
+        if (putBack != null) {
+            arenas.remove(putBack);
+            arenas.add(new Arena(minigame, id, new Location(
+                    Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + id + ".world"))),
+                    config.getDouble("arenas." + id + ".x"),
+                    config.getDouble("arenas." + id + ".y"),
+                    config.getDouble("arenas." + id + ".z"),
+                    (float) config.getDouble("arenas." + id + ".yaw"),
+                    (float) config.getDouble("arenas." + id + ".pitch")),
+                    config.getString("arenas." + id + ".game")));
+
+            System.out.println("success reset arena " + id);
+        }
     }
 }

@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 public class KitUI {
@@ -19,7 +19,7 @@ public class KitUI {
             ItemStack is = new ItemStack(type.getMaterial());
             ItemMeta isMeta = is.getItemMeta();
             Objects.requireNonNull(isMeta).setDisplayName(type.getDisplay());
-            isMeta.setLore(Arrays.asList(type.getDescription()));
+            isMeta.setLore(Collections.singletonList(type.getDescription()));
             isMeta.setLocalizedName(type.name());
             is.setItemMeta(isMeta);
 

@@ -55,6 +55,14 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>OnARandomBox</id>
+            <url>https://repo.onarandombox.com/content/groups/public/</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -62,9 +70,16 @@
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
+
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.onarandombox.multiversecore</groupId> <!-- Don't forget to replace this -->
+            <artifactId>Multiverse-Core</artifactId> <!-- Replace this as well -->
+            <version>4.3.1</version> <!-- This too -->
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>

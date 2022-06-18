@@ -1,26 +1,33 @@
 required-players: 1
 countdown-seconds: 10
+blockgame-blocks-to-break-count: 10
+pvpgame-player-kill-count: 10
+
+world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
+world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 lobby-spawn:
   world: 'world'
-  x: -119
-  y: 73
-  z: -91
-  yaw: 12
-  pitch: 9.3
+  x: 220
+  y: 53
+  z: 4.87
+  yaw: 180
+  pitch: 0
 
 arenas:
   '0':
-    world: 'world'
-    x: 181
-    y: 77
-    z: 391
+    game: 'BLOCK'
+    world: 'arena1'
+    x: 202
+    y: 4
+    z: 3.055
     pitch: 0
-    yaw: 0
+    yaw: -90
 
   '1':
-    world: 'world'
-    x: 181
-    y: 77
-    z: 391
+    game: 'PVP'
+    world: 'arena2'
+    x: 202
+    y: 4
+    z: 3.055
     pitch: 0
-    yaw: 0
+    yaw: -90

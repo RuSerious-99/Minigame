@@ -8,6 +8,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.io.IOException;
+
 public class ConnectListener implements Listener {
 
     private final Minigame minigame;
@@ -20,11 +22,10 @@ public class ConnectListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         e.getPlayer().teleport(ConfigMgr.getLobbySpawn());
-
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e){
+    public void onQuit(PlayerQuitEvent e) throws IOException {
         Arena arena = minigame.getArenaMgr().getArena(e.getPlayer());
         if(arena != null){
             arena.removePlayer(e.getPlayer());
