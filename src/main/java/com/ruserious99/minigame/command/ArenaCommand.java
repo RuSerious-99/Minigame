@@ -2,7 +2,7 @@ package com.ruserious99.minigame.command;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.instance.Arena;
+import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.kit.KitUI;
 import com.ruserious99.minigame.team.TeamUI;
 import org.bukkit.ChatColor;

@@ -1,8 +1,8 @@
-package com.ruserious99.minigame.instance.game;
+package com.ruserious99.minigame.listeners.instance.game;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.instance.Arena;
+import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

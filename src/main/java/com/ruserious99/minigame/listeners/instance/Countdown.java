@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.instance;
+package com.ruserious99.minigame.listeners.instance;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;

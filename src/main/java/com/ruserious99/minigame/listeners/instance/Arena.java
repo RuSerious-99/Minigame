@@ -1,11 +1,11 @@
-package com.ruserious99.minigame.instance;
+package com.ruserious99.minigame.listeners.instance;
 
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.instance.game.BlockGame;
-import com.ruserious99.minigame.instance.game.Game;
-import com.ruserious99.minigame.instance.game.PvpGame;
+import com.ruserious99.minigame.listeners.instance.game.BlockGame;
+import com.ruserious99.minigame.listeners.instance.game.Game;
+import com.ruserious99.minigame.listeners.instance.game.PvpGame;
 import com.ruserious99.minigame.kit.Kit;
 import com.ruserious99.minigame.kit.KitType;
 import com.ruserious99.minigame.kit.type.FighterKit;
@@ -81,7 +81,6 @@ public class Arena {
             }
             players.clear();
 
-
             switch(Objects.requireNonNull(spawn.getWorld()).getName()){
                 case("arena1"):{
                     minigame.getGameMapArena1().restoreFromSource();
@@ -92,16 +91,15 @@ public class Arena {
                     break;
                 }
             }
+            minigame.releaseLoadArena(id);
         }
+
         sendTitle("", "");
-
-        minigame.releaseLoadArena(id);
-
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(minigame, this);
 
-        game.unregistar();
+        game.unregister();
         game = null;
     }
 
@@ -127,8 +125,6 @@ public class Arena {
 
        // setTeam(player, lowest);
         //player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
-
-        player.sendMessage("Don't forget your kit /arena kit");
 
         if(state.equals(GameState.RECRUITING) && players.size() >= ConfigMgr.getRequiredPlayers()){
             countdown.start();

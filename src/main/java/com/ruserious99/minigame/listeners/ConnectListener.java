@@ -1,7 +1,7 @@
 package com.ruserious99.minigame.listeners;
 
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.instance.Arena;
+import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

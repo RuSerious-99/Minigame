@@ -55,7 +55,4 @@ public final class Minigame extends JavaPlugin {
     public GameMap getGameMapArena1() {return gameMapArena1;}
     public GameMap getGameMapArena2() {return gameMapArena2;}
     public ArenaMgr getArenaMgr() {return arenaMgr;}
-
-
-
 }
