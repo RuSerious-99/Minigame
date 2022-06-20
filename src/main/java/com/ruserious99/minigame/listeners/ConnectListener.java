@@ -21,8 +21,11 @@ public class ConnectListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        System.out.println("on join connect listener");
+        e.getPlayer().getInventory().clear();
         e.getPlayer().teleport(ConfigMgr.getLobbySpawn());
     }
+
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) throws IOException {

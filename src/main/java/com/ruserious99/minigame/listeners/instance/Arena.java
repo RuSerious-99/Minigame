@@ -3,20 +3,20 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.listeners.instance.kit.KitUI_Blockgame;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
-import com.ruserious99.minigame.kit.Kit;
-import com.ruserious99.minigame.kit.KitType;
-import com.ruserious99.minigame.kit.type.FighterKit;
-import com.ruserious99.minigame.kit.type.MinerKit;
+import com.ruserious99.minigame.listeners.instance.kit.Kit_Blockgame;
+import com.ruserious99.minigame.listeners.instance.kit.KitTypeBlockgame;
+import com.ruserious99.minigame.listeners.instance.kit.type.FighterKit;
+import com.ruserious99.minigame.listeners.instance.kit.type.MinerKit;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -28,7 +28,7 @@ public class Arena {
     private final Location spawn;
 
     private GameState state;
-    private final HashMap<UUID, Kit> kits;
+    private final HashMap<UUID, Kit_Blockgame> kits;
     private final HashMap<UUID, Team> teams;
     private final List<UUID> players;
     private Countdown countdown;
@@ -74,6 +74,7 @@ public class Arena {
 
         if(state == GameState.LIVE){
             Location location = ConfigMgr.getLobbySpawn();
+
             for(UUID uuid : players){
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).teleport(location);
@@ -100,7 +101,7 @@ public class Arena {
         countdown = new Countdown(minigame, this);
 
         game.unregister();
-        game = null;
+
     }
 
     //tools
@@ -120,6 +121,12 @@ public class Arena {
         players.add(player.getUniqueId());
 
         player.teleport(spawn);
+        player.getInventory().clear();
+
+        if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")){
+            new KitUI_Blockgame(player);
+        }
+
 
         //Team lowest = getLowestTeamCount();
 
@@ -168,20 +175,26 @@ public class Arena {
       }
     }
 
-    public void setKit(UUID uuid, KitType type){
+    public void setKit(UUID uuid, KitTypeBlockgame type){
         removeKit(uuid);
-        switch(type){
-            case FIGHTER: {
+        System.out.println("set kit = " + type.name());
+        switch(type.name()){
+            case "FIGHTER": {
                 kits.put(uuid, new FighterKit(minigame, uuid));
             }
-            case MINER: {
+            case "MINER": {
                 kits.put(uuid, new MinerKit(minigame, uuid));
             }
         }
     }
 
-    public KitType getKitType(Player player){
-        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()).getType() : null;
+    public KitTypeBlockgame getKitType(Player player){
+        if(kits.containsKey(player.getUniqueId())){
+            System.out.println("get KitType = " + kits.get(player.getUniqueId()).getType());
+            return kits.get(player.getUniqueId()).getType();
+        }else{
+            return null;
+        }
     }
 
 
@@ -210,7 +223,7 @@ public class Arena {
     //getters
 
     public String getGameName() {return gameName;}
-    public HashMap<UUID, Kit> getKits() {return kits;}
+    public HashMap<UUID, Kit_Blockgame> getKits() {return kits;}
     public int getId() {return id;}
     public GameState getState() {return state;}
     public List<UUID> getPlayers() {return players;}

@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.kit;
+package com.ruserious99.minigame.listeners.instance.kit;
 
 import com.ruserious99.minigame.Minigame;
 import org.bukkit.Bukkit;
@@ -8,16 +8,15 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
-public abstract class Kit implements Listener {
+public abstract class Kit_Blockgame implements Listener {
 
-    protected KitType type;
+    protected KitTypeBlockgame type;
     protected UUID uuid;
 
-    public Kit(Minigame minigame, KitType type, UUID uuid){
+    public Kit_Blockgame(Minigame minigame,KitTypeBlockgame type, UUID uuid){
         this.type = type;
         this.uuid = uuid;
 
-        //register here so all kit classes have access to eventhandler ect
         Bukkit.getPluginManager().registerEvents(this, minigame);
     }
 
@@ -26,6 +25,6 @@ public abstract class Kit implements Listener {
     }
     public abstract void onStart(Player player);
 
-    public KitType getType() {return type;}
-    public UUID getUuid() {return uuid;}
+    public KitTypeBlockgame getType() {return type;}
+
 }

@@ -1,9 +1,9 @@
-package com.ruserious99.minigame.kit;
+package com.ruserious99.minigame.listeners.instance.kit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-public enum KitType {
+public enum KitTypeBlockgame {
 
     MINER(ChatColor.GOLD + "Miner", Material.DIAMOND_PICKAXE, "Best Mining kit"),
     FIGHTER(ChatColor.DARK_RED + "Fighter", Material.DIAMOND_SWORD, "best fighting kit");
@@ -12,7 +12,7 @@ public enum KitType {
     private final String description;
     private final Material material;
 
-    KitType(String display, Material material, String description){
+    KitTypeBlockgame(String display, Material material, String description){
         this.display = display;
         this.description = description;
         this.material = material;

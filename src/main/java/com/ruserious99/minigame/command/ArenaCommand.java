@@ -3,7 +3,6 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.kit.KitUI;
 import com.ruserious99.minigame.team.TeamUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -53,7 +52,7 @@ public class ArenaCommand implements CommandExecutor {
                 }
 
 
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
+           /* } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     if (arena.getState() != GameState.LIVE) {
@@ -63,7 +62,7 @@ public class ArenaCommand implements CommandExecutor {
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
-                }
+                }*/
 
 
 

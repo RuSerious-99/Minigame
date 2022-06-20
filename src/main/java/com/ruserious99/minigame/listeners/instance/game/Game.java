@@ -15,7 +15,6 @@ public abstract class Game implements Listener {
         Bukkit.getPluginManager().registerEvents(this, minigame);
 
     }
-
     public void start() {
         onStart();
     }

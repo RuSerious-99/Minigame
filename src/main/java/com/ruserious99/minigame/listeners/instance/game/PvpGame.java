@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class PvpGame extends Game {
         super(minigame, arena);
         kills = new HashMap<>();
     }
+
 
     @Override
     public void onStart() {
@@ -54,4 +56,5 @@ public class PvpGame extends Game {
             }
         }
     }
+
 }

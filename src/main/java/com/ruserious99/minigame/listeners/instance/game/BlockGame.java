@@ -3,17 +3,15 @@ package com.ruserious99.minigame.listeners.instance.game;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.kit.KitType;
+import com.ruserious99.minigame.listeners.instance.kit.KitTypeBlockgame;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -32,12 +30,14 @@ public class BlockGame extends Game {
     public void onStart() {
         arena.setState(GameState.LIVE);
         arena.sendMessage("GAME HAS STARTED! First Player to break " + ConfigMgr.getBlockGameBlocksToBreakInt() + " blocks wins!");
+
         for (UUID uuid : arena.getPlayers()) {
             points.put(uuid, 0);
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
 
-            for (UUID uuidkits : arena.getKits().keySet()) {
-                arena.getKits().get(uuidkits).onStart(Bukkit.getPlayer(uuid));
+            for (UUID uuid1 : arena.getKits().keySet()) {
+                System.out.println("block onStart: " + uuid1);
+                arena.getKits().get(uuid);
             }
         }
     }
@@ -66,14 +66,10 @@ public class BlockGame extends Game {
             if (event.getView().getTitle().contains("Kit Selection") && event.getCurrentItem() != null) {
                 event.setCancelled(true);
 
-                KitType type = KitType.valueOf(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getLocalizedName());
-                KitType activated = arena.getKitType(player);
-                if (activated != null && activated == type) {
-                    player.sendMessage(ChatColor.RED + "You already have this kit equipped");
-                } else {
-                    player.sendMessage(ChatColor.GREEN + "You have equipped the " + type.getDisplay() + ChatColor.GREEN + " kit!");
-                    arena.setKit(player.getUniqueId(), type);
-                }
+                KitTypeBlockgame type = KitTypeBlockgame.valueOf(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getLocalizedName());
+                player.sendMessage(ChatColor.GREEN + "You have equipped the " + type.getDisplay() + ChatColor.GREEN + " kit!");
+                arena.setKit(player.getUniqueId(), type);
+
                 player.closeInventory();
 
 
@@ -107,11 +103,5 @@ public class BlockGame extends Game {
         }
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        World world = e.getPlayer().getWorld();
-        if (world.getName().equals("arena1")) {
-            e.getPlayer().getInventory().clear();
-        }
-    }
+
 }
