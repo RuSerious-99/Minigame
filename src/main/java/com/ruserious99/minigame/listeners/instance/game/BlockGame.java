@@ -5,7 +5,7 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.KitTypeBlockgame;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import com.ruserious99.minigame.team.Team;
+import com.ruserious99.minigame.listeners.instance.team.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

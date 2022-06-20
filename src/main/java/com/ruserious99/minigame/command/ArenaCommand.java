@@ -3,7 +3,6 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.team.TeamUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -39,33 +38,6 @@ public class ArenaCommand implements CommandExecutor {
                 }
 
 
-            }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
-                Arena arena = minigame.getArenaMgr().getArena(player);
-                if (arena != null) {
-                    if (arena.getState() != GameState.LIVE) {
-                        new TeamUI(arena, player);
-                    } else {
-                        player.sendMessage(ChatColor.RED + " you cant select a team at this time");
-                    }
-                } else {
-                    player.sendMessage(ChatColor.RED + "You are not in an arena");
-                }
-
-
-           /* } else if (args.length == 1 && args[0].equalsIgnoreCase("kit")) {
-                Arena arena = minigame.getArenaMgr().getArena(player);
-                if (arena != null) {
-                    if (arena.getState() != GameState.LIVE) {
-                        new KitUI(player);
-                    } else {
-                        player.sendMessage(ChatColor.RED + " you cant select a kit at this time");
-                    }
-                } else {
-                    player.sendMessage(ChatColor.RED + "You are not in an arena");
-                }*/
-
-
-
             } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
@@ -78,6 +50,20 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+
+         /*   }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
+                Arena arena = minigame.getArenaMgr().getArena(player);
+                if (arena != null) {
+                    if (arena.getState() != GameState.LIVE) {
+                        new TeamUI(arena, player);
+                    } else {
+                        player.sendMessage(ChatColor.RED + " you cant select a team at this time");
+                    }
+                } else {
+                    player.sendMessage(ChatColor.RED + "You are not in an arena");
+                }*/
+
+
 
 
 

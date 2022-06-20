@@ -32,6 +32,15 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.yaw"),
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
+    public static Location getBlockNPCSpawn(){
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("blocknpc_spawn.world"))),
+                config.getDouble("blocknpc_spawn.x"),
+                config.getDouble("blocknpc_spawn.y"),
+                config.getDouble("blocknpc_spawn.z"),
+                (float) config.getDouble("blocknpc_spawn.yaw"),
+                (float) config.getDouble("blocknpc_spawn.pitch"));
+    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.team;
+package com.ruserious99.minigame.listeners.instance.team;
 
 import com.ruserious99.minigame.listeners.instance.Arena;
 import org.bukkit.Bukkit;

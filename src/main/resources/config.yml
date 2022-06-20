@@ -5,6 +5,13 @@ pvpgame-player-kill-count: 10
 
 world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
+
+blocknpc_spawn:
+  x: 202
+  y: 4
+  z: 3.055
+
+
 lobby-spawn:
   world: 'world'
   x: 220

@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.team;
+package com.ruserious99.minigame.listeners.instance.team;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
