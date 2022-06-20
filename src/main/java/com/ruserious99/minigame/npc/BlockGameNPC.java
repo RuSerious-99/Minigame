@@ -36,7 +36,7 @@ public class BlockGameNPC {
                 ((CraftWorld) player.getWorld()).getHandle(),
                 gameProfile);
 
-       if(blockNPC.spawnIn(player.getWorld().setSpawnLocation(new Location(player.getWorld(), 220, 4, 3 )))){
+       if(blockNPC.spawnIn(player.getWorld().setSpawnLocation(new Location(player.getWorld(), 220, 4,)))){
            System.out.println("sucess");
        }else {
            System.out.println("failed to spawn bloclNPC");
