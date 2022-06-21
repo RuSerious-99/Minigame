@@ -8,12 +8,12 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
-public abstract class Kit_Blockgame implements Listener {
+public abstract class Kit implements Listener {
 
-    protected KitTypeBlockgame type;
+    protected KitType type;
     protected UUID uuid;
 
-    public Kit_Blockgame(Minigame minigame,KitTypeBlockgame type, UUID uuid){
+    public Kit(Minigame minigame, KitType type, UUID uuid){
         this.type = type;
         this.uuid = uuid;
 
@@ -23,8 +23,8 @@ public abstract class Kit_Blockgame implements Listener {
     public void remove(){
         HandlerList.unregisterAll(this);
     }
-    public abstract void onStart(Player player);
+    public abstract void atStart(Player player);
 
-    public KitTypeBlockgame getType() {return type;}
+    public KitType getType() {return type;}
 
 }

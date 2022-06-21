@@ -3,9 +3,9 @@ package com.ruserious99.minigame.listeners.instance.game;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.listeners.instance.kit.KitTypeBlockgame;
-import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.listeners.instance.kit.KitType;
 import com.ruserious99.minigame.listeners.instance.team.Team;
+import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,6 +26,7 @@ public class BlockGame extends Game {
         points = new HashMap<>();
     }
 
+    
     @Override
     public void onStart() {
         arena.setState(GameState.LIVE);
@@ -34,14 +35,13 @@ public class BlockGame extends Game {
         for (UUID uuid : arena.getPlayers()) {
             points.put(uuid, 0);
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
+        }
 
-            for (UUID uuid1 : arena.getKits().keySet()) {
-                System.out.println("block onStart: " + uuid1);
-                arena.getKits().get(uuid);
-            }
+        for (UUID uuid1 : arena.getKits().keySet()) {
+            Player player = Bukkit.getPlayer(uuid1);
+            arena.getKits().get(uuid1).atStart(player);
         }
     }
-
     public void addPoint(Player player) {
 
         int playerpoints = points.get(player.getUniqueId()) + 1;
@@ -66,7 +66,7 @@ public class BlockGame extends Game {
             if (event.getView().getTitle().contains("Kit Selection") && event.getCurrentItem() != null) {
                 event.setCancelled(true);
 
-                KitTypeBlockgame type = KitTypeBlockgame.valueOf(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getLocalizedName());
+                KitType type = KitType.valueOf(Objects.requireNonNull(event.getCurrentItem().getItemMeta()).getLocalizedName());
                 player.sendMessage(ChatColor.GREEN + "You have equipped the " + type.getDisplay() + ChatColor.GREEN + " kit!");
                 arena.setKit(player.getUniqueId(), type);
 

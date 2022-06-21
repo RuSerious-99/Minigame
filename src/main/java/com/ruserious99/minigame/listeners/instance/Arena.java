@@ -3,12 +3,12 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.kit.KitUI_Blockgame;
+import com.ruserious99.minigame.listeners.instance.kit.KitUI;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
-import com.ruserious99.minigame.listeners.instance.kit.Kit_Blockgame;
-import com.ruserious99.minigame.listeners.instance.kit.KitTypeBlockgame;
+import com.ruserious99.minigame.listeners.instance.kit.Kit;
+import com.ruserious99.minigame.listeners.instance.kit.KitType;
 import com.ruserious99.minigame.listeners.instance.kit.type.FighterKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.MinerKit;
 import com.ruserious99.minigame.managers.ConfigMgr;
@@ -28,7 +28,7 @@ public class Arena {
     private final Location spawn;
 
     private GameState state;
-    private final HashMap<UUID, Kit_Blockgame> kits;
+    private final HashMap<UUID, Kit> kits;
     private final HashMap<UUID, Team> teams;
     private final List<UUID> players;
     private Countdown countdown;
@@ -54,14 +54,9 @@ public class Arena {
 
     private void startNewGameType(int id) {
         game = null;
-        switch(id){
-            case(0):
-                this.game = new BlockGame(minigame, this);
-                break;
-
-            case(1):
-                this.game = new PvpGame(minigame, this);
-                break;
+        switch (id) {
+            case (0) -> this.game = new BlockGame(minigame, this);
+            case (1) -> this.game = new PvpGame(minigame, this);
         }
     }
 
@@ -82,15 +77,9 @@ public class Arena {
             }
             players.clear();
 
-            switch(Objects.requireNonNull(spawn.getWorld()).getName()){
-                case("arena1"):{
-                    minigame.getGameMapArena1().restoreFromSource();
-                    break;
-                }
-                case("arena2"):{
-                    minigame.getGameMapArena2().restoreFromSource();
-                    break;
-                }
+            switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
+                case ("arena1") -> minigame.getGameMapArena1().restoreFromSource();
+                case ("arena2") -> minigame.getGameMapArena2().restoreFromSource();
             }
             minigame.releaseLoadArena(id);
         }
@@ -124,18 +113,19 @@ public class Arena {
         player.getInventory().clear();
 
         if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")){
-            new KitUI_Blockgame(player);
+            new KitUI(player);
+            ImplTeams(player);
         }
-
-
-        //Team lowest = getLowestTeamCount();
-
-       // setTeam(player, lowest);
-        //player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
 
         if(state.equals(GameState.RECRUITING) && players.size() >= ConfigMgr.getRequiredPlayers()){
             countdown.start();
         }
+    }
+
+    private void ImplTeams(Player player) {
+        Team lowest = getLowestTeamCount();
+        setTeam(player, lowest);
+        player.sendMessage(ChatColor.GOLD + "You are on team " + lowest.getDisplay() + ChatColor.GOLD + " Team");
     }
 
     private Team getLowestTeamCount() {
@@ -175,28 +165,14 @@ public class Arena {
       }
     }
 
-    public void setKit(UUID uuid, KitTypeBlockgame type){
+    public void setKit(UUID uuid, KitType type){
         removeKit(uuid);
-        System.out.println("set kit = " + type.name());
-        switch(type.name()){
-            case "FIGHTER": {
-                kits.put(uuid, new FighterKit(minigame, uuid));
-            }
-            case "MINER": {
-                kits.put(uuid, new MinerKit(minigame, uuid));
-            }
+
+        switch (type) {
+            case FIGHTER -> kits.put(uuid, new FighterKit(minigame, uuid));
+            case MINER -> kits.put(uuid, new MinerKit(minigame, uuid));
         }
     }
-
-    public KitTypeBlockgame getKitType(Player player){
-        if(kits.containsKey(player.getUniqueId())){
-            System.out.println("get KitType = " + kits.get(player.getUniqueId()).getType());
-            return kits.get(player.getUniqueId()).getType();
-        }else{
-            return null;
-        }
-    }
-
 
     public void setTeam(Player player, Team team){
         removeTeam(player);
@@ -223,11 +199,10 @@ public class Arena {
     //getters
 
     public String getGameName() {return gameName;}
-    public HashMap<UUID, Kit_Blockgame> getKits() {return kits;}
+    public HashMap<UUID, Kit> getKits() {return kits;}
     public int getId() {return id;}
     public GameState getState() {return state;}
     public List<UUID> getPlayers() {return players;}
-    public Game getGame(){return game;}
     public void setState(GameState gameState){this.state = gameState;}
 
 

@@ -7,19 +7,19 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Objects;
 
-public class KitUI_Blockgame {
+public class KitUI {
 
-    public KitUI_Blockgame(Player player){
+    public KitUI(Player player){
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Kit Selection fo Block game");
 
-        for(KitTypeBlockgame type : KitTypeBlockgame.values()){
+        for(KitType type : KitType.values()){
             ItemStack is = new ItemStack(type.getMaterial());
             ItemMeta isMeta = is.getItemMeta();
             Objects.requireNonNull(isMeta).setDisplayName(type.getDisplay());
-            isMeta.setLore(Collections.singletonList(type.getDescription()));
+            isMeta.setLore(Arrays.asList(type.getDescription()));
             isMeta.setLocalizedName(type.name());
             is.setItemMeta(isMeta);
 

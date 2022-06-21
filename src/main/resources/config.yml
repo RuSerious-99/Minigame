@@ -7,10 +7,9 @@ world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 
 blocknpc_spawn:
-  x: 202
-  y: 4
-  z: 3.055
-
+  x: 220
+  y: 53
+  z: 4.87
 
 lobby-spawn:
   world: 'world'

@@ -4,6 +4,7 @@ import com.ruserious99.minigame.Minigame;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.Objects;
 
 public class ConfigMgr {
@@ -32,15 +33,7 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.yaw"),
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
-    public static Location getBlockNPCSpawn(){
-        return new Location(
-                Bukkit.getWorld(Objects.requireNonNull(config.getString("blocknpc_spawn.world"))),
-                config.getDouble("blocknpc_spawn.x"),
-                config.getDouble("blocknpc_spawn.y"),
-                config.getDouble("blocknpc_spawn.z"),
-                (float) config.getDouble("blocknpc_spawn.yaw"),
-                (float) config.getDouble("blocknpc_spawn.pitch"));
-    }
-
-
 }
+
+
+
