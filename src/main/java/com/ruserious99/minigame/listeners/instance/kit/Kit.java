@@ -25,6 +25,6 @@ public abstract class Kit implements Listener {
     }
     public abstract void atStart(Player player);
 
-    public KitType getType() {return type;}
+
 
 }

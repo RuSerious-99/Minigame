@@ -14,9 +14,9 @@ import java.util.Objects;
 public class ArenaMgr {
 
     FileConfiguration config;
-    private  Minigame minigame;
+    private final Minigame minigame;
 
-    private static List<Arena> arenas = new ArrayList<>();
+    private static final List<Arena> arenas = new ArrayList<>();
 
     public ArenaMgr(Minigame minigame) {
         this.minigame = minigame;

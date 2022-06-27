@@ -15,6 +15,27 @@ public class ConfigMgr {
         ConfigMgr.config = minigame.getConfig();
         minigame.saveDefaultConfig();
     }
+
+    public static int getBlockNpcX(){
+        return config.getInt("blockgameNpc.x");
+    }
+    public static int getBlockNpcY(){
+        return config.getInt("blockgameNpc.y");
+    }
+    public static int getBlockNpcZ(){
+        return config.getInt("blockgameNpc.z");
+    }
+
+    public static int getPvpNpcX(){
+        return config.getInt("pvpNpc.x");
+    }
+    public static int getPvpNpcY(){
+        return config.getInt("pvpNpc.y");
+    }
+    public static int getPvpNpcZ(){
+        return config.getInt("pvpNpc.z");
+    }
+
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }

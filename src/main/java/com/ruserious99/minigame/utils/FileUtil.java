@@ -1,5 +1,7 @@
 package com.ruserious99.minigame.utils;
 
+import org.bukkit.Bukkit;
+
 import java.io.*;
 
 public class FileUtil {
@@ -10,10 +12,13 @@ public class FileUtil {
                 File[] strFiles = file.listFiles();
                 if(strFiles == null){return;}
                 for (File strFilename : strFiles) {
-                    strFilename.delete();
+                    if(strFilename.delete()) {
+                        Bukkit.getLogger().info("success deleting file " + strFilename);
+                    }
                 }
             }
-            file.delete();
+           if(file.delete()) Bukkit.getLogger().info("success deleting file " + file);
+
         }
     }
 
@@ -21,7 +26,7 @@ public class FileUtil {
     public static void copy(File sourceLocation, File targetLocation) throws IOException {
         if (sourceLocation.isDirectory()) {
             if(!targetLocation.exists()){
-                targetLocation.mkdirs();
+                if(targetLocation.mkdirs()) System.out.println("resetting arena directory");
             }
 
             String[] files = sourceLocation.list();

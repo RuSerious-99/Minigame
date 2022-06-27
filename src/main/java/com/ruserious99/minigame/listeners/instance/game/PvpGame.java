@@ -49,8 +49,9 @@ public class PvpGame extends Game {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         if (arena.getGameName().equals("PVP")) {
-            if (arena.getPlayers().contains(e.getEntity())
-                    && arena.getPlayers().contains(e.getEntity().getKiller())
+            Player killer = e.getEntity().getKiller();
+            if (arena.getPlayers().contains(e.getEntity().getUniqueId())
+                    && arena.getPlayers().contains(Objects.requireNonNull(killer).getUniqueId())
                     && arena.getState().equals(GameState.LIVE)) {
                 addKill(Objects.requireNonNull(e.getEntity().getKiller()));
             }

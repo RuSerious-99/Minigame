@@ -3,20 +3,23 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.kit.KitUI;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
 import com.ruserious99.minigame.listeners.instance.kit.KitType;
+import com.ruserious99.minigame.listeners.instance.kit.KitUI;
 import com.ruserious99.minigame.listeners.instance.kit.type.FighterKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.MinerKit;
-import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.listeners.instance.team.Team;
+import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.npc.CreateBlockNPC;
+import com.ruserious99.minigame.npc.CreatePvpNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -74,6 +77,11 @@ public class Arena {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).teleport(location);
                 removeKit(player.getUniqueId());
+                removeTeam(player);
+
+                CreateBlockNPC.execute(player);
+                CreatePvpNPC.execute(player);
+
             }
             players.clear();
 
@@ -82,16 +90,16 @@ public class Arena {
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource();
             }
             minigame.releaseLoadArena(id);
+            game.unregister();
         }
 
         sendTitle("", "");
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(minigame, this);
-
-        game.unregister();
-
     }
+
+
 
     //tools
     public void sendMessage(String message){
@@ -107,8 +115,8 @@ public class Arena {
 
     //players
     public void addPlayer(Player player){
-        players.add(player.getUniqueId());
 
+        players.add(player.getUniqueId());
         player.teleport(spawn);
         player.getInventory().clear();
 
@@ -146,6 +154,14 @@ public class Arena {
         removeKit(player.getUniqueId());
         removeTeam(player);
 
+        if(state != GameState.LIVE) {
+            //recreate all npcs
+            Minigame.NPCs.clear();
+            CreateBlockNPC.execute(player);
+            CreatePvpNPC.execute(player);
+        }
+
+        System.out.println(state + "********************************* " + players.size());
         if(state == GameState.COUNTDOWN && players.size()  < ConfigMgr.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "There are not enough players countdown has stopped");
             reset();
