@@ -16,6 +16,16 @@ public class ConfigMgr {
         minigame.saveDefaultConfig();
     }
 
+    public static int getAbandonedNpcX(){
+        return config.getInt("abandonedNpc.x");
+    }
+    public static int getAbandonedNpcY(){
+        return config.getInt("abandonedNpc.y");
+    }
+    public static int getAbandonedNpcZ(){
+        return config.getInt("abandonedNpc.z");
+    }
+
     public static int getBlockNpcX(){
         return config.getInt("blockgameNpc.x");
     }

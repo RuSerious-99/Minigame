@@ -20,6 +20,13 @@ pvpNpc:
   yaw: 0
   pitch: 0
 
+abandonedNpc:
+  x: 226.968
+  y: 53.000
+  z: -5.700
+  yaw: 0
+  pitch: 0
+
 lobby-spawn:
   world: 'world'
   x: 220
@@ -46,3 +53,12 @@ arenas:
     z: 3.055
     pitch: 0
     yaw: -90
+
+  '2':
+    game: 'DUNGEON'
+    world: 'arena3'
+    x: -27
+    y: 79
+    z: 65
+    pitch: 0
+    yaw: 0

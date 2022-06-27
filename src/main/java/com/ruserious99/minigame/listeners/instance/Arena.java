@@ -3,6 +3,7 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.listeners.instance.game.AbandonedSpaceship;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
@@ -13,8 +14,6 @@ import com.ruserious99.minigame.listeners.instance.kit.type.FighterKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.MinerKit;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import com.ruserious99.minigame.npc.CreateBlockNPC;
-import com.ruserious99.minigame.npc.CreatePvpNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,7 +43,6 @@ public class Arena {
         this.id = id;
         this.spawn = spawn;
 
-
         this.state = GameState.RECRUITING;
         this.players = new ArrayList<>();
         this.kits = new HashMap<>();
@@ -60,10 +58,10 @@ public class Arena {
         switch (id) {
             case (0) -> this.game = new BlockGame(minigame, this);
             case (1) -> this.game = new PvpGame(minigame, this);
+            case (2) -> this.game = new AbandonedSpaceship(minigame, this);
+
         }
     }
-
-
     public void start() {
         game.start();
     }
@@ -78,16 +76,14 @@ public class Arena {
                 Objects.requireNonNull(player).teleport(location);
                 removeKit(player.getUniqueId());
                 removeTeam(player);
-
-                CreateBlockNPC.execute(player);
-                CreatePvpNPC.execute(player);
-
             }
             players.clear();
 
             switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
                 case ("arena1") -> minigame.getGameMapArena1().restoreFromSource();
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource();
+                case ("arena3") -> minigame.getGameMapArena3().restoreFromSource();
+
             }
             minigame.releaseLoadArena(id);
             game.unregister();
@@ -153,13 +149,6 @@ public class Arena {
 
         removeKit(player.getUniqueId());
         removeTeam(player);
-
-        if(state != GameState.LIVE) {
-            //recreate all npcs
-            Minigame.NPCs.clear();
-            CreateBlockNPC.execute(player);
-            CreatePvpNPC.execute(player);
-        }
 
         System.out.println(state + "********************************* " + players.size());
         if(state == GameState.COUNTDOWN && players.size()  < ConfigMgr.getRequiredPlayers()){

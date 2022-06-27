@@ -54,22 +54,21 @@ public class ArenaCommand implements CommandExecutor {
 
 
 
-
-
-            }else if (args.length == 1 && args[0].equalsIgnoreCase("team")){
+            } else if (args.length == 1 && args[0].equalsIgnoreCase("team")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
-                    if (arena.getState() != GameState.LIVE) {
-                        new TeamUI(arena, player);
+                    if (arena.getId() == 0) {
+                        if (arena.getState() != GameState.LIVE) {
+                            new TeamUI(arena, player);
+                        } else {
+                            player.sendMessage(ChatColor.RED + " you cant select a team at this time");
+                        }
                     } else {
-                        player.sendMessage(ChatColor.RED + " you cant select a team at this time");
+                        player.sendMessage(ChatColor.RED + "You are not in an arena with Teams");
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
-
-
-
 
 
 

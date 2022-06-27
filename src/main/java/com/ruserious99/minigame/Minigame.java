@@ -19,10 +19,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/*create new Mini game
+* make new folder(arena#) with your game world and copy it to resetWorlds folder for restoring
+
+* Create a new game class in: listeners, instance, game
+* in main class(MiniGame) make an instance of Gamemap with getter to restore worlds
+* in Arena class add your new game class to 2 switch statements
+*
+* make a new npc for access to new game
+ TODO make instructions to add an npc
+* */
+
 public final class Minigame extends JavaPlugin {
 
     private GameMap gameMapArena1;
     private GameMap gameMapArena2;
+    private GameMap gameMapArena3;
 
     private ArenaMgr arenaMgr;
     private Plugin plugin;
@@ -38,16 +50,13 @@ public final class Minigame extends JavaPlugin {
 
         gameMapArena1 = new LocalGameMap(worldResetsFolder, "arena1", true);
         gameMapArena2 = new LocalGameMap(worldResetsFolder, "arena2", true);
+        gameMapArena3 = new LocalGameMap(worldResetsFolder, "arena3", true);
 
-        System.out.println("[MiniGames] - Plugin by RuSerious99 Enabled!");
         new BukkitRunnable() {
-
             @Override
             public void run() {
-                System.out.println("Delayed start of ArenaMgr");
                 arenaMgr = new ArenaMgr((Minigame) plugin);
             }
-
         }.runTaskLater(this.plugin, 20);
 
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
@@ -64,6 +73,8 @@ public final class Minigame extends JavaPlugin {
 
     public GameMap getGameMapArena1() {return gameMapArena1;} //block
     public GameMap getGameMapArena2() {return gameMapArena2;} // pvp
+    public GameMap getGameMapArena3() {return gameMapArena3;} // Abandoned Spaceship
+
     public ArenaMgr getArenaMgr() {return arenaMgr;}
 
 }
