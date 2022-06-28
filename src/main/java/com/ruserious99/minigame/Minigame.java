@@ -37,7 +37,7 @@ public final class Minigame extends JavaPlugin {
     private GameMap gameMapArena3;
 
     private ArenaMgr arenaMgr;
-    private Plugin plugin;
+    private static Plugin plugin;
 
     public static final List<ServerPlayer> NPCs = new ArrayList<>();
 
@@ -57,7 +57,7 @@ public final class Minigame extends JavaPlugin {
             public void run() {
                 arenaMgr = new ArenaMgr((Minigame) plugin);
             }
-        }.runTaskLater(this.plugin, 20);
+        }.runTaskLater(plugin, 20);
 
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(), this);
@@ -71,10 +71,10 @@ public final class Minigame extends JavaPlugin {
        arenaMgr.clearArena(id);
     }
 
-    public GameMap getGameMapArena1() {return gameMapArena1;} //block
-    public GameMap getGameMapArena2() {return gameMapArena2;} // pvp
-    public GameMap getGameMapArena3() {return gameMapArena3;} // Abandoned Spaceship
-
-    public ArenaMgr getArenaMgr() {return arenaMgr;}
+    public GameMap  getGameMapArena1() {return gameMapArena1;} //block
+    public GameMap  getGameMapArena2() {return gameMapArena2;} // pvp
+    public GameMap  getGameMapArena3() {return gameMapArena3;} // Abandoned Spaceship
+    public ArenaMgr getArenaMgr()      {return arenaMgr;}
+    public static Plugin getPlugin()   {return plugin;}
 
 }

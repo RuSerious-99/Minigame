@@ -39,7 +39,6 @@ public class ConnectListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    System.out.println("Delayed npcs");
                     CreateBlockNPC.execute(e.getPlayer());
                     CreatePvpNPC.execute(e.getPlayer());
                     CreateAbandonedshipNPC.execute(e.getPlayer());

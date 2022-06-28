@@ -3,7 +3,7 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.game.AbandonedSpaceship;
+import com.ruserious99.minigame.listeners.instance.game.abship.AbandonedSpaceship;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
@@ -89,13 +89,11 @@ public class Arena {
             game.unregister();
         }
 
-        sendTitle("", "");
+        sendTitle("", "",0,0,0);
         state = GameState.RECRUITING;
         countdown.cancel();
         countdown = new Countdown(minigame, this);
     }
-
-
 
     //tools
     public void sendMessage(String message){
@@ -103,7 +101,7 @@ public class Arena {
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(message);
         }
     }
-    public void sendTitle(String title, String subTitle){
+    public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
         for(UUID uuid : players){
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendTitle(title, subTitle, 10,10,10);
         }
@@ -111,7 +109,6 @@ public class Arena {
 
     //players
     public void addPlayer(Player player){
-
         players.add(player.getUniqueId());
         player.teleport(spawn);
         player.getInventory().clear();

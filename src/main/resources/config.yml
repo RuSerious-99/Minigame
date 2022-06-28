@@ -6,6 +6,18 @@ pvpgame-player-kill-count: 4
 world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 
+hanger-countdown-seconds: 180
+firstboss-countdown-seconds: 600
+parkour_1-seconds: 600
+maze-seconds: 240
+boss_2-seconds: 720
+parkour_2-seconds: 480
+teleportation-seconds: 300
+leave_the_dungeon-seconds: 120
+dungeon_cooldown-seconds: 300
+
+
+
 blockgameNpc:
   x: 217.01
   y: 54.000
@@ -21,6 +33,7 @@ pvpNpc:
   pitch: 0
 
 abandonedNpc:
+  world: 'arena3'
   x: 226.968
   y: 53.000
   z: -5.700

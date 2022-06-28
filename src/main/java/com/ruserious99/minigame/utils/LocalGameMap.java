@@ -3,7 +3,6 @@ package com.ruserious99.minigame.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-
 import java.io.File;
 import java.io.IOException;
 

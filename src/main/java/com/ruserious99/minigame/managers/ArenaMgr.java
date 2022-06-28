@@ -76,8 +76,6 @@ public class ArenaMgr {
                     (float) config.getDouble("arenas." + id + ".yaw"),
                     (float) config.getDouble("arenas." + id + ".pitch")),
                     config.getString("arenas." + id + ".game")));
-
-            System.out.println("success reset arena " + id);
         }
     }
 }
