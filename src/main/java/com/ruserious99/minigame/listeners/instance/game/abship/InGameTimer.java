@@ -1,6 +1,5 @@
 package com.ruserious99.minigame.listeners.instance.game.abship;
 
-import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.ChatColor;
@@ -14,17 +13,16 @@ public class InGameTimer extends BukkitRunnable {
     public InGameTimer(Arena arena, int seconds) {
         this.abandonedSpaceship = arena;
         this.seconds = seconds;
-        runTaskTimer(Minigame.getPlugin(), 0, 20);
+        runTaskTimer(arena.getMinigame(), 0, 20);
     }
 
     @Override
     public void run() {
-        if (seconds == 0) {
+        if (seconds == 0 || abandonedSpaceship.getPlayers().size() < ConfigMgr.getRequiredPlayers()) {
             abandonedSpaceship.sendMessage(ChatColor.RED + "Dungeon failed!! time is up.");
             abandonedSpaceship.sendTitle(ChatColor.RED + "Dungeon failed!!", ChatColor.GRAY + "time is up.",10, 60, 10);
             abandonedSpaceship.reset();
             cancel();
-            return;
         }
         if (seconds == 480) {
             abandonedSpaceship.sendMessage(ChatColor.AQUA + "Hurry! Only " + ChatColor.RED + " 8" + ChatColor.AQUA + " minutes left.");
@@ -46,11 +44,11 @@ public class InGameTimer extends BukkitRunnable {
             }
         }
         seconds--;
-        if (abandonedSpaceship.getPlayers().size() < ConfigMgr.getRequiredPlayers()) {
+        /*if (abandonedSpaceship.getPlayers().size() < ConfigMgr.getRequiredPlayers()) {
             abandonedSpaceship.sendMessage(ChatColor.AQUA + "Too many players left Resetting game");
             abandonedSpaceship.reset();
             cancel();
-        }
+        }*/
 
     }
     public void updateSeconds(int time){

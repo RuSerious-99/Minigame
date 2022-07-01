@@ -206,6 +206,5 @@ public class Arena {
     public GameState getState() {return state;}
     public List<UUID> getPlayers() {return players;}
     public void setState(GameState gameState){this.state = gameState;}
-
-
+    public Minigame getMinigame() {return minigame;}
 }
