@@ -1,5 +1,6 @@
-package com.ruserious99.minigame.listeners.instance.kit;
+package com.ruserious99.minigame.listeners.instance.kit.gui;
 
+import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,7 +14,7 @@ import java.util.Objects;
 public class KitUI {
 
     public KitUI(Player player){
-        Inventory gui = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Kit Selection fo Block game");
+        Inventory gui = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Kit Selection for Block game");
 
         for(KitType type : KitType.values()){
             ItemStack is = new ItemStack(type.getMaterial());

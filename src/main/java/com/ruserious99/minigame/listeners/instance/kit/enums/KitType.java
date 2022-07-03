@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.listeners.instance.kit;
+package com.ruserious99.minigame.listeners.instance.kit.enums;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

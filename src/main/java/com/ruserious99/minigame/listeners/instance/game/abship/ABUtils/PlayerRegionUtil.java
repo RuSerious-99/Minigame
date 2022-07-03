@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.world.WorldLoadEvent;
 
 import java.util.HashMap;
 
@@ -15,11 +14,6 @@ public class PlayerRegionUtil implements Listener {
     public static HashMap<String, Long> regionFirstEnter = new HashMap<>();
     public static HashMap<Player, String> entered = new HashMap<>();
     public static HashMap<Player, String> exit    = new HashMap<>();
-
-    @EventHandler
-    public void onWorldLoad(WorldLoadEvent event) {
-        System.out.println("World loading; " + event.getWorld().getName());
-    }
 
     @EventHandler
     public void deathEvent(PlayerDeathEvent event) {

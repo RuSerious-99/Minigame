@@ -3,7 +3,6 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.listeners.instance.team.TeamUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -54,7 +53,7 @@ public class ArenaCommand implements CommandExecutor {
 
 
 
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("team")) {
+            /*else if (args.length == 1 && args[0].equalsIgnoreCase("team")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     if (arena.getId() == 0) {
@@ -68,7 +67,7 @@ public class ArenaCommand implements CommandExecutor {
                     }
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
-                }
+                }*/
 
 
 
@@ -84,6 +83,7 @@ public class ArenaCommand implements CommandExecutor {
                 } catch (Exception e) {
                     player.sendMessage(ChatColor.RED + "Invalid id given");
                 }
+                System.out.println("arenas # " + minigame.getArenaMgr().getArenas().size());
                 if (id >= 0 && id < minigame.getArenaMgr().getArenas().size()) {
                     Arena arena = minigame.getArenaMgr().getArena(id);
                     if (arena.getState() == GameState.RECRUITING ||

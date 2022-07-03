@@ -3,7 +3,7 @@ package com.ruserious99.minigame.listeners.instance.game;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
-import com.ruserious99.minigame.listeners.instance.kit.KitType;
+import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;

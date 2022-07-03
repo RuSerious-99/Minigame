@@ -3,15 +3,21 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.game.abship.AbandonedSpaceship;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
+import com.ruserious99.minigame.listeners.instance.game.CodStronghold;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
+import com.ruserious99.minigame.listeners.instance.game.abship.AbandonedSpaceship;
+import com.ruserious99.minigame.listeners.instance.kit.CodKit;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
-import com.ruserious99.minigame.listeners.instance.kit.KitType;
-import com.ruserious99.minigame.listeners.instance.kit.KitUI;
-import com.ruserious99.minigame.listeners.instance.kit.type.FighterKit;
-import com.ruserious99.minigame.listeners.instance.kit.type.MinerKit;
+import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
+import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
+import com.ruserious99.minigame.listeners.instance.kit.gui.CodKitUI;
+import com.ruserious99.minigame.listeners.instance.kit.gui.KitUI;
+import com.ruserious99.minigame.listeners.instance.kit.type.BlockFighterKit;
+import com.ruserious99.minigame.listeners.instance.kit.type.BlockMinerKit;
+import com.ruserious99.minigame.listeners.instance.kit.type.CodHeavyWeaponKit;
+import com.ruserious99.minigame.listeners.instance.kit.type.CodSpeedKit;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
@@ -31,6 +37,8 @@ public class Arena {
 
     private GameState state;
     private final HashMap<UUID, Kit> kits;
+    private final HashMap<UUID, CodKit> codKits;
+
     private final HashMap<UUID, Team> teams;
     private final List<UUID> players;
     private Countdown countdown;
@@ -45,6 +53,7 @@ public class Arena {
 
         this.state = GameState.RECRUITING;
         this.players = new ArrayList<>();
+        this.codKits = new HashMap<>();
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
         this.countdown = new Countdown(minigame, this);
@@ -59,7 +68,7 @@ public class Arena {
             case (0) -> this.game = new BlockGame(minigame, this);
             case (1) -> this.game = new PvpGame(minigame, this);
             case (2) -> this.game = new AbandonedSpaceship(minigame, this);
-
+            case (3) -> this.game = new CodStronghold(minigame, this);
         }
     }
     public void start() {
@@ -83,6 +92,7 @@ public class Arena {
                 case ("arena1") -> minigame.getGameMapArena1().restoreFromSource();
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource();
                 case ("arena3") -> minigame.getGameMapArena3().restoreFromSource();
+                case ("arena4") -> minigame.getGameMapArena4().restoreFromSource();
 
             }
             minigame.releaseLoadArena(id);
@@ -115,6 +125,9 @@ public class Arena {
 
         if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")){
             new KitUI(player);
+            ImplTeams(player);
+        }else if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
+            new CodKitUI(player);
             ImplTeams(player);
         }
 
@@ -161,18 +174,30 @@ public class Arena {
     }
 
     public void removeKit(UUID uuid){
+        if(codKits.containsKey(uuid)){
+            codKits.get(uuid).remove();
+            codKits.remove(uuid);
+        }
       if(kits.containsKey(uuid)){
           kits.get(uuid).remove();
           kits.remove(uuid);
       }
     }
 
+    public void setCodKit(UUID uuid, CodKitType type){
+        removeKit(uuid);
+
+        switch (type) {
+            case HEAVYWEAPON  -> codKits.put(uuid, new CodHeavyWeaponKit(minigame, uuid));
+            case SPEED -> codKits.put(uuid, new CodSpeedKit(minigame, uuid));
+        }
+    }
     public void setKit(UUID uuid, KitType type){
         removeKit(uuid);
 
         switch (type) {
-            case FIGHTER -> kits.put(uuid, new FighterKit(minigame, uuid));
-            case MINER -> kits.put(uuid, new MinerKit(minigame, uuid));
+            case FIGHTER -> kits.put(uuid, new BlockFighterKit(minigame, uuid));
+            case MINER -> kits.put(uuid, new BlockMinerKit(minigame, uuid));
         }
     }
 
@@ -202,6 +227,7 @@ public class Arena {
 
     public String getGameName() {return gameName;}
     public HashMap<UUID, Kit> getKits() {return kits;}
+    public HashMap<UUID, CodKit> getCodKits() {return codKits;}
     public int getId() {return id;}
     public GameState getState() {return state;}
     public List<UUID> getPlayers() {return players;}

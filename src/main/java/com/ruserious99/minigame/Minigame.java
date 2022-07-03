@@ -4,12 +4,10 @@ import com.ruserious99.minigame.command.ArenaCommand;
 import com.ruserious99.minigame.listeners.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.listeners.NpcPlayerMoveEvent;
-import com.ruserious99.minigame.listeners.instance.game.abship.ABUtils.PlayerRegionUtil;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.utils.GameMap;
 import com.ruserious99.minigame.utils.LocalGameMap;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
@@ -37,8 +35,8 @@ public final class Minigame extends JavaPlugin {
     private GameMap gameMapArena1;
     private GameMap gameMapArena2;
     private GameMap gameMapArena3;
+    private GameMap gameMapArena4;
 
-    public WorldGuardPlugin worldGuardPlugin;
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
@@ -48,13 +46,13 @@ public final class Minigame extends JavaPlugin {
     public void onEnable() {
         ConfigMgr.setupConfig(this);
         plugin = this;
-        worldGuardPlugin = getWorldGuard();
 
         File worldResetsFolder = new File(ConfigMgr.getWorldArenasSource(), "worldResets");
 
         gameMapArena1 = new LocalGameMap(worldResetsFolder, "arena1", true);
         gameMapArena2 = new LocalGameMap(worldResetsFolder, "arena2", true);
         gameMapArena3 = new LocalGameMap(worldResetsFolder, "arena3", true);
+        gameMapArena4 = new LocalGameMap(worldResetsFolder, "arena4", true);
 
         new BukkitRunnable() {
             @Override
@@ -63,7 +61,7 @@ public final class Minigame extends JavaPlugin {
             }
         }.runTaskLater(plugin, 20);
 
-        Bukkit.getPluginManager().registerEvents(new PlayerRegionUtil(), this);
+
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(), this);
 
@@ -80,13 +78,10 @@ public final class Minigame extends JavaPlugin {
     public GameMap  getGameMapArena1() {return gameMapArena1;} //block
     public GameMap  getGameMapArena2() {return gameMapArena2;} // pvp
     public GameMap  getGameMapArena3() {return gameMapArena3;} // Abandoned Spaceship
+    public GameMap  getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr()      {return arenaMgr;}
-    public WorldGuardPlugin getWorldGuard() {
-        Plugin plugin = Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
-        if (!(plugin instanceof WorldGuardPlugin)) {
-            return null;
-        }
-        return (WorldGuardPlugin) plugin;
-    }
+
+
+
 
 }

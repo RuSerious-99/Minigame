@@ -16,8 +16,6 @@ teleportation-seconds: 300
 leave_the_dungeon-seconds: 120
 dungeon_cooldown-seconds: 300
 
-
-
 blockgameNpc:
   x: 217.01
   y: 54.000
@@ -75,3 +73,96 @@ arenas:
     z: 65
     pitch: 0
     yaw: 0
+
+  '3':
+    game: 'STRONGHOLD'
+    world: 'arena4'
+    x: 33
+    y: 87
+    z: 483
+    pitch: 0
+    yaw: 93
+
+# Cod Stronghold
+cod-required-players: 2
+game-time-seconds: 300
+kills-to-win: 2
+waiting:
+  world: 'arena4'
+  x: 33
+  y: 87
+  z: 483
+  pitch: 0
+  yaw: 93
+spawn-blue:
+  '0':
+    world: 'arena4'
+    x: -160
+    y: 85
+    z: 493
+    pitch: 0
+    yaw: -41
+  '1':
+    world: 'arena4'
+    x: -159
+    y: 80
+    z: 480
+    pitch: 0
+    yaw: -37
+  '2':
+    world: 'arena4'
+    x: -116
+    y: 92
+    z: 464
+    pitch: 0
+    yaw: -29
+  '3':
+    world: 'arena4'
+    x: -69
+    y: 88
+    z: 456
+    pitch: 0
+    yaw: -31
+  '4':
+    world: 'arena4'
+    x: -105
+    y: 85
+    z: 498
+    pitch: 0
+    yaw: 35
+spawn-red:
+  '0':
+    world: 'arena4'
+    x: -133
+    y: 82
+    z: 546
+    pitch: 0
+    yaw: -90
+  '1':
+    world: 'arena4'
+    x: -32
+    y: 84
+    z: 510
+    pitch: 0
+    yaw: 135
+  '2':
+    world: 'arena4'
+    x: -63
+    y: 87
+    z: 533
+    pitch: 0
+    yaw: 57
+  '3':
+    world: 'arena4'
+    x: -51
+    y: 106
+    z: 534
+    pitch: 0
+    yaw: 148
+  '4':
+    world: 'arena4'
+    x: -132
+    y: 82
+    z: 544
+    pitch: 0
+    yaw: 180

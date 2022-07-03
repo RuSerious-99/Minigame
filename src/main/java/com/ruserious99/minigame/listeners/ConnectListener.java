@@ -54,4 +54,5 @@ public class ConnectListener implements Listener {
             arena.removePlayer(e.getPlayer());
         }
     }
+
 }

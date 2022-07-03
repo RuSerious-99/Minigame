@@ -17,6 +17,7 @@ public class ConfigMgr {
     }
 
 
+    //NPCs
     public static int getAbandonedNpcX(){
         return config.getInt("abandonedNpc.x");
     }
@@ -47,6 +48,8 @@ public class ConfigMgr {
         return config.getInt("pvpNpc.z");
     }
 
+
+//general game settings
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }
@@ -56,6 +59,7 @@ public class ConfigMgr {
     public static int      getCountdownSeconds(){
         return config.getInt("countdown-seconds");
     }
+
     public static Location getLobbySpawn(){
         return new Location(
                 Bukkit.getWorld(Objects.requireNonNull(config.getString("lobby-spawn.world"))),
@@ -66,6 +70,8 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
 
+
+    //ab_Spaceship
     public static Location getAbandonedSpawn(){
         return new Location(
                 Bukkit.getWorld(Objects.requireNonNull(config.getString("abandonedNpc.world"))),
@@ -75,25 +81,49 @@ public class ConfigMgr {
                 (float) config.getDouble("abandonedNpc.yaw"),
                 (float) config.getDouble("abandonedNpc.pitch"));
     }
+    public static int getHangerCountdownSeconds(){ return config.getInt("hanger-countdown-seconds"); }
 
 
 
+    //COD Stronghold
+    public static int getGameTime() {
+        return config.getInt("game-time-seconds");
+    }
+    public static int getWinningKillCount() { return config.getInt("kills-to-win"); }
 
-
-    public static String getArenaWorld(){ return config.getString("arenas." + "2" + ".world"); }
-    public static int getHangerCountdownSeconds()            { return config.getInt("hanger-countdown-seconds"); }
-    public static int getFirstBossCountdownSeconds()         { return config.getInt("firstboss-countdown-seconds"); }
-    public static int getMaxPlayerCount()                    { return config.getInt("maxPlayer_count-seconds"); }
-    public static int getParkour_1()                         { return config.getInt("parkour_1-seconds"); }
-    public static int getMaze()                              { return config.getInt("maze-seconds"); }
-    public static int getBoss_2()                            { return config.getInt("boss_2-seconds"); }
-    public static int getParkour_2()                         { return config.getInt("parkour_2-seconds"); }
-    public static int getTeleportationRoom()                 { return config.getInt("teleportation-seconds"); }
-    public static int getLeave_the_Dungeon()                 { return config.getInt("leave_the_dungeon-seconds"); }
-    public static int getDungeOnCooldown()                   { return config.getInt("dungeon_cooldown-seconds"); }
-    public static boolean getIskeyRequired()                 { return config.getBoolean("is_key_required"); }
-    public static boolean getIsDungeonDisabled()             { return config.getBoolean("is_dungeon_disabled"); }
-
+    public static Location getWaitingSpawn() {
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("waiting.world"))),
+                config.getDouble("waiting.x"),
+                config.getDouble("waiting.y"),
+                config.getDouble("waiting.z"),
+                config.getInt("waiting.yaw"),
+                config.getInt("waiting.pitch"));
+    }
+    public static Location getArenaSpawnBlue(int id) {
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("spawn-blue." + id + ".world"))),
+                config.getDouble("spawn-blue." + id + ".x"),
+                config.getDouble("spawn-blue." + id + ".y"),
+                config.getDouble("spawn-blue." + id + ".z"),
+                config.getInt("spawn-blue." + id + ".yaw"),
+                config.getInt("spawn-blue." + id + ".pitch"));
+    }
+    public static Location getArenaSpawnRed(int id) {
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("spawn-red." + id + ".world"))),
+                config.getDouble("spawn-red." + id + ".x"),
+                config.getDouble("spawn-red." + id + ".y"),
+                config.getDouble("spawn-red." + id + ".z"),
+                config.getInt("spawn-red." + id + ".yaw"),
+                config.getInt("spawn-red." + id + ".pitch"));
+    }
+    public static int getBlueSpawnCount(){
+        return Objects.requireNonNull(config.getConfigurationSection("spawn-blue.")).getKeys(false).size();
+    }
+    public static int getRedSpawnCount(){
+        return Objects.requireNonNull(config.getConfigurationSection("spawn-red.")).getKeys(false).size();
+    }
 }
 
 

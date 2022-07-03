@@ -5,7 +5,7 @@ import org.bukkit.Material;
 
 public enum Team {
 
-    GREEN(ChatColor.GREEN + "Green", Material.GREEN_WOOL),
+    //GREEN(ChatColor.GREEN + "Green", Material.GREEN_WOOL),
     BLUE(ChatColor.BLUE + "Blue", Material.BLUE_WOOL),
     RED(ChatColor.RED + "Red", Material.RED_WOOL);
 
