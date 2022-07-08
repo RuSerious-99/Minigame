@@ -25,7 +25,13 @@ import java.util.UUID;
 
 public class CreateBlockNPC {
 
-    public static void execute(Player player) {
+    Minigame minigame;
+
+    public CreateBlockNPC(Minigame minigame) {
+        this.minigame = minigame;
+    }
+
+    public void execute(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
@@ -55,10 +61,8 @@ public class CreateBlockNPC {
         serverGamePacketListener.send(new ClientboundSetEquipmentPacket(blockNPC.getBukkitEntity().getEntityId(),
                 List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
 
-
-        Minigame.NPCs.add((blockNPC));
+        minigame.getNPCs().put(blockNPC.getId(), blockNPC);
     }
-
 }
 
 

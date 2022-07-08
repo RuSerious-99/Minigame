@@ -12,12 +12,12 @@ public class NpcGameStartUtil {
 
         int joinArena = -1;
 
-
         //game is the displayname of your NPC
         switch (game) {
             case ("Block Game") -> joinArena = 0;
             case ("PVP Game")   -> joinArena = 1;
-            case ("Spaceship")  -> joinArena = 2;
+
+            case ("Stronghold PVP")  -> joinArena = 3;
         }
 
         if (joinArena != -1) {

@@ -19,22 +19,22 @@ public class CodSpeedKit extends CodKit {
     }
 
     @Override
-    public void atStart(Player p) {
+    public void atStart(Player player) {
 
-        p.getInventory().setItem(0, new ItemStack(Material.IRON_SWORD));
-        p.getInventory().setItem(1, new ItemStack(Material.BOW));
-        p.getInventory().setItem(2, new ItemStack(Material.ARROW, 32));
-        p.getInventory().setItem(3, new ItemStack(Material.MUSHROOM_STEW, 2));
-        p.getInventory().setItem(4, new ItemStack(Material.APPLE));
+        player.getInventory().setItem(0, new ItemStack(Material.IRON_SWORD));
+        player.getInventory().setItem(1, new ItemStack(Material.BOW));
+        player.getInventory().setItem(2, new ItemStack(Material.ARROW, 32));
+        player.getInventory().setItem(3, new ItemStack(Material.MUSHROOM_STEW, 2));
+        player.getInventory().setItem(4, new ItemStack(Material.APPLE));
 
-        p.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-        p.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-        p.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-        p.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
+        player.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+        player.getInventory().setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
+        player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
+        player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ConfigMgr.getGameTime(), 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ConfigMgr.getGameTime(), 1));
 
-        p.updateInventory();
+        player.updateInventory();
     }
 }
 

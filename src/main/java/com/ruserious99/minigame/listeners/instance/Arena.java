@@ -7,7 +7,6 @@ import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.CodStronghold;
 import com.ruserious99.minigame.listeners.instance.game.Game;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
-import com.ruserious99.minigame.listeners.instance.game.abship.AbandonedSpaceship;
 import com.ruserious99.minigame.listeners.instance.kit.CodKit;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
@@ -35,12 +34,12 @@ public class Arena {
     private final int id;
     private final Location spawn;
 
-    private GameState state;
     private final HashMap<UUID, Kit> kits;
     private final HashMap<UUID, CodKit> codKits;
-
     private final HashMap<UUID, Team> teams;
     private final List<UUID> players;
+
+    private GameState state;
     private Countdown countdown;
     private Game game;
 
@@ -67,7 +66,6 @@ public class Arena {
         switch (id) {
             case (0) -> this.game = new BlockGame(minigame, this);
             case (1) -> this.game = new PvpGame(minigame, this);
-            case (2) -> this.game = new AbandonedSpaceship(minigame, this);
             case (3) -> this.game = new CodStronghold(minigame, this);
         }
     }
@@ -81,17 +79,19 @@ public class Arena {
             Location location = ConfigMgr.getLobbySpawn();
 
             for(UUID uuid : players){
+                System.out.println("reset: teleport player to lobby " + Bukkit.getPlayer(uuid));
                 Player player = Bukkit.getPlayer(uuid);
+                Objects.requireNonNull(player).getInventory().clear();
                 Objects.requireNonNull(player).teleport(location);
                 removeKit(player.getUniqueId());
                 removeTeam(player);
             }
             players.clear();
 
+
             switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
                 case ("arena1") -> minigame.getGameMapArena1().restoreFromSource();
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource();
-                case ("arena3") -> minigame.getGameMapArena3().restoreFromSource();
                 case ("arena4") -> minigame.getGameMapArena4().restoreFromSource();
 
             }
@@ -105,7 +105,6 @@ public class Arena {
         countdown = new Countdown(minigame, this);
     }
 
-    //tools
     public void sendMessage(String message){
         for(UUID uuid : players){
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(message);
@@ -160,7 +159,10 @@ public class Arena {
         removeKit(player.getUniqueId());
         removeTeam(player);
 
-        System.out.println(state + "********************************* " + players.size());
+        if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")){
+            CodStronghold.endCodGi();
+        }
+
         if(state == GameState.COUNTDOWN && players.size()  < ConfigMgr.getRequiredPlayers()){
             sendMessage(ChatColor.RED + "There are not enough players countdown has stopped");
             reset();
@@ -219,12 +221,12 @@ public class Arena {
         }
         return count;
     }
+
+
+
     public Team getTeam(Player player){
         return teams.get(player.getUniqueId());
     }
-
-    //getters
-
     public String getGameName() {return gameName;}
     public HashMap<UUID, Kit> getKits() {return kits;}
     public HashMap<UUID, CodKit> getCodKits() {return codKits;}
@@ -233,4 +235,6 @@ public class Arena {
     public List<UUID> getPlayers() {return players;}
     public void setState(GameState gameState){this.state = gameState;}
     public Minigame getMinigame() {return minigame;}
+
+
 }

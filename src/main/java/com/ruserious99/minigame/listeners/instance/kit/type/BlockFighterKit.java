@@ -20,6 +20,6 @@ public class BlockFighterKit extends Kit {
     @Override
     public void atStart(Player player) {
         player.getInventory().addItem((new ItemStack(Material.DIAMOND_SWORD)));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100,3));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10000,3));
     }
 }

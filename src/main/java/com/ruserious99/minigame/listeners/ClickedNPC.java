@@ -12,29 +12,25 @@ import com.ruserious99.minigame.utils.NpcGameStartUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static com.ruserious99.minigame.Minigame.NPCs;
-
-
 public class ClickedNPC {
 
-
     public static void listeningForOurNPCs(Minigame minigame) {
-
 
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(minigame, PacketType.Play.Client.USE_ENTITY) {
             @Override
             public void onPacketReceiving(PacketEvent event) {
+
                 String game = null;
 
                 PacketContainer packetContainer = event.getPacket();
                 int npcID = packetContainer.getIntegers().read(0);
-                for (ServerPlayer clicked_Npc : NPCs) {
-                    if (npcID == clicked_Npc.getId()) {
-                        game = clicked_Npc.displayName;
+                for (Integer clicked_Npc : minigame.getNPCs().keySet()) {
+                    if (npcID == clicked_Npc) {
+                        ServerPlayer sp = minigame.getNPCs().get(clicked_Npc);
+                        game = sp.displayName;
                     }
                 }
-
                 if(game != null) {
                     EnumWrappers.Hand hand = packetContainer.getEnumEntityUseActions().read(0).getHand();
                     EnumWrappers.EntityUseAction action = packetContainer.getEnumEntityUseActions().read(0).getAction();

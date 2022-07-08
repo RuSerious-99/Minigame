@@ -19,21 +19,21 @@ public class CodHeavyWeaponKit extends CodKit {
     }
 
     @Override
-    public void atStart(Player p) {
+    public void atStart(Player player) {
 
-        p.getInventory().clear();
-        p.getInventory().setItem(0, new ItemStack(Material.DIAMOND_SWORD));
-        p.getInventory().setItem(1, new ItemStack(Material.FISHING_ROD));
-        p.getInventory().setItem(3, new ItemStack(Material.MUSHROOM_STEW, 2));
-        p.getInventory().setItem(4, new ItemStack(Material.GOLDEN_APPLE));
-        p.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
-        p.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-        p.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-        p.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+        player.getInventory().setItem(0, new ItemStack(Material.DIAMOND_SWORD));
+        player.getInventory().setItem(1, new ItemStack(Material.FISHING_ROD));
+        player.getInventory().setItem(3, new ItemStack(Material.MUSHROOM_STEW, 2));
+        player.getInventory().setItem(4, new ItemStack(Material.GOLDEN_APPLE));
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ConfigMgr.getGameTime(), 0));
+        player.getInventory().setHelmet(new ItemStack(Material.IRON_HELMET));
+        player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+        player.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+        player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
 
-        p.updateInventory();
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ConfigMgr.getGameTime(), 0));
+
+
     }
 
 

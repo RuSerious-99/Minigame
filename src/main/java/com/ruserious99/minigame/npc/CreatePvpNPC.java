@@ -25,7 +25,13 @@ import java.util.UUID;
 
 public class CreatePvpNPC {
 
-    public static void execute(Player player) {
+    Minigame minigame;
+
+    public CreatePvpNPC(Minigame minigame) {
+        this.minigame = minigame;
+    }
+
+    public void execute(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
@@ -66,6 +72,7 @@ public class CreatePvpNPC {
         serverGamePacketListener.send(new ClientboundSetEquipmentPacket(pvpNPC.getBukkitEntity().getEntityId(),
                 List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
 
-        Minigame.NPCs.add((pvpNPC));
+
+        minigame.getNPCs().put(pvpNPC.getId(), pvpNPC);
     }
 }

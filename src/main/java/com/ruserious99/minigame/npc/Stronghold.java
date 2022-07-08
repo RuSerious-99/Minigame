@@ -23,16 +23,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreateAbandonedshipNPC {
+public class Stronghold {
 
-    public static void execute(Player player) {
+    Minigame minigame;
+
+    public Stronghold(Minigame minigame) {
+        this.minigame = minigame;
+    }
+
+    public void execute(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
         MinecraftServer server = serverPlayer.getServer();
         ServerLevel level = serverPlayer.getLevel();
 
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "Spaceship");
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), "Stronghold PVP");
         String signature = "ovldz0K8YDr+gNiNhYFj8YhrKc1Qwxg+zPfGDcfJWB66GKF7ndQPaf0PD7SER/O+EScdbMxYIfWGBo0XzoW4366k+5t" +
                 "3x1OyaaaYHqGHrY0rwdguUywTaR6+/vnLrq41MIN5UHv7UNaUnCzPV4ruuRsC48SQvq88X8qRy4+BVpJeHtpyzmo8fAO6jyk5Z6vtQt" +
                 "f5JTzwoQT/0KIxSPtAGzgS3QkvawaVSbUDfj6N5LfHwQWBUFR4hz0s4pIhUiIwavX2StEYzzKRkHbiDtzjgzajoOUbKYFeVr12rPqVH" +
@@ -47,25 +53,24 @@ public class CreateAbandonedshipNPC {
 
         gameProfile.getProperties().put("textures", new Property("textures", texture, signature));
 
-        ServerPlayer AbandonedshipNPC = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
+        ServerPlayer Stronghold = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
 
-        AbandonedshipNPC.setPos(ConfigMgr.getAbandonedNpcX(), ConfigMgr.getAbandonedNpcY(), ConfigMgr.getAbandonedNpcZ());
+        Stronghold.setPos(ConfigMgr.getAbandonedNpcX(), ConfigMgr.getAbandonedNpcY(), ConfigMgr.getAbandonedNpcZ());
 
         ServerGamePacketListenerImpl serverGamePacketListener = serverPlayer.connection;
 
         //playerInfoPacket
-        serverGamePacketListener.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, AbandonedshipNPC));
+        serverGamePacketListener.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, Stronghold));
 
         //spawnPacket
-        serverGamePacketListener.send(new ClientboundAddPlayerPacket(AbandonedshipNPC));
+        serverGamePacketListener.send(new ClientboundAddPlayerPacket(Stronghold));
 
         //armor and items inhand
         ItemStack itemInHand = new ItemStack(Material.DIAMOND_SWORD);
-        serverGamePacketListener.send(new ClientboundSetEquipmentPacket(AbandonedshipNPC.getBukkitEntity().getEntityId(),
+        serverGamePacketListener.send(new ClientboundSetEquipmentPacket(Stronghold.getBukkitEntity().getEntityId(),
                 List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
 
-
-        Minigame.NPCs.add((AbandonedshipNPC));
+        minigame.getNPCs().put(Stronghold.getId(), Stronghold);
     }
 
 }

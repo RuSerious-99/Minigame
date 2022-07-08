@@ -3,7 +3,7 @@ package com.ruserious99.minigame.listeners;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import com.ruserious99.minigame.npc.CreateAbandonedshipNPC;
+import com.ruserious99.minigame.npc.Stronghold;
 import com.ruserious99.minigame.npc.CreateBlockNPC;
 import com.ruserious99.minigame.npc.CreatePvpNPC;
 import org.bukkit.World;
@@ -30,9 +30,9 @@ public class ConnectListener implements Listener {
         e.getPlayer().teleport(ConfigMgr.getLobbySpawn());
     }
 
+/*
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e){
-        e.getPlayer().getInventory().clear();
         World world = Objects.requireNonNull(e.getTo()).getWorld();
 
         if (Objects.requireNonNull(world).getName().equals("world")) {
@@ -41,11 +41,11 @@ public class ConnectListener implements Listener {
                 public void run() {
                     CreateBlockNPC.execute(e.getPlayer());
                     CreatePvpNPC.execute(e.getPlayer());
-                    CreateAbandonedshipNPC.execute(e.getPlayer());
+                    Stronghold.execute(e.getPlayer());
                 }
             }.runTaskLater(minigame, 20);
         }
-    }
+    }*/
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) throws IOException {

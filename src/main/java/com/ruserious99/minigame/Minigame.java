@@ -6,6 +6,9 @@ import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.listeners.NpcPlayerMoveEvent;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.npc.CreateBlockNPC;
+import com.ruserious99.minigame.npc.CreatePvpNPC;
+import com.ruserious99.minigame.npc.Stronghold;
 import com.ruserious99.minigame.utils.GameMap;
 import com.ruserious99.minigame.utils.LocalGameMap;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,13 +38,12 @@ public final class Minigame extends JavaPlugin {
 
     private GameMap gameMapArena1;
     private GameMap gameMapArena2;
-    private GameMap gameMapArena3;
     private GameMap gameMapArena4;
 
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
-    public static final List<ServerPlayer> NPCs = new ArrayList<>();
+    private final HashMap<Integer, ServerPlayer> NPCs = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -51,7 +54,6 @@ public final class Minigame extends JavaPlugin {
 
         gameMapArena1 = new LocalGameMap(worldResetsFolder, "arena1", true);
         gameMapArena2 = new LocalGameMap(worldResetsFolder, "arena2", true);
-        gameMapArena3 = new LocalGameMap(worldResetsFolder, "arena3", true);
         gameMapArena4 = new LocalGameMap(worldResetsFolder, "arena4", true);
 
         new BukkitRunnable() {
@@ -63,7 +65,7 @@ public final class Minigame extends JavaPlugin {
 
 
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
 
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
 
@@ -74,14 +76,10 @@ public final class Minigame extends JavaPlugin {
     public void releaseLoadArena(int id){
        arenaMgr.clearArena(id);
     }
-
+    public HashMap<Integer, ServerPlayer> getNPCs() {return NPCs;}
     public GameMap  getGameMapArena1() {return gameMapArena1;} //block
     public GameMap  getGameMapArena2() {return gameMapArena2;} // pvp
-    public GameMap  getGameMapArena3() {return gameMapArena3;} // Abandoned Spaceship
     public GameMap  getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr()      {return arenaMgr;}
-
-
-
 
 }

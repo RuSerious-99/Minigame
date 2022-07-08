@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 
 import java.util.UUID;
 
-public abstract class CodKit implements Listener {
+public abstract class  CodKit implements Listener {
 
     protected CodKitType type;
     protected UUID uuid;

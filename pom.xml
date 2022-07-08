@@ -116,23 +116,6 @@
     </repositories>
     <dependencies>
         <dependency>
-            <groupId>me.zombie_striker</groupId>
-            <artifactId>QualityArmory</artifactId>
-            <version>2.0.6</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-bukkit</artifactId>
-            <version>7.1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sk89q</groupId>
-            <artifactId>worldedit</artifactId>
-            <version>6.0.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
             <version>4.7.0</version>
@@ -143,13 +126,6 @@
             <version>4.3.1</version> <!-- This too -->
             <scope>provided</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.raidstone/WorldGuardEvents -->
-        <dependency>
-            <groupId>net.raidstone</groupId>
-            <artifactId>WorldGuardEvents</artifactId>
-            <version>1.18.1</version>
-        </dependency>
-
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
