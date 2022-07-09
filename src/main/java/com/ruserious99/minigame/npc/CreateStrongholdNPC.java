@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.managers.NpcPacketMgr;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -23,15 +24,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class Stronghold {
+public class CreateStrongholdNPC {
 
     Minigame minigame;
 
-    public Stronghold(Minigame minigame) {
+    public CreateStrongholdNPC(Minigame minigame) {
         this.minigame = minigame;
     }
 
-    public void execute(Player player) {
+    public void createNpc(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
@@ -55,22 +56,13 @@ public class Stronghold {
 
         ServerPlayer Stronghold = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
 
-        Stronghold.setPos(ConfigMgr.getAbandonedNpcX(), ConfigMgr.getAbandonedNpcY(), ConfigMgr.getAbandonedNpcZ());
+        Stronghold.setPos(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
 
-        ServerGamePacketListenerImpl serverGamePacketListener = serverPlayer.connection;
-
-        //playerInfoPacket
-        serverGamePacketListener.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, Stronghold));
-
-        //spawnPacket
-        serverGamePacketListener.send(new ClientboundAddPlayerPacket(Stronghold));
-
-        //armor and items inhand
-        ItemStack itemInHand = new ItemStack(Material.DIAMOND_SWORD);
-        serverGamePacketListener.send(new ClientboundSetEquipmentPacket(Stronghold.getBukkitEntity().getEntityId(),
-                List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
+        NpcPacketMgr pm = new NpcPacketMgr(minigame, Stronghold);
+        pm.addNPCPackets();
 
         minigame.getNPCs().put(Stronghold.getId(), Stronghold);
+        SaveNpcs saveNpcs = new SaveNpcs(minigame, player, texture, signature);
+        saveNpcs.saveNpcData();
     }
-
 }

@@ -30,8 +30,8 @@ pvpNpc:
   yaw: 0
   pitch: 0
 
-abandonedNpc:
-  world: 'arena3'
+stronghold:
+  world: 'arena4'
   x: 226.968
   y: 53.000
   z: -5.700

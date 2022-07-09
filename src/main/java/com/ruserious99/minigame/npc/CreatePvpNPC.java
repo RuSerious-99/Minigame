@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.managers.NpcPacketMgr;
 import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
@@ -31,7 +32,7 @@ public class CreatePvpNPC {
         this.minigame = minigame;
     }
 
-    public void execute(Player player) {
+    public void CreateNpc(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
@@ -57,22 +58,13 @@ public class CreatePvpNPC {
 
         ServerPlayer pvpNPC = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
 
-        pvpNPC.setPos(ConfigMgr.getPvpNpcX(), ConfigMgr.getPvpNpcY() + .500, ConfigMgr.getPvpNpcZ());
+        pvpNPC.setPos(player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ());
 
-        ServerGamePacketListenerImpl serverGamePacketListener = serverPlayer.connection;
-
-        //playerInfoPacket
-        serverGamePacketListener.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, pvpNPC));
-
-        //spawnPacket
-        serverGamePacketListener.send(new ClientboundAddPlayerPacket(pvpNPC));
-
-        //armor and items inhand
-        ItemStack itemInHand = new ItemStack(Material.DIAMOND_SWORD);
-        serverGamePacketListener.send(new ClientboundSetEquipmentPacket(pvpNPC.getBukkitEntity().getEntityId(),
-                List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
-
+        NpcPacketMgr pm = new NpcPacketMgr(minigame, pvpNPC);
+        pm.addNPCPackets();
 
         minigame.getNPCs().put(pvpNPC.getId(), pvpNPC);
+        SaveNpcs saveNpcs = new SaveNpcs(minigame, player, texture, signature);
+        saveNpcs.saveNpcData();
     }
 }

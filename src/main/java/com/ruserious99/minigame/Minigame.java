@@ -6,21 +6,21 @@ import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.listeners.NpcPlayerMoveEvent;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import com.ruserious99.minigame.npc.CreateBlockNPC;
-import com.ruserious99.minigame.npc.CreatePvpNPC;
-import com.ruserious99.minigame.npc.Stronghold;
+import com.ruserious99.minigame.managers.DataMgr;
+import com.ruserious99.minigame.managers.NpcPacketMgr;
+import com.ruserious99.minigame.npc.LoadNpcs;
 import com.ruserious99.minigame.utils.GameMap;
 import com.ruserious99.minigame.utils.LocalGameMap;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 /*create new Mini game
@@ -34,6 +34,11 @@ import java.util.Objects;
  TODO make instructions to add an npc
 * */
 
+
+// Block Game  arena0  in config  arena1 directory
+// PVP Game    arena1     "       arena2    "
+
+
 public final class Minigame extends JavaPlugin {
 
     private GameMap gameMapArena1;
@@ -43,10 +48,12 @@ public final class Minigame extends JavaPlugin {
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
+    private DataMgr npcData;
     private final HashMap<Integer, ServerPlayer> NPCs = new HashMap<>();
 
     @Override
     public void onEnable() {
+        npcData = new DataMgr(this);
         ConfigMgr.setupConfig(this);
         plugin = this;
 
@@ -72,6 +79,14 @@ public final class Minigame extends JavaPlugin {
         ClickedNPC.listeningForOurNPCs(this);
 
     }
+    @Override
+    public void onDisable(){
+        for(Player player : Bukkit.getOnlinePlayers())
+        for(ServerPlayer p : NPCs.values()){
+            NpcPacketMgr mgr = new NpcPacketMgr(this, p);
+            mgr.removePacket(player);
+        }
+    }
 
     public void releaseLoadArena(int id){
        arenaMgr.clearArena(id);
@@ -82,4 +97,6 @@ public final class Minigame extends JavaPlugin {
     public GameMap  getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr()      {return arenaMgr;}
 
+    public FileConfiguration getNpcData() {return npcData.getConfig();}
+    public void saveData(){npcData.savecfg();}
 }

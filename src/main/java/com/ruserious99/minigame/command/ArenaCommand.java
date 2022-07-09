@@ -3,6 +3,8 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
+import com.ruserious99.minigame.npc.CreateBlockNPC;
+import com.ruserious99.minigame.npc.CreateStrongholdNPC;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -37,7 +39,21 @@ public class ArenaCommand implements CommandExecutor {
 
 
 
-            } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
+            }else if(args.length == 2 && args[0].equalsIgnoreCase("create")){
+                if(args[1].equalsIgnoreCase("Stronghold")){
+                    CreateStrongholdNPC c = new CreateStrongholdNPC(minigame);
+                    c.createNpc(player);
+                }else if(args[1].equalsIgnoreCase("Block")){
+                    CreateBlockNPC c = new CreateBlockNPC(minigame);
+                    c.createNpc(player);
+                }else {
+                    player.sendMessage("NPC not found");
+                }
+            }
+
+
+
+            else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
                 Arena arena = minigame.getArenaMgr().getArena(player);
                 if (arena != null) {
                     player.sendMessage(ChatColor.RED + " you have left the arena");
