@@ -23,12 +23,13 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-public class CodStronghold extends Game{
+public class CodStronghold extends Game {
 
     static boolean endTimer;
 
@@ -52,14 +53,14 @@ public class CodStronghold extends Game{
     public void onStart() {
         arena.setState(GameState.LIVE);
         arena.sendMessage(ChatColor.GREEN + "Game has started!!" + ChatColor.WHITE + " Objective... " +
-                ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() +" kills Wins!!!");
+                ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() + " kills Wins!!!");
 
         for (UUID uuid1 : arena.getCodKits().keySet()) {
             Player player = Bukkit.getPlayer(uuid1);
             arena.getCodKits().get(uuid1).atStart(player);
         }
 
-        endTimer= false;
+        endTimer = false;
         redScore = 0;
         blueScore = 0;
 
@@ -96,6 +97,7 @@ public class CodStronghold extends Game{
         System.out.println(gameTime + " " + endTimer);
         BukkitRunnable runGameTime = new BukkitRunnable() {
             int timeLeft = gameTime;
+
             @Override
             public void run() {
                 if (timeLeft == 0 || redScore == KillsToWin || blueScore == KillsToWin || endTimer) {
@@ -112,7 +114,7 @@ public class CodStronghold extends Game{
                 timeLeft--;
             }
         };
-        runGameTime.runTaskTimer(arena.getMinigame(), 20L, 20L);
+        runGameTime.runTaskTimer(arena.getMinigame(), 0L, 20L);
     }
 
     public String getFormattedTime(int time) {
@@ -153,32 +155,28 @@ public class CodStronghold extends Game{
     }
 
     public void gameEnd() {
+
         for (UUID uuid : arena.getPlayers()) {
-            if (redScore < KillsToWin && blueScore < KillsToWin) {
-                if (blueScore < redScore) {
-                    Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("RED team WINS!!!!");
-                } else {
-                    if (blueScore == redScore) {
-                        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("ITS A TIE!!!!");
-                    } else {
-                        Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("BLUE team WINS!!!!");
-                    }
-                }
-            }
-            if (redScore == KillsToWin) {
-                Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("RED team WINS!!!!");
-            }
-            if (blueScore == KillsToWin) {
-                Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage("BLUE team WINS!!!!");
-            }
-
             gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
-
-            kills.replace(uuid, 0);
-            deaths.replace(uuid, 0);
+            endTimer = true;
+            updateScoreboard(Bukkit.getPlayer(uuid));
         }
+        if (redScore < KillsToWin && blueScore < KillsToWin) {
+            arena.sendMessage("Aww No clear winner. must be a tie. ");
+        }
+        if (redScore == KillsToWin) {
+            arena.sendMessage("RED team WINS!!!!");
+        }
+        if (blueScore == KillsToWin) {
+            arena.sendMessage("BLUE team WINS!!!!");
+        }
+
+        gameScore.setVisible(false);
+        kills.clear();
+        deaths.clear();
         redScore = 0;
         blueScore = 0;
+        arena.reset();
     }
 
     private void updateScoreboard(Player player) {
@@ -204,7 +202,7 @@ public class CodStronghold extends Game{
                 obj.getScore("§6§lName:").setScore(5);
                 obj.getScore(player.getName()).setScore(4);
                 obj.getScore(" ").setScore(3);
-                obj.getScore("§6§lPlayers Online: "  + ChatColor.WHITE + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
+                obj.getScore("§6§lPlayers Online: " + ChatColor.WHITE + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
                 obj.getScore("§6§lKills: " + ChatColor.WHITE + kills.get(player.getUniqueId())).setScore(1);
                 obj.getScore("§6§lDeaths: " + ChatColor.WHITE + deaths.get(player.getUniqueId())).setScore(0);
 
@@ -265,13 +263,13 @@ public class CodStronghold extends Game{
     }
 
 
-
     public boolean areFriendly(@NotNull Player one, @NotNull Player two) {
         if ((arena.getTeam(Objects.requireNonNull(one.getPlayer())).getDisplay().equals("RED") && arena.getTeam(Objects.requireNonNull(two.getPlayer())).getDisplay().equals("RED"))) {
             return true;
         }
         return (arena.getTeam(one.getPlayer()).getDisplay().equals("BLUE") && arena.getTeam(Objects.requireNonNull(two.getPlayer())).getDisplay().equals("BLUE"));
     }
+
     @EventHandler
     public void onClick(InventoryClickEvent event) {
 
@@ -302,7 +300,8 @@ public class CodStronghold extends Game{
             }
         }
     }
-    public static void endCodGi(){
+
+    public static void endCodGi() {
         endTimer = true;
     }
 }

@@ -82,9 +82,9 @@ public class Arena {
                 System.out.println("reset: teleport player to lobby " + Bukkit.getPlayer(uuid));
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).getInventory().clear();
-                Objects.requireNonNull(player).teleport(location);
                 removeKit(player.getUniqueId());
                 removeTeam(player);
+                Objects.requireNonNull(player).teleport(location);
             }
             players.clear();
 

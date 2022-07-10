@@ -25,7 +25,6 @@ import java.util.Objects;
 
 /*create new Mini game
 * make new folder(arena#) with your game world and copy it to resetWorlds folder for restoring
-
 * Create a new game class in: listeners, instance, game
 * in main class(MiniGame) make an instance of Gamemap with getter to restore worlds
 * in Arena class add your new game class to 2 switch statements
@@ -48,14 +47,15 @@ public final class Minigame extends JavaPlugin {
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
-    private DataMgr npcData;
     private final HashMap<Integer, ServerPlayer> NPCs = new HashMap<>();
 
     @Override
     public void onEnable() {
-        npcData = new DataMgr(this);
         ConfigMgr.setupConfig(this);
         plugin = this;
+
+        DataMgr.setupConfig();
+        DataMgr.getConfig().options().copyDefaults(true);
 
         File worldResetsFolder = new File(ConfigMgr.getWorldArenasSource(), "worldResets");
 
@@ -70,7 +70,6 @@ public final class Minigame extends JavaPlugin {
             }
         }.runTaskLater(plugin, 20);
 
-
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
 
@@ -79,24 +78,40 @@ public final class Minigame extends JavaPlugin {
         ClickedNPC.listeningForOurNPCs(this);
 
     }
+
     @Override
-    public void onDisable(){
-        for(Player player : Bukkit.getOnlinePlayers())
-        for(ServerPlayer p : NPCs.values()){
-            NpcPacketMgr mgr = new NpcPacketMgr(this, p);
-            mgr.removePacket(player);
+    public void onDisable() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            for (ServerPlayer p : NPCs.values()) {
+                NpcPacketMgr mgr = new NpcPacketMgr(this, p);
+                mgr.removePacket(player);
+            }
         }
     }
 
-    public void releaseLoadArena(int id){
-       arenaMgr.clearArena(id);
+    public void releaseLoadArena(int id) {
+        arenaMgr.clearArena(id);
     }
-    public HashMap<Integer, ServerPlayer> getNPCs() {return NPCs;}
-    public GameMap  getGameMapArena1() {return gameMapArena1;} //block
-    public GameMap  getGameMapArena2() {return gameMapArena2;} // pvp
-    public GameMap  getGameMapArena4() {return gameMapArena4;} // cod stronghold
-    public ArenaMgr getArenaMgr()      {return arenaMgr;}
 
-    public FileConfiguration getNpcData() {return npcData.getConfig();}
-    public void saveData(){npcData.savecfg();}
+    public HashMap<Integer, ServerPlayer> getNPCs() {
+        return NPCs;
+    }
+
+    public GameMap getGameMapArena1() {
+        return gameMapArena1;
+    } //block
+
+    public GameMap getGameMapArena2() {
+        return gameMapArena2;
+    } // pvp
+
+    public GameMap getGameMapArena4() {
+        return gameMapArena4;
+    } // cod stronghold
+
+    public ArenaMgr getArenaMgr() {
+        return arenaMgr;
+    }
+
+
 }

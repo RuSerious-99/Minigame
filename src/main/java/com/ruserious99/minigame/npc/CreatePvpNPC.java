@@ -64,7 +64,7 @@ public class CreatePvpNPC {
         pm.addNPCPackets();
 
         minigame.getNPCs().put(pvpNPC.getId(), pvpNPC);
-        SaveNpcs saveNpcs = new SaveNpcs(minigame, player, texture, signature);
+        SaveNpcs saveNpcs = new SaveNpcs(pvpNPC, texture, signature);
         saveNpcs.saveNpcData();
     }
 }

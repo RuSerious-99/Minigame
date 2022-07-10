@@ -27,8 +27,7 @@ public class NpcPlayerMoveEvent implements Listener {
         Player player = e.getPlayer();
         World world = e.getPlayer().getWorld();
 
-        if (world.getName().equalsIgnoreCase("World")) {
-
+        if (world.getName().equalsIgnoreCase("world")) {
             for (Integer Npc : minigame.getNPCs().keySet()) {
                 ServerPlayer sp = minigame.getNPCs().get(Npc);
 
@@ -41,9 +40,7 @@ public class NpcPlayerMoveEvent implements Listener {
 
                 ps.send(new ClientboundRotateHeadPacket(sp, (byte) ((yaw % 360) * 256 / 360)));
                 ps.send(new ClientboundMoveEntityPacket.Rot(sp.getBukkitEntity().getEntityId(), (byte) ((yaw % 360.) * 256 / 360), (byte) ((pitch % 360.) * 256 / 360), false));
-
             }
-
         }
     }
 }

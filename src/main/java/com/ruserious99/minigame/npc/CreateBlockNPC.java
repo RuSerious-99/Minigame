@@ -53,8 +53,9 @@ public class CreateBlockNPC {
         pm.addNPCPackets();
 
         minigame.getNPCs().put(blockNPC.getId(), blockNPC);
-        SaveNpcs saveNpcs = new SaveNpcs(minigame, player, texture, signature);
+        SaveNpcs saveNpcs = new SaveNpcs(blockNPC, texture, signature);
         saveNpcs.saveNpcData();
+
     }
 
 }

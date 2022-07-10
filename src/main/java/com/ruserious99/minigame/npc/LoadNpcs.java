@@ -3,6 +3,7 @@ package com.ruserious99.minigame.npc;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -19,13 +20,15 @@ import java.util.UUID;
 
 public class LoadNpcs {
 
-    Minigame minigame;
+    private final Minigame minigame;
+    private final Player player;
 
-    public LoadNpcs(Minigame minigame) {
+
+    public LoadNpcs(Minigame minigame, Player player) {
         this.minigame = minigame;
+        this.player = player;
     }
-
-    public void loadNPCs(Location location, GameProfile profile, Player player){
+    public void loadNPCs(Location location, GameProfile profile){
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
@@ -41,8 +44,8 @@ public class LoadNpcs {
         minigame.getNPCs().put(npc.getId(), npc);
     }
 
-    public void loadNpc(Player player){
-        FileConfiguration file = minigame.getNpcData();
+    public void loadNpc(){
+        FileConfiguration file = DataMgr.getConfig();
         Objects.requireNonNull(file.getConfigurationSection("data")).getKeys(false).forEach(npc ->{
             Location location = new Location(Bukkit.getWorld(Objects.requireNonNull(file.getString("data." + npc + ".world"))),
                     file.getInt("data." + npc + ".x"), file.getInt("data." + npc + ".y"), file.getInt("data." + npc + ".z"));
@@ -51,9 +54,9 @@ public class LoadNpcs {
 
             String name = file.getString("data." + npc + ".name");
             GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-            gameProfile.getProperties().put("textures", new Property("textures", file.getString("data." + npc + ".text"), "data." + npc + ".signature"));
+            gameProfile.getProperties().put("textures", new Property("textures", file.getString("data." + npc + ".text"), file.getString("data." + npc + ".signature")));
 
-            loadNPCs(location, gameProfile, player);
+            loadNPCs(location, gameProfile);
 
         });
     }

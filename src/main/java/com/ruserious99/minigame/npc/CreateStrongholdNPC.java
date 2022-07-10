@@ -62,7 +62,7 @@ public class CreateStrongholdNPC {
         pm.addNPCPackets();
 
         minigame.getNPCs().put(Stronghold.getId(), Stronghold);
-        SaveNpcs saveNpcs = new SaveNpcs(minigame, player, texture, signature);
+        SaveNpcs saveNpcs = new SaveNpcs(Stronghold, texture, signature);
         saveNpcs.saveNpcData();
     }
 }
