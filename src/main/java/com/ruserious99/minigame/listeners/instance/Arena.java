@@ -69,22 +69,25 @@ public class Arena {
             case (3) -> this.game = new CodStronghold(minigame, this);
         }
     }
+
     public void start() {
         game.start();
     }
 
     public void reset() {
 
-        if(state == GameState.LIVE){
+        if (state == GameState.LIVE) {
             Location location = ConfigMgr.getLobbySpawn();
 
-            for(UUID uuid : players){
-                System.out.println("reset: teleport player to lobby " + Bukkit.getPlayer(uuid));
+            for (UUID uuid : players) {
+                Objects.requireNonNull(Bukkit.getPlayer(uuid)).teleport(location);
+            }
+
+            for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).getInventory().clear();
                 removeKit(player.getUniqueId());
                 removeTeam(player);
-                Objects.requireNonNull(player).teleport(location);
             }
             players.clear();
 
@@ -98,39 +101,43 @@ public class Arena {
             minigame.releaseLoadArena(id);
             game.unregister();
         }
-
-        sendTitle("", "",0,0,0);
+        if (state.equals(GameState.COUNTDOWN)) {
+            countdown.cancel();
+            countdown = new Countdown(minigame, this);
+        }
+        sendTitle("", "", 0, 0, 0);
         state = GameState.RECRUITING;
-        countdown.cancel();
-        countdown = new Countdown(minigame, this);
+
+
     }
 
-    public void sendMessage(String message){
-        for(UUID uuid : players){
+    public void sendMessage(String message) {
+        for (UUID uuid : players) {
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(message);
         }
     }
-    public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut){
-        for(UUID uuid : players){
-            Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendTitle(title, subTitle, 10,10,10);
+
+    public void sendTitle(String title, String subTitle, int fadeIn, int stay, int fadeOut) {
+        for (UUID uuid : players) {
+            Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendTitle(title, subTitle, fadeIn, stay, fadeOut);
         }
     }
 
     //players
-    public void addPlayer(Player player){
+    public void addPlayer(Player player) {
         players.add(player.getUniqueId());
         player.teleport(spawn);
         player.getInventory().clear();
 
-        if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")){
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")) {
             new KitUI(player);
             ImplTeams(player);
-        }else if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
+        } else if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
             new CodKitUI(player);
             ImplTeams(player);
         }
 
-        if(state.equals(GameState.RECRUITING) && players.size() >= ConfigMgr.getRequiredPlayers()){
+        if (state.equals(GameState.RECRUITING) && players.size() >= ConfigMgr.getRequiredPlayers()) {
             countdown.start();
         }
     }
@@ -143,7 +150,7 @@ public class Arena {
 
     private Team getLowestTeamCount() {
         TreeMultimap<Integer, Team> count = TreeMultimap.create();
-        for(Team t : Team.values()){
+        for (Team t : Team.values()) {
             count.put(getTeamCount(t), t);
         }
         return (Team) count.values().toArray()[0];
@@ -154,47 +161,48 @@ public class Arena {
 
         player.getInventory().clear();
         player.teleport(ConfigMgr.getLobbySpawn());
-        player.sendTitle("", "", 0,0,0);
+        player.sendTitle("", "", 0, 0, 0);
 
         removeKit(player.getUniqueId());
         removeTeam(player);
 
-        if(Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")){
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
             CodStronghold.endCodGi();
         }
 
-        if(state == GameState.COUNTDOWN && players.size()  < ConfigMgr.getRequiredPlayers()){
+        if (state == GameState.COUNTDOWN && players.size() < ConfigMgr.getRequiredPlayers()) {
             sendMessage(ChatColor.RED + "There are not enough players countdown has stopped");
             reset();
             return;
         }
 
-        if(state == GameState.LIVE && players.size() < ConfigMgr.getRequiredPlayers()){
+        if (state == GameState.LIVE && players.size() < ConfigMgr.getRequiredPlayers()) {
             sendMessage(ChatColor.RED + "AWW! Too many players have left. Game stopping.");
             reset();
         }
     }
 
-    public void removeKit(UUID uuid){
-        if(codKits.containsKey(uuid)){
+    public void removeKit(UUID uuid) {
+        if (codKits.containsKey(uuid)) {
             codKits.get(uuid).remove();
             codKits.remove(uuid);
         }
-      if(kits.containsKey(uuid)){
-          kits.get(uuid).remove();
-          kits.remove(uuid);
-      }
+        if (kits.containsKey(uuid)) {
+            kits.get(uuid).remove();
+            kits.remove(uuid);
+        }
     }
 
-    public void setCodKit(UUID uuid, CodKitType type){
+    public void setCodKit(UUID uuid, CodKitType type) {
         removeKit(uuid);
 
         switch (type) {
-            case HEAVYWEAPON  -> codKits.put(uuid, new CodHeavyWeaponKit(minigame, uuid));
+            case HEAVYWEAPON -> codKits.put(uuid, new CodHeavyWeaponKit(minigame, uuid));
             case SPEED -> codKits.put(uuid, new CodSpeedKit(minigame, uuid));
         }
     }
-    public void setKit(UUID uuid, KitType type){
+
+    public void setKit(UUID uuid, KitType type) {
         removeKit(uuid);
 
         switch (type) {
@@ -203,19 +211,19 @@ public class Arena {
         }
     }
 
-    public void setTeam(Player player, Team team){
+    public void setTeam(Player player, Team team) {
         removeTeam(player);
         teams.put(player.getUniqueId(), team);
     }
 
-    public void removeTeam(Player player){
+    public void removeTeam(Player player) {
         teams.remove(player.getUniqueId());
     }
 
-    public int getTeamCount(Team team){
+    public int getTeamCount(Team team) {
         int count = 0;
-        for(Team t : teams.values()){
-            if(t == team){
+        for (Team t : teams.values()) {
+            if (t == team) {
                 count++;
             }
         }
@@ -223,18 +231,41 @@ public class Arena {
     }
 
 
-
-    public Team getTeam(Player player){
+    public Team getTeam(Player player) {
         return teams.get(player.getUniqueId());
     }
-    public String getGameName() {return gameName;}
-    public HashMap<UUID, Kit> getKits() {return kits;}
-    public HashMap<UUID, CodKit> getCodKits() {return codKits;}
-    public int getId() {return id;}
-    public GameState getState() {return state;}
-    public List<UUID> getPlayers() {return players;}
-    public void setState(GameState gameState){this.state = gameState;}
-    public Minigame getMinigame() {return minigame;}
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public HashMap<UUID, Kit> getKits() {
+        return kits;
+    }
+
+    public HashMap<UUID, CodKit> getCodKits() {
+        return codKits;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public List<UUID> getPlayers() {
+        return players;
+    }
+
+    public void setState(GameState gameState) {
+        this.state = gameState;
+    }
+
+    public Minigame getMinigame() {
+        return minigame;
+    }
 
 
 }

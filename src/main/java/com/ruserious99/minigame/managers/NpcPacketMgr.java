@@ -2,10 +2,8 @@ package com.ruserious99.minigame.managers;
 
 import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.Minigame;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoPacket;
-import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
-import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,13 +13,12 @@ import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import java.util.List;
 
 public class NpcPacketMgr {
 
-    private Minigame minigame;
-    private ServerPlayer npc;
+    private final Minigame minigame;
+    private final ServerPlayer npc;
 
     public NpcPacketMgr(Minigame minigame, ServerPlayer npc) {
         this.minigame = minigame;

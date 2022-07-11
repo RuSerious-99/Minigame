@@ -1,9 +1,7 @@
 package com.ruserious99.minigame.npc;
 
-import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.managers.DataMgr;
 import net.minecraft.server.level.ServerPlayer;
-import org.bukkit.entity.Player;
 
 import java.util.Objects;
 

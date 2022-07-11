@@ -3,17 +3,14 @@ package com.ruserious99.minigame;
 import com.ruserious99.minigame.command.ArenaCommand;
 import com.ruserious99.minigame.listeners.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
-import com.ruserious99.minigame.listeners.NpcPlayerMoveEvent;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
-import com.ruserious99.minigame.npc.LoadNpcs;
 import com.ruserious99.minigame.utils.GameMap;
 import com.ruserious99.minigame.utils.LocalGameMap;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -71,7 +68,7 @@ public final class Minigame extends JavaPlugin {
         }.runTaskLater(plugin, 20);
 
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
-        Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
+        //Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
 
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
 

@@ -6,38 +6,6 @@ pvpgame-player-kill-count: 4
 world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 
-hanger-countdown-seconds: 180
-firstboss-countdown-seconds: 600
-parkour_1-seconds: 600
-maze-seconds: 240
-boss_2-seconds: 720
-parkour_2-seconds: 480
-teleportation-seconds: 300
-leave_the_dungeon-seconds: 120
-dungeon_cooldown-seconds: 300
-
-blockgameNpc:
-  x: 217.01
-  y: 54.000
-  z: -10.32
-  yaw: 0
-  pitch: 0
-
-pvpNpc:
-  x: 224.126
-  y: 54.000
-  z: -10.32
-  yaw: 0
-  pitch: 0
-
-stronghold:
-  world: 'arena4'
-  x: 226.968
-  y: 53.000
-  z: -5.700
-  yaw: 0
-  pitch: 0
-
 lobby-spawn:
   world: 'world'
   x: 220
@@ -64,15 +32,6 @@ arenas:
     z: 3.055
     pitch: 0
     yaw: -90
-
-  '2':
-    game: 'DUNGEON'
-    world: 'arena3'
-    x: -27
-    y: 79
-    z: 65
-    pitch: 0
-    yaw: 0
 
   '3':
     game: 'STRONGHOLD'

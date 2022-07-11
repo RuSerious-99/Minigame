@@ -53,7 +53,7 @@ public class CodStronghold extends Game {
     public void onStart() {
         arena.setState(GameState.LIVE);
         arena.sendMessage(ChatColor.GREEN + "Game has started!!" + ChatColor.WHITE + " Objective... " +
-                ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() + " kills Wins!!!");
+                ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() + ChatColor.RED + " kills Wins!!!");
 
         for (UUID uuid1 : arena.getCodKits().keySet()) {
             Player player = Bukkit.getPlayer(uuid1);
@@ -94,7 +94,6 @@ public class CodStronghold extends Game {
     }
 
     private void startGameTimer() {
-        System.out.println(gameTime + " " + endTimer);
         BukkitRunnable runGameTime = new BukkitRunnable() {
             int timeLeft = gameTime;
 
@@ -103,7 +102,6 @@ public class CodStronghold extends Game {
                 if (timeLeft == 0 || redScore == KillsToWin || blueScore == KillsToWin || endTimer) {
                     this.cancel();
                     endTimer = false;
-                    gameScore.setVisible(false);
                     gameEnd();
                     return;
                 }
@@ -155,11 +153,10 @@ public class CodStronghold extends Game {
     }
 
     public void gameEnd() {
+        endTimer = true;
 
         for (UUID uuid : arena.getPlayers()) {
             gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
-            endTimer = true;
-            updateScoreboard(Bukkit.getPlayer(uuid));
         }
         if (redScore < KillsToWin && blueScore < KillsToWin) {
             arena.sendMessage("Aww No clear winner. must be a tie. ");
@@ -176,6 +173,7 @@ public class CodStronghold extends Game {
         deaths.clear();
         redScore = 0;
         blueScore = 0;
+
         arena.reset();
     }
 
@@ -246,12 +244,19 @@ public class CodStronghold extends Game {
         }
         killed.spigot().respawn();
 
+        for (Integer count : kills.values()) {
+            if (count == KillsToWin) {
+                gameEnd();
+                return;
+            }
+        }
+
         Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getMinigame(), () -> {
 
             if (arena.getState().equals(GameState.LIVE)) {
-                killed.teleport(ConfigMgr.getArenaSpawnRed(2));
+                killed.teleport(ConfigMgr.getArenaSpawnRed(getRand(4)));
             } else {
-                killed.teleport(ConfigMgr.getWaitingSpawn());
+                killed.teleport(ConfigMgr.getArenaSpawnBlue(getRand(4)));
             }
             killed.setFoodLevel(20);
             killed.setHealth(20D);

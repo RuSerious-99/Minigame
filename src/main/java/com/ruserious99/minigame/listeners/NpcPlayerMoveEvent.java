@@ -23,7 +23,6 @@ public class NpcPlayerMoveEvent implements Listener {
 
     @EventHandler
     public  void onPlayerMove(PlayerMoveEvent e) {
-
         Player player = e.getPlayer();
         World world = e.getPlayer().getWorld();
 

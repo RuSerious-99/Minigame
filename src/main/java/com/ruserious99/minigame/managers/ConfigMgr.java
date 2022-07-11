@@ -16,40 +16,6 @@ public class ConfigMgr {
         minigame.saveDefaultConfig();
     }
 
-
-    //NPCs
-    public static int getAbandonedNpcX(){
-        return config.getInt("abandonedNpc.x");
-    }
-    public static int getAbandonedNpcY(){
-        return config.getInt("abandonedNpc.y");
-    }
-    public static int getAbandonedNpcZ(){
-        return config.getInt("abandonedNpc.z");
-    }
-
-    public static int getBlockNpcX(){
-        return config.getInt("blockgameNpc.x");
-    }
-    public static int getBlockNpcY(){
-        return config.getInt("blockgameNpc.y");
-    }
-    public static int getBlockNpcZ(){
-        return config.getInt("blockgameNpc.z");
-    }
-
-    public static int getPvpNpcX(){
-        return config.getInt("pvpNpc.x");
-    }
-    public static int getPvpNpcY(){
-        return config.getInt("pvpNpc.y");
-    }
-    public static int getPvpNpcZ(){
-        return config.getInt("pvpNpc.z");
-    }
-
-
-//general game settings
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }
@@ -69,20 +35,6 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.yaw"),
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
-
-
-    //ab_Spaceship
-    public static Location getAbandonedSpawn(){
-        return new Location(
-                Bukkit.getWorld(Objects.requireNonNull(config.getString("abandonedNpc.world"))),
-                config.getDouble("abandonedNpc.x"),
-                config.getDouble("abandonedNpc.y"),
-                config.getDouble("abandonedNpc.z"),
-                (float) config.getDouble("abandonedNpc.yaw"),
-                (float) config.getDouble("abandonedNpc.pitch"));
-    }
-    public static int getHangerCountdownSeconds(){ return config.getInt("hanger-countdown-seconds"); }
-
 
 
     //COD Stronghold
