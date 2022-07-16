@@ -1,12 +1,13 @@
 package com.ruserious99.minigame;
 
 import com.ruserious99.minigame.command.ArenaCommand;
-import com.ruserious99.minigame.listeners.ClickedNPC;
+import com.ruserious99.minigame.npc.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
+import com.ruserious99.minigame.npc.NpcPlayerMoveEvent;
 import com.ruserious99.minigame.utils.GameMap;
 import com.ruserious99.minigame.utils.LocalGameMap;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,7 +54,6 @@ public final class Minigame extends JavaPlugin {
 
         DataMgr.setupConfig();
         DataMgr.getConfig().options().copyDefaults(true);
-
         File worldResetsFolder = new File(ConfigMgr.getWorldArenasSource(), "worldResets");
 
         gameMapArena1 = new LocalGameMap(worldResetsFolder, "arena1", true);
@@ -68,8 +68,7 @@ public final class Minigame extends JavaPlugin {
         }.runTaskLater(plugin, 20);
 
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
-        //Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
-
+        Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
 
         ClickedNPC.listeningForOurNPCs(this);

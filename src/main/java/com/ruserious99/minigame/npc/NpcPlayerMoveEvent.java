@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.listeners;
+package com.ruserious99.minigame.npc;
 
 import com.ruserious99.minigame.Minigame;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;

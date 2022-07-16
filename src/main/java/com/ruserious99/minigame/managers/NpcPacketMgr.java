@@ -13,6 +13,8 @@ import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.List;
 
 public class NpcPacketMgr {
@@ -28,16 +30,20 @@ public class NpcPacketMgr {
     public void addNPCPackets(){
         for(Player player : Bukkit.getOnlinePlayers()) {
             ServerPlayerConnection playerConnection = ((CraftPlayer)player).getHandle().connection;
-            //ServerGamePacketListenerImpl serverGamePacketListener = npc.connection;
-            //playerInfoPacket
+
             playerConnection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
-            //spawnPacket
             playerConnection.send(new ClientboundAddPlayerPacket(npc));
-            //armor and items inhand
+
             ItemStack itemInHand = new ItemStack(Material.DIAMOND_SWORD);
             playerConnection.send(new ClientboundSetEquipmentPacket(npc.getBukkitEntity().getEntityId(),
                     List.of(new Pair<>(EquipmentSlot.MAINHAND, CraftItemStack.asNMSCopy(itemInHand)))));
 
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    playerConnection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc));
+                }
+            }.runTaskLater(minigame, 20);
         }
     }
 
