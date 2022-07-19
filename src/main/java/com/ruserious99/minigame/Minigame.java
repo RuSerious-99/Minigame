@@ -32,10 +32,6 @@ import java.util.Objects;
 * */
 
 
-// Block Game  arena0  in config  arena1 directory
-// PVP Game    arena1     "       arena2    "
-
-
 public final class Minigame extends JavaPlugin {
 
     private GameMap gameMapArena1;

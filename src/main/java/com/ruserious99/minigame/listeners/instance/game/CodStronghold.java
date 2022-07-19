@@ -305,7 +305,7 @@ public class CodStronghold extends Game {
             }
         }
     }
-
+    //todo make not static
     public static void endCodGi() {
         endTimer = true;
     }

@@ -38,8 +38,10 @@ public class ConnectListener implements Listener {
                     mgr.removePacket(player);
                 }
             }
-            LoadNpcs load = new LoadNpcs(minigame, e.getPlayer());
-            load.loadNpc();
+           /* if(DataMgr.getConfig().contains("data")) {
+                LoadNpcs load = new LoadNpcs(minigame, e.getPlayer());
+                load.loadNpc();
+            }*/
         }
 }
     @EventHandler
@@ -55,8 +57,10 @@ public class ConnectListener implements Listener {
                             NpcPacketMgr mgr = new NpcPacketMgr(minigame, p);
                             mgr.removePacket(player);
                         }
-                        LoadNpcs load = new LoadNpcs(minigame, player);
-                        load.loadNpc();
+                        if(DataMgr.getConfig().contains("data")) {
+                            LoadNpcs load = new LoadNpcs(minigame, player);
+                            load.loadNpc();
+                        }
                     }
                 }
             }.runTaskLater(minigame, 20);
