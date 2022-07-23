@@ -29,21 +29,10 @@ public class ConnectListener implements Listener {
 
    @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.getPlayer().teleport(ConfigMgr.getLobbySpawn());
+       e.getPlayer().teleport(ConfigMgr.getLobbySpawn());
 
-        if (DataMgr.getConfig().contains("data")) {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                for (ServerPlayer p : minigame.getNPCs().values()) {
-                    NpcPacketMgr mgr = new NpcPacketMgr(minigame, p);
-                    mgr.removePacket(player);
-                }
-            }
-           /* if(DataMgr.getConfig().contains("data")) {
-                LoadNpcs load = new LoadNpcs(minigame, e.getPlayer());
-                load.loadNpc();
-            }*/
-        }
-}
+
+   }
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e){
         World world = Objects.requireNonNull(e.getTo()).getWorld();
@@ -63,10 +52,9 @@ public class ConnectListener implements Listener {
                         }
                     }
                 }
-            }.runTaskLater(minigame, 20);
+            }.runTaskLater(minigame, 100);
         }
     }
-
     @EventHandler
     public void onQuit(PlayerQuitEvent e) throws IOException {
         Arena arena = minigame.getArenaMgr().getArena(e.getPlayer());

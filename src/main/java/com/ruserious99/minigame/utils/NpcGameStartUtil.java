@@ -12,16 +12,20 @@ public class NpcGameStartUtil {
 
         int joinArena = -1;
 
-        //game is the displayname of your NPC
+        //game is the display name of your NPC
         switch (game) {
             case ("Block Game") -> joinArena = 0;
             case ("PVP Game")   -> joinArena = 1;
-
             case ("Stronghold PVP")  -> joinArena = 3;
         }
 
         if (joinArena != -1) {
             Arena arena = minigame.getArenaMgr().getArena(joinArena);
+
+            if (minigame.getArenaMgr().getArena(player) != null) {
+                player.sendMessage(ChatColor.RED + " Hey im only an NPC give me a second");
+                return;
+            }
             if (arena.getState() == GameState.RECRUITING || arena.getState() == GameState.COUNTDOWN) {
                 player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + joinArena);
                 arena.addPlayer(player);

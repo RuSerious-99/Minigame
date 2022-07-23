@@ -32,7 +32,8 @@ public class CreatePvpNPC {
         this.minigame = minigame;
     }
 
-    public void CreateNpc(Player player) {
+
+    public void createNpc(Player player) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 

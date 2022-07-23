@@ -15,12 +15,18 @@ public class ConfigMgr {
         ConfigMgr.config = minigame.getConfig();
         minigame.saveDefaultConfig();
     }
-
+    public static String   getWorldName() {return config.getString("main-world-name"); }
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }
-    public static int      getRequiredPlayers(){
-        return config.getInt("required-players");
+    public static int      getRequiredPlayersBlockGame(){
+        return config.getInt("required-players-block-game");
+    }
+    public static int      getRequiredPlayersPvpOneOnOne(){
+        return config.getInt("required-players-pvp-vs");
+    }
+    public static int      getRequiredPlayersStronghold(){
+        return config.getInt("required-players-stronghold");
     }
     public static int      getCountdownSeconds(){
         return config.getInt("countdown-seconds");
@@ -35,12 +41,24 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.yaw"),
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
+    public static Location getPvpExtraSpawnlocations(int id) {
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("pvp-1on1." + id + ".world"))),
+                config.getDouble("pvp-1on1." + id + ".x"),
+                config.getDouble("pvp-1on1." + id + ".y"),
+                config.getDouble("pvp-1on1." + id + ".z"),
+                config.getInt("pvp-1on1." + id + ".yaw"),
+                config.getInt("pvp-1on1." + id + ".pitch"));
+    }
+
+    //game times
+    public static int getGameTimeBlock() {return config.getInt("game-time-block");}
+    public static int getGameTimeCod() {return config.getInt("game-time-cod");}
+    public static int getGameTimePvp() {return config.getInt("game-time-pvp");}
 
 
     //COD Stronghold
-    public static int getGameTime() {
-        return config.getInt("game-time-seconds");
-    }
+
     public static int getWinningKillCount() { return config.getInt("kills-to-win"); }
 
     public static Location getWaitingSpawn() {
@@ -76,6 +94,7 @@ public class ConfigMgr {
     public static int getRedSpawnCount(){
         return Objects.requireNonNull(config.getConfigurationSection("spawn-red.")).getKeys(false).size();
     }
+
 }
 
 

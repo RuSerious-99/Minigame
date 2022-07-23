@@ -1,11 +1,25 @@
-required-players: 1
-countdown-seconds: 30
-blockgame-blocks-to-break-count: 4
-pvpgame-player-kill-count: 4
+# minimum player count for all mini games:
+required-players-block-game: 2
+required-players-stronghold: 4
+required-players-pvp-vs: 2
 
+# countdown in seconds when minimum player count is met this is the countdown before game starts
+countdown-seconds: 30
+
+# specific game counts to win game   NOTE: cod stronghold has its own setting for kills to win in its section
+blockgame-blocks-to-break-count: 4
+pvpgame-player-kill-count: 2
+
+# if you change main-world-name you also have to change lobby-spawn 'world'
+main-world-name: 'world'
+
+# set the paths to game maps.
+# world-filepath:  is where your game maps are that are in use (users playing on)
+# world-source-arenas: this is path to reset maps back to original (when game is finished)
 world-filepath: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 world-source-arenas: 'C:\Users\lfind\OneDrive\Desktop\multiMini\'
 
+# lobby for game choice:
 lobby-spawn:
   world: 'world'
   x: 220
@@ -14,6 +28,7 @@ lobby-spawn:
   yaw: 180
   pitch: 0
 
+# specific spawn for games waiting to start
 arenas:
   '0':
     game: 'BLOCK'
@@ -27,9 +42,9 @@ arenas:
   '1':
     game: 'PVP'
     world: 'arena2'
-    x: 202
-    y: 4
-    z: 3.055
+    x: 198.440
+    y: 10
+    z: 227.023
     pitch: 0
     yaw: -90
 
@@ -42,17 +57,47 @@ arenas:
     pitch: 0
     yaw: 93
 
-# Cod Stronghold
-cod-required-players: 2
-game-time-seconds: 300
+# pvp one on one extra game live spawns
+pvp-1on1:
+  '0':
+    world: 'arena2'
+    x: 182
+    y: 9.0
+    z: 216.88
+    pitch: 0
+    yaw: -50
+  '1':
+    world: 'arena2'
+    x: 176.902
+    y: 9.0
+    z: 227.474
+    pitch: 0
+    yaw: -90
+  '2':
+    world: 'arena2'
+    x: 198.505
+    y: 9.0
+    z: 247.696
+    pitch: 0
+    yaw: 180
+  '3':
+    world: 'arena2'
+    x: 221.244
+    y: 9.0
+    z: 227.776
+    pitch: 0
+    yaw: 90
+
+# total game time regardless of kills
+game-time-block: 300
+game-time-pvp: 300
+game-time-cod: 300
+
+# Cod Stronghold: game parameters
+# number of kills a team needs to win the game
 kills-to-win: 2
-waiting:
-  world: 'arena4'
-  x: 33
-  y: 87
-  z: 483
-  pitch: 0
-  yaw: 93
+
+# multiple spawn for blue team
 spawn-blue:
   '0':
     world: 'arena4'
@@ -89,6 +134,8 @@ spawn-blue:
     z: 498
     pitch: 0
     yaw: 35
+
+# multiple spawn for red team
 spawn-red:
   '0':
     world: 'arena4'

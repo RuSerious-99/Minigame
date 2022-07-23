@@ -32,7 +32,7 @@ public class CodSpeedKit extends CodKit {
         player.getInventory().setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
         player.getInventory().setBoots(new ItemStack(Material.LEATHER_BOOTS));
 
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ConfigMgr.getGameTime(), 1));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, ConfigMgr.getGameTimeCod(), 1));
 
         player.updateInventory();
     }

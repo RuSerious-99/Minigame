@@ -14,7 +14,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 
 public class ClickedNPC {
+
     //todo handle left and centre mouse clicks
+
     public static void listeningForOurNPCs(Minigame minigame) {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         protocolManager.addPacketListener(new PacketAdapter(minigame, PacketType.Play.Client.USE_ENTITY) {

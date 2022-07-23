@@ -1,6 +1,7 @@
 package com.ruserious99.minigame;
 
 import com.ruserious99.minigame.command.ArenaCommand;
+import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.npc.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.managers.ArenaMgr;
@@ -16,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
@@ -26,6 +26,7 @@ import java.util.Objects;
 * Create a new game class in: listeners, instance, game
 * in main class(MiniGame) make an instance of Gamemap with getter to restore worlds
 * in Arena class add your new game class to 2 switch statements
+* add your timer to BlockTimer in setGameScoreTitle (switch statement).
 *
 * make a new npc for access to new game
  TODO make instructions to add an npc
@@ -38,6 +39,7 @@ public final class Minigame extends JavaPlugin {
     private GameMap gameMapArena2;
     private GameMap gameMapArena4;
 
+    private BlockTimer timer;
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
@@ -60,6 +62,7 @@ public final class Minigame extends JavaPlugin {
             @Override
             public void run() {
                 arenaMgr = new ArenaMgr((Minigame) plugin);
+                timer    = new BlockTimer();
             }
         }.runTaskLater(plugin, 20);
 
@@ -101,9 +104,7 @@ public final class Minigame extends JavaPlugin {
         return gameMapArena4;
     } // cod stronghold
 
-    public ArenaMgr getArenaMgr() {
-        return arenaMgr;
-    }
+    public ArenaMgr getArenaMgr() {return arenaMgr;}
 
-
+    public BlockTimer getTimer() {return timer;}
 }

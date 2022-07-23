@@ -4,6 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.npc.CreateBlockNPC;
+import com.ruserious99.minigame.npc.CreatePvpNPC;
 import com.ruserious99.minigame.npc.CreateStrongholdNPC;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -39,18 +40,25 @@ public class ArenaCommand implements CommandExecutor {
 
 
 
-            }else if(args.length == 2 && args[0].equalsIgnoreCase("create")){
-                if(args[1].equalsIgnoreCase("Stronghold")){
-                    CreateStrongholdNPC c = new CreateStrongholdNPC(minigame);
-                    c.createNpc(player);
-                }else if(args[1].equalsIgnoreCase("Block")){
-                    CreateBlockNPC c = new CreateBlockNPC(minigame);
-                    c.createNpc(player);
-                }else {
-                    player.sendMessage("NPC not found");
+            }else if(args.length == 2 && args[0].equalsIgnoreCase("create")) {
+                if (player.isOp()) {
+                    if (args[1].equalsIgnoreCase("Stronghold")) {
+                        CreateStrongholdNPC c = new CreateStrongholdNPC(minigame);
+                        c.createNpc(player);
+                    } else if (args[1].equalsIgnoreCase("Block")) {
+                        CreateBlockNPC c = new CreateBlockNPC(minigame);
+                        c.createNpc(player);
+                    } else if (args[1].equalsIgnoreCase("Pvp")) {
+                        CreatePvpNPC c = new CreatePvpNPC(minigame);
+                        c.createNpc(player);
+                    } else {
+                        player.sendMessage("NPC not found");
+                        player.sendMessage("usage = /arena create <NPC name>");
+                    }
+                }else{
+                    player.sendMessage("Only Ops can perform that task");
                 }
             }
-
 
 
             else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {

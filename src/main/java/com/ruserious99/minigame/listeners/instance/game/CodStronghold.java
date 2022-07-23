@@ -5,16 +5,15 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
 import com.ruserious99.minigame.listeners.instance.team.Team;
+import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -31,20 +30,15 @@ import java.util.UUID;
 
 public class CodStronghold extends Game {
 
-    static boolean endTimer;
-
     public HashMap<UUID, Integer> kills;
     public HashMap<UUID, Integer> deaths;
 
-    private int redScore;
-    private int blueScore;
-    private final int gameTime = ConfigMgr.getGameTime();
+    public static int redScore;
+    public static int blueScore;
     private final int KillsToWin = ConfigMgr.getWinningKillCount();
 
-    public BossBar gameScore = Bukkit.createBossBar("BLUE: 00 | RED: 00", BarColor.PINK, BarStyle.SOLID);
-
-    public CodStronghold(Minigame minigame, Arena arena) {
-        super(minigame, arena);
+    public CodStronghold(Minigame minigame, Arena arena, BlockTimer timer) {
+        super(minigame, arena, timer);
         this.deaths = new HashMap<>();
         this.kills = new HashMap<>();
     }
@@ -57,17 +51,15 @@ public class CodStronghold extends Game {
 
         for (UUID uuid1 : arena.getCodKits().keySet()) {
             Player player = Bukkit.getPlayer(uuid1);
+            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid1));
             arena.getCodKits().get(uuid1).atStart(player);
         }
-
-        endTimer = false;
         redScore = 0;
         blueScore = 0;
 
         for (UUID uuid : arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
 
-            gameScore.addPlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
             Objects.requireNonNull(player).setFoodLevel(20);
             Objects.requireNonNull(player).setHealth(20D);
 
@@ -85,7 +77,7 @@ public class CodStronghold extends Game {
             player.closeInventory();
         }
 
-        startGameTimer();
+        minigame.getTimer().startGameTimer(arena);
     }
 
     private int getRand(int max) {
@@ -93,49 +85,11 @@ public class CodStronghold extends Game {
         return (int) (Math.random() * range);
     }
 
-    private void startGameTimer() {
-        BukkitRunnable runGameTime = new BukkitRunnable() {
-            int timeLeft = gameTime;
-
-            @Override
-            public void run() {
-                if (timeLeft == 0 || redScore == KillsToWin || blueScore == KillsToWin || endTimer) {
-                    this.cancel();
-                    endTimer = false;
-                    gameEnd();
-                    return;
-                }
-                gameScore.setTitle(ChatColor.RED + "RED: " + redScore + ChatColor.GOLD
-                        + " | " + ChatColor.GREEN + getFormattedTime(timeLeft)
-                        + ChatColor.GOLD + " | " + ChatColor.BLUE + "BLUE: " + blueScore);
-                gameScore.setProgress(getProgress(timeLeft, gameTime));
-                timeLeft--;
-            }
-        };
-        runGameTime.runTaskTimer(arena.getMinigame(), 0L, 20L);
-    }
-
-    public String getFormattedTime(int time) {
-
-        int seconds;
-        int minutes;
-        minutes = time / 60;
-        seconds = time - (minutes * 60);
-
-        String minutesString, secondsString;
-        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
-        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
-
-        return minutesString + " : " + secondsString;
-    }
-
-    public double getProgress(int timeLeft, int totalTime) {
-        return (double) timeLeft / (double) totalTime;
-    }
-
-
     public void addkill(Player player) {
-        int p = this.kills.get(player.getUniqueId()) + 1;
+        System.out.println("addkillCalled " + player);
+        System.out.println("team is " + arena.getTeam(player).getDisplay());
+
+        int p = kills.get(player.getUniqueId()) + 1;
         kills.replace(player.getUniqueId(), p);
 
         if (arena.getTeam(player).getDisplay().contains("RED")) {
@@ -145,19 +99,18 @@ public class CodStronghold extends Game {
             blueScore++;
             player.sendMessage("BLUE team plus one point");
         }
+        updateScoreboard(player);
+
     }
 
     public void addDeath(Player player) {
         int p = this.deaths.get(player.getUniqueId()) + 1;
         deaths.replace(player.getUniqueId(), p);
+        updateScoreboard(player);
+
     }
 
     public void gameEnd() {
-        endTimer = true;
-
-        for (UUID uuid : arena.getPlayers()) {
-            gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
-        }
         if (redScore < KillsToWin && blueScore < KillsToWin) {
             arena.sendMessage("Aww No clear winner. must be a tie. ");
         }
@@ -168,7 +121,7 @@ public class CodStronghold extends Game {
             arena.sendMessage("BLUE team WINS!!!!");
         }
 
-        gameScore.setVisible(false);
+        minigame.getTimer().removeAll();
         kills.clear();
         deaths.clear();
         redScore = 0;
@@ -186,7 +139,7 @@ public class CodStronghold extends Game {
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (player == null || !player.isOnline() || endTimer) {
+                if (player == null || !player.isOnline() || !player.getWorld().getName().equals("arena4")) {
                     Objects.requireNonNull(player).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
                     cancel();
                     return;
@@ -234,12 +187,17 @@ public class CodStronghold extends Game {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-        e.getDrops().clear();
-        Player killed = e.getEntity();
-        Player killer = e.getEntity().getKiller();
 
-        addDeath(killed);
-        if (killer != null) {
+        Player killed = e.getEntity();
+        Player killer = null;
+        EntityDamageEvent damageCause = killed.getLastDamageCause();
+        if (damageCause != null) {
+            if (damageCause instanceof EntityDamageByEntityEvent entityDamageCause) {
+                killer = Bukkit.getPlayer(entityDamageCause.getDamager().getUniqueId());
+            }
+        }
+        if (killed.getWorld().getName().equals("arena4")) {
+            addDeath(killed);
             addkill(killer);
         }
         killed.spigot().respawn();
@@ -266,6 +224,7 @@ public class CodStronghold extends Game {
             }
         }, 20L);
     }
+
 
 
     public boolean areFriendly(@NotNull Player one, @NotNull Player two) {
@@ -300,13 +259,9 @@ public class CodStronghold extends Game {
                         arena.setTeam(player, team);
                     }
                     player.closeInventory();
-
                 }
             }
         }
     }
-    //todo make not static
-    public static void endCodGi() {
-        endTimer = true;
-    }
+
 }

@@ -5,6 +5,7 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.team.Team;
+import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,12 +21,11 @@ public class BlockGame extends Game {
 
     private final HashMap<UUID, Integer> points;
 
-    public BlockGame(Minigame minigame, Arena arena) {
-        super(minigame, arena);
+    public BlockGame(Minigame minigame, Arena arena, BlockTimer timer) {
+        super(minigame, arena, timer);
         points = new HashMap<>();
     }
 
-    
     @Override
     public void onStart() {
         arena.setState(GameState.LIVE);
@@ -33,6 +33,7 @@ public class BlockGame extends Game {
 
         for (UUID uuid : arena.getPlayers()) {
             points.put(uuid, 0);
+            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid));
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
         }
 
@@ -40,25 +41,30 @@ public class BlockGame extends Game {
             Player player = Bukkit.getPlayer(uuid1);
             arena.getKits().get(uuid1).atStart(player);
         }
-    }
-    public void addPoint(Player player) {
 
+        minigame.getTimer().startGameTimer(arena);
+    }
+
+    public void addPoint(Player player) {
         int playerpoints = points.get(player.getUniqueId()) + 1;
 
         if (playerpoints == ConfigMgr.getBlockGameBlocksToBreakInt()) {
             arena.sendMessage(ChatColor.GOLD + player.getName() + " WINS!!! Thanks for playing.");
-            arena.reset();
+            endGame();
             return;
         }
 
         player.sendMessage(ChatColor.GREEN + "+1 point");
         points.replace(player.getUniqueId(), playerpoints);
+    }
 
+    private void endGame() {
+        minigame.getTimer().removeAll();
+        arena.reset();
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-
         if (arena.getId() == 0) {
             Player player = (Player) event.getWhoClicked();
 
@@ -70,8 +76,6 @@ public class BlockGame extends Game {
                 arena.setKit(player.getUniqueId(), type);
 
                 player.closeInventory();
-
-
             } else {
                 if (event.getView().getTitle().contains("Team Selection") && event.getCurrentItem() != null) {
                     event.setCancelled(true);
@@ -82,9 +86,7 @@ public class BlockGame extends Game {
                         player.sendMessage(ChatColor.AQUA + "You are now on the " + team.getDisplay() + ChatColor.AQUA + " team!");
                         arena.setTeam(player, team);
                     }
-
                     player.closeInventory();
-
                 }
             }
         }
@@ -101,6 +103,4 @@ public class BlockGame extends Game {
             }
         }
     }
-
-
 }

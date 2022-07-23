@@ -31,7 +31,7 @@ public class CodHeavyWeaponKit extends CodKit {
         p.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
         p.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
 
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ConfigMgr.getGameTime(), 0));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, ConfigMgr.getGameTimeCod(), 0));
 
         p.updateInventory();
     }
