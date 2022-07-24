@@ -1,6 +1,7 @@
 package com.ruserious99.minigame;
 
 import com.ruserious99.minigame.command.ArenaCommand;
+import com.ruserious99.minigame.command.ArenaTab;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.npc.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
@@ -69,6 +70,8 @@ public final class Minigame extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
+        Objects.requireNonNull(getCommand("arena")).setTabCompleter(new ArenaTab());
+
 
         ClickedNPC.listeningForOurNPCs(this);
 

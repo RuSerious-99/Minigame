@@ -40,7 +40,7 @@ public class ArenaCommand implements CommandExecutor {
 
 
 
-            }else if(args.length == 2 && args[0].equalsIgnoreCase("create")) {
+            }else if(args.length == 2 && args[0].equalsIgnoreCase("createNpc")) {
                 if (player.isOp()) {
                     if (args[1].equalsIgnoreCase("Stronghold")) {
                         CreateStrongholdNPC c = new CreateStrongholdNPC(minigame);
@@ -53,10 +53,10 @@ public class ArenaCommand implements CommandExecutor {
                         c.createNpc(player);
                     } else {
                         player.sendMessage("NPC not found");
-                        player.sendMessage("usage = /arena create <NPC name>");
+                        player.sendMessage("usage = /arena createNpc <NPC name>");
                     }
                 }else{
-                    player.sendMessage("Only Ops can perform that task");
+                    player.sendMessage("Only Ops can perform this task");
                 }
             }
 
@@ -122,13 +122,18 @@ public class ArenaCommand implements CommandExecutor {
                 }
 
             } else {
-                player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
-                player.sendMessage(ChatColor.RED + "/arena list");
-                player.sendMessage(ChatColor.RED + "/arena leave");
-                player.sendMessage(ChatColor.RED + "/arena join <1d>");
-                player.sendMessage(ChatColor.RED + "/arena kit");
-                player.sendMessage(ChatColor.RED + "/arena team");
-
+                if(player.isOp()){
+                    player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
+                    player.sendMessage(ChatColor.RED + "/arena createNpc");
+                    player.sendMessage(ChatColor.RED + "/arena list");
+                    player.sendMessage(ChatColor.RED + "/arena leave");
+                    player.sendMessage(ChatColor.RED + "/arena join <1d>");
+                }else{
+                    player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
+                    player.sendMessage(ChatColor.RED + "/arena list");
+                    player.sendMessage(ChatColor.RED + "/arena leave");
+                    player.sendMessage(ChatColor.RED + "/arena join <1d>");
+                }
             }
         }
         return false;

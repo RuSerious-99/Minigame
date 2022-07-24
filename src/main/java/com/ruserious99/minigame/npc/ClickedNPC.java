@@ -24,6 +24,10 @@ public class ClickedNPC {
             public void onPacketReceiving(PacketEvent event) {
                 String game = null;
 
+                if(event.getPacket().getEnumEntityUseActions().read(0).getAction().name().equals("ATTACK")){
+                    return;
+                }
+
                 PacketContainer packetContainer = event.getPacket();
 
                 int npcID = packetContainer.getIntegers().read(0);
