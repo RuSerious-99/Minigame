@@ -3,9 +3,13 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
+import com.ruserious99.minigame.managers.NpcPacketMgr;
 import com.ruserious99.minigame.npc.CreateBlockNPC;
 import com.ruserious99.minigame.npc.CreatePvpNPC;
 import com.ruserious99.minigame.npc.CreateStrongholdNPC;
+import com.ruserious99.minigame.npc.RemoveNpc;
+import net.minecraft.server.level.ServerPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,9 +42,7 @@ public class ArenaCommand implements CommandExecutor {
                 }
 
 
-
-
-            }else if(args.length == 2 && args[0].equalsIgnoreCase("createNpc")) {
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("createNpc")) {
                 if (player.isOp()) {
                     if (args[1].equalsIgnoreCase("Stronghold")) {
                         CreateStrongholdNPC c = new CreateStrongholdNPC(minigame);
@@ -55,24 +57,33 @@ public class ArenaCommand implements CommandExecutor {
                         player.sendMessage("NPC not found");
                         player.sendMessage("usage = /arena createNpc <NPC name>");
                     }
-                }else{
+                } else {
                     player.sendMessage("Only Ops can perform this task");
                 }
-            }
-
-
-            else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
-                Arena arena = minigame.getArenaMgr().getArena(player);
-                if (arena != null) {
-                    player.sendMessage(ChatColor.RED + " you have left the arena");
-                    try {
-                        arena.removePlayer(player);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            } else if (args.length == 2 && args[0].equalsIgnoreCase("removeNpc")) {
+                for (Player playerR : Bukkit.getOnlinePlayers()) {
+                    for (ServerPlayer p : minigame.getNPCs().values()) {
+                        if (p.getBukkitEntity().getDisplayName().toLowerCase().contains(args[1].toLowerCase())) {
+                            NpcPacketMgr mgr = new NpcPacketMgr(minigame, p);
+                            mgr.removePacket(playerR);
+                            RemoveNpc r = new RemoveNpc(minigame);
+                            r.removeNpc(p.getId(), player);
+                        }
                     }
-                } else {
-                    player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+
+        } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
+            Arena arena = minigame.getArenaMgr().getArena(player);
+            if (arena != null) {
+                player.sendMessage(ChatColor.RED + " you have left the arena");
+                try {
+                    arena.removePlayer(player);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                player.sendMessage(ChatColor.RED + "You are not in an arena");
+            }
 
 
 
@@ -94,48 +105,46 @@ public class ArenaCommand implements CommandExecutor {
                 }*/
 
 
-
-
-            } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
-                if (minigame.getArenaMgr().getArena(player) != null) {
-                    player.sendMessage(ChatColor.RED + " you are already in an arena");
-                    return false;
-                }
-                int id = -1;
-                try {
-                    id = Integer.parseInt(args[1]);
-                } catch (Exception e) {
-                    player.sendMessage(ChatColor.RED + "Invalid id given");
-                }
-                System.out.println("arenas # " + minigame.getArenaMgr().getArenas().size());
-                if (id >= 0 && id < minigame.getArenaMgr().getArenas().size()) {
-                    Arena arena = minigame.getArenaMgr().getArena(id);
-                    if (arena.getState() == GameState.RECRUITING ||
-                            arena.getState() == GameState.COUNTDOWN) {
-                        player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + id + ".");
-                        arena.addPlayer(player);
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You cant join that arena right now.");
-                    }
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
+            if (minigame.getArenaMgr().getArena(player) != null) {
+                player.sendMessage(ChatColor.RED + " you are already in an arena");
+                return false;
+            }
+            int id = -1;
+            try {
+                id = Integer.parseInt(args[1]);
+            } catch (Exception e) {
+                player.sendMessage(ChatColor.RED + "Invalid id given");
+            }
+            System.out.println("arenas # " + minigame.getArenaMgr().getArenas().size());
+            if (id >= 0 && id < minigame.getArenaMgr().getArenas().size()) {
+                Arena arena = minigame.getArenaMgr().getArena(id);
+                if (arena.getState() == GameState.RECRUITING ||
+                        arena.getState() == GameState.COUNTDOWN) {
+                    player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + id + ".");
+                    arena.addPlayer(player);
                 } else {
-                    player.sendMessage(ChatColor.RED + "Invalid id given");
+                    player.sendMessage(ChatColor.RED + "You cant join that arena right now.");
                 }
-
             } else {
-                if(player.isOp()){
-                    player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
-                    player.sendMessage(ChatColor.RED + "/arena createNpc");
-                    player.sendMessage(ChatColor.RED + "/arena list");
-                    player.sendMessage(ChatColor.RED + "/arena leave");
-                    player.sendMessage(ChatColor.RED + "/arena join <1d>");
-                }else{
-                    player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
-                    player.sendMessage(ChatColor.RED + "/arena list");
-                    player.sendMessage(ChatColor.RED + "/arena leave");
-                    player.sendMessage(ChatColor.RED + "/arena join <1d>");
-                }
+                player.sendMessage(ChatColor.RED + "Invalid id given");
+            }
+
+        } else {
+            if (player.isOp()) {
+                player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
+                player.sendMessage(ChatColor.RED + "/arena createNpc");
+                player.sendMessage(ChatColor.RED + "/arena list");
+                player.sendMessage(ChatColor.RED + "/arena leave");
+                player.sendMessage(ChatColor.RED + "/arena join <1d>");
+            } else {
+                player.sendMessage(ChatColor.RED + "Invalid usage! These are your Options:");
+                player.sendMessage(ChatColor.RED + "/arena list");
+                player.sendMessage(ChatColor.RED + "/arena leave");
+                player.sendMessage(ChatColor.RED + "/arena join <1d>");
             }
         }
-        return false;
     }
+        return false;
+}
 }

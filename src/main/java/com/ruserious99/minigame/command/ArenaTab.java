@@ -23,6 +23,7 @@ public class ArenaTab implements TabCompleter {
 
         if (menu.isEmpty()) {
             if (player.isOp()) {
+                menu.add("removeNpc");
                 menu.add("createNpc");
             }
             menu.add("list");
@@ -50,7 +51,7 @@ public class ArenaTab implements TabCompleter {
                 resultNames.add(arguments.get(3));
                 resultNames.add(arguments.get(4));
                 resultNames.add(arguments.get(5));
-            } else if (args[0].equals("createNpc")) {
+            } else if (args[0].equals("createNpc") || args[0].equals("removeNpc")) {
                 resultNames.add(arguments.get(0));
                 resultNames.add(arguments.get(1));
                 resultNames.add(arguments.get(2));

@@ -52,7 +52,7 @@ public class ConnectListener implements Listener {
                         }
                     }
                 }
-            }.runTaskLater(minigame, 100);
+            }.runTaskLater(minigame, 20);
         }
     }
     @EventHandler

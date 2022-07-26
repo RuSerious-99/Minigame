@@ -2,7 +2,6 @@ package com.ruserious99.minigame.managers;
 
 import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.Minigame;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerPlayerConnection;
