@@ -25,6 +25,9 @@ public class ConfigMgr {
     public static int      getRequiredPlayersPvpOneOnOne(){
         return config.getInt("required-players-pvp-vs");
     }
+    public static int      getRequiredPlayersWak_A_Block(){
+        return config.getInt("required-players-wak_a_block");
+    }
     public static int      getRequiredPlayersStronghold(){
         return config.getInt("required-players-stronghold");
     }
@@ -54,6 +57,7 @@ public class ConfigMgr {
     //game times
     public static int getGameTimeBlock() {return config.getInt("game-time-block");}
     public static int getGameTimeCod() {return config.getInt("game-time-cod");}
+    public static int getGameTimeWak() {return config.getInt("game-time-wak");}
     public static int getGameTimePvp() {return config.getInt("game-time-pvp");}
 
 
@@ -94,6 +98,7 @@ public class ConfigMgr {
     public static int getRedSpawnCount(){
         return Objects.requireNonNull(config.getConfigurationSection("spawn-red.")).getKeys(false).size();
     }
+
 
 }
 

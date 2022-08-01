@@ -36,9 +36,11 @@ public class ArenaTab implements TabCompleter {
         if (arguments.isEmpty()) {
             arguments.add("Stronghold");
             arguments.add("Block");
+            arguments.add("Wak_A_Block");
             arguments.add("Pvp");
             arguments.add("0");
             arguments.add("1");
+            arguments.add("2");
             arguments.add("3");
 
         }
@@ -48,13 +50,16 @@ public class ArenaTab implements TabCompleter {
 
         if(args.length == 2) {
             if(args[0].equals("join")){
-                resultNames.add(arguments.get(3));
                 resultNames.add(arguments.get(4));
                 resultNames.add(arguments.get(5));
+                resultNames.add(arguments.get(6));
+                resultNames.add(arguments.get(7));
             } else if (args[0].equals("createNpc") || args[0].equals("removeNpc")) {
                 resultNames.add(arguments.get(0));
                 resultNames.add(arguments.get(1));
                 resultNames.add(arguments.get(2));
+                resultNames.add(arguments.get(3));
+
             }
 
         arguments.clear();

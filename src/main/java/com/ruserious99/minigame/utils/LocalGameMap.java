@@ -20,7 +20,6 @@ public class LocalGameMap implements GameMap{
 
     @Override
     public boolean load() {
-        //if(isLoaded()) return true;
         this.activeWorldFolder = new File(Bukkit.getWorldContainer().getParentFile(),
                 sourceWorldFolder.getName());
 

@@ -26,11 +26,17 @@ import java.util.Objects;
 * make new folder(arena#) with your game world and copy it to resetWorlds folder for restoring
 * Create a new game class in: listeners, instance, game
 * in main class(MiniGame) make an instance of Gamemap with getter to restore worlds
-* in Arena class add your new game class to 2 switch statements
+* add game info to config and ConfigMgr
+* in Arena class add your new game to 3 switch statements
 * add your timer to BlockTimer in setGameScoreTitle (switch statement).
 *
+* write your game in the class you made:)
+*
 * make a new npc for access to new game
- TODO make instructions to add an npc
+* create a new class in the npc folder <Create<game>> copy paste from other Create class and change name and game
+* *** dont forget new texture and signature strings for npc (in Create class)
+* add to command : ArenaCommand and ArenaTab
+* add to NpcGameStartUtil
 * */
 
 
@@ -38,6 +44,7 @@ public final class Minigame extends JavaPlugin {
 
     private GameMap gameMapArena1;
     private GameMap gameMapArena2;
+    private GameMap gameMapArena3;
     private GameMap gameMapArena4;
 
     private BlockTimer timer;
@@ -53,10 +60,12 @@ public final class Minigame extends JavaPlugin {
 
         DataMgr.setupConfig();
         DataMgr.getConfig().options().copyDefaults(true);
+
         File worldResetsFolder = new File(ConfigMgr.getWorldArenasSource(), "worldResets");
 
         gameMapArena1 = new LocalGameMap(worldResetsFolder, "arena1", true);
         gameMapArena2 = new LocalGameMap(worldResetsFolder, "arena2", true);
+        gameMapArena3 = new LocalGameMap(worldResetsFolder, "arena3", true);
         gameMapArena4 = new LocalGameMap(worldResetsFolder, "arena4", true);
 
         new BukkitRunnable() {
@@ -91,23 +100,15 @@ public final class Minigame extends JavaPlugin {
         arenaMgr.clearArena(id);
     }
 
-    public HashMap<Integer, ServerPlayer> getNPCs() {
-        return NPCs;
-    }
-
+    public HashMap<Integer, ServerPlayer> getNPCs() {return NPCs;}
     public GameMap getGameMapArena1() {
         return gameMapArena1;
     } //block
-
-    public GameMap getGameMapArena2() {
-        return gameMapArena2;
-    } // pvp
-
+    public GameMap getGameMapArena2() { return gameMapArena2; } // pvp
+    public GameMap getGameMapArena3() { return gameMapArena3; } // wakAblock
     public GameMap getGameMapArena4() {
         return gameMapArena4;
     } // cod stronghold
-
     public ArenaMgr getArenaMgr() {return arenaMgr;}
-
     public BlockTimer getTimer() {return timer;}
 }

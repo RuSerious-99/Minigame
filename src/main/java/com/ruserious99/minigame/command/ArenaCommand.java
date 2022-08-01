@@ -4,10 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
-import com.ruserious99.minigame.npc.CreateBlockNPC;
-import com.ruserious99.minigame.npc.CreatePvpNPC;
-import com.ruserious99.minigame.npc.CreateStrongholdNPC;
-import com.ruserious99.minigame.npc.RemoveNpc;
+import com.ruserious99.minigame.npc.*;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -52,6 +49,9 @@ public class ArenaCommand implements CommandExecutor {
                         c.createNpc(player);
                     } else if (args[1].equalsIgnoreCase("Pvp")) {
                         CreatePvpNPC c = new CreatePvpNPC(minigame);
+                        c.createNpc(player);
+                    } else if (args[1].equalsIgnoreCase("Wak_A_Block")) {
+                        CreateWak_A_BlockNPC c = new CreateWak_A_BlockNPC(minigame);
                         c.createNpc(player);
                     } else {
                         player.sendMessage("NPC not found");
@@ -116,7 +116,7 @@ public class ArenaCommand implements CommandExecutor {
             } catch (Exception e) {
                 player.sendMessage(ChatColor.RED + "Invalid id given");
             }
-            System.out.println("arenas # " + minigame.getArenaMgr().getArenas().size());
+            System.out.println("arenas************** # " + minigame.getArenaMgr().getArenas().size());
             if (id >= 0 && id < minigame.getArenaMgr().getArenas().size()) {
                 Arena arena = minigame.getArenaMgr().getArena(id);
                 if (arena.getState() == GameState.RECRUITING ||

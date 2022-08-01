@@ -16,12 +16,15 @@ public class NpcGameStartUtil {
         switch (game) {
             case ("Block Game") -> joinArena = 0;
             case ("PVP Game")   -> joinArena = 1;
+            case ("Wak_A_Block Game")   -> joinArena = 2;
             case ("Stronghold PVP")  -> joinArena = 3;
         }
 
         if (joinArena != -1) {
+
             Arena arena = minigame.getArenaMgr().getArena(joinArena);
 
+            System.out.println("joinArena************** = " + joinArena);
             if (minigame.getArenaMgr().getArena(player) != null) {
                 player.sendMessage(ChatColor.RED + " Hey im only an NPC give me a second");
                 return;

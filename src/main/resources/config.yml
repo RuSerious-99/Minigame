@@ -1,6 +1,7 @@
 # minimum player count for all mini games:
 required-players-block-game: 2
-required-players-stronghold: 4
+required-players-stronghold: 2
+required-players-wak_a_block: 1
 required-players-pvp-vs: 2
 
 # countdown in seconds when minimum player count is met this is the countdown before game starts
@@ -48,6 +49,15 @@ arenas:
     pitch: 0
     yaw: -90
 
+  '2':
+    game: 'WAK_A_BLOCK'
+    world: 'arena3'
+    x: 205.797
+    y: 87
+    z: 226.736
+    pitch: 0
+    yaw: -90
+
   '3':
     game: 'STRONGHOLD'
     world: 'arena4'
@@ -91,6 +101,7 @@ pvp-1on1:
 # total game time regardless of kills
 game-time-block: 300
 game-time-pvp: 300
+game-time-wak: 300
 game-time-cod: 300
 
 # Cod Stronghold: game parameters

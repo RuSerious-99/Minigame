@@ -41,6 +41,7 @@ public class BlockTimer {
 
             @Override
             public void run() {
+                timeLeft += checkAddTimer(0);
                 if (timeLeft == 0 || cancelTimer) {
                     cancelTimer = false;
                     if (timeLeft == 0) {
@@ -55,6 +56,11 @@ public class BlockTimer {
             }
         };
         runGame.runTaskTimer(arena.getMinigame(), 0L, 20L);
+
+    }
+
+    public int checkAddTimer(int addTime) {
+      return addTime;
     }
 
     private int gameTime() {
@@ -65,6 +71,9 @@ public class BlockTimer {
             case (1) -> {
                 return ConfigMgr.getGameTimePvp();
             } // 1vs1 pvp
+            case (2) -> {
+                return ConfigMgr.getGameTimeWak();
+            } // 1vs1 pvp
             case (3) -> {
                 return ConfigMgr.getGameTimeCod();
             } // team pvp stronghold
@@ -74,7 +83,7 @@ public class BlockTimer {
 
     private void setGameScoreTitle(int timeLeft) {
         switch (arena.getId()) {
-            case 0 -> {
+            case 0, 2 -> {
                 gameScore.setTitle(ChatColor.GOLD
                         + " | " + ChatColor.BLUE + getFormattedTime(timeLeft)
                         + ChatColor.GOLD + " | ");

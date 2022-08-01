@@ -21,7 +21,6 @@ public class SaveNpcs {
     public void saveNpcData() {
         int var = player.getId();
 
-        if (DataMgr.getConfig().contains("data")) {
             DataMgr.getConfig().set("data." + var + ".x", player.getBukkitEntity().getLocation().getX());
             DataMgr.getConfig().set("data." + var + ".y", player.getBukkitEntity().getLocation().getY());
             DataMgr.getConfig().set("data." + var + ".z", player.getBukkitEntity().getLocation().getZ());
@@ -34,6 +33,6 @@ public class SaveNpcs {
 
             DataMgr.saveConfig();
             DataMgr.reload();
-        }
+
     }
 }

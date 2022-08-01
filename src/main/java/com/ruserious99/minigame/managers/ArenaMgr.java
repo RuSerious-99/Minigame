@@ -25,15 +25,15 @@ public class ArenaMgr {
     }
 
     public void populateArenas() {
-        for(String s : Objects.requireNonNull(config.getConfigurationSection("arenas")).getKeys(false)){
-            arenas.add(new Arena(minigame, Integer.parseInt(s), new Location(
-                    Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + s + ".world"))),
-                    config.getDouble("arenas." + s + ".x"),
-                    config.getDouble("arenas." + s + ".y"),
-                    config.getDouble("arenas." + s + ".z"),
-                    (float) config.getDouble("arenas." + s + ".yaw"),
-                    (float) config.getDouble("arenas." + s + ".pitch")),
-                    config.getString("arenas." + s + ".game")));
+        for(String id : Objects.requireNonNull(config.getConfigurationSection("arenas")).getKeys(false)){
+            arenas.add(new Arena(minigame, Integer.parseInt(id), new Location(
+                    Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + id + ".world"))),
+                    config.getDouble("arenas." + id + ".x"),
+                    config.getDouble("arenas." + id + ".y"),
+                    config.getDouble("arenas." + id + ".z"),
+                    (float) config.getDouble("arenas." + id + ".yaw"),
+                    (float) config.getDouble("arenas." + id + ".pitch")),
+                    config.getString("arenas." + id + ".game")));
         }
     }
 

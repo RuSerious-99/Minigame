@@ -3,10 +3,7 @@ package com.ruserious99.minigame.listeners.instance;
 import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.game.BlockGame;
-import com.ruserious99.minigame.listeners.instance.game.CodStronghold;
-import com.ruserious99.minigame.listeners.instance.game.Game;
-import com.ruserious99.minigame.listeners.instance.game.PvpGame;
+import com.ruserious99.minigame.listeners.instance.game.*;
 import com.ruserious99.minigame.listeners.instance.kit.CodKit;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
@@ -66,10 +63,12 @@ public class Arena {
     }
 
     private void startNewGameType(int id) {
+        System.out.println("start nrw game type " + id);
         game = null;
         switch (id) {
             case (0) -> this.game = new BlockGame(minigame, this, timer);
             case (1) -> this.game = new PvpGame(minigame, this, timer);
+            case (2) -> this.game = new Wak_A_Block(minigame, this, timer);
             case (3) -> this.game = new CodStronghold(minigame, this, timer);
         }
     }
@@ -101,6 +100,7 @@ public class Arena {
             switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
                 case ("arena1") -> minigame.getGameMapArena1().restoreFromSource(); // block game
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource(); // 1vs1 pvp
+                case ("arena3") -> minigame.getGameMapArena3().restoreFromSource(); //
                 case ("arena4") -> minigame.getGameMapArena4().restoreFromSource(); // team pvp stronghold
 
             }
@@ -152,6 +152,7 @@ public class Arena {
         return switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
             case "arena1" -> ConfigMgr.getRequiredPlayersBlockGame();
             case "arena2" -> ConfigMgr.getRequiredPlayersPvpOneOnOne();
+            case "arena3" -> ConfigMgr.getRequiredPlayersWak_A_Block();
             case "arena4" -> ConfigMgr.getRequiredPlayersStronghold();
             default -> -1;
         };
