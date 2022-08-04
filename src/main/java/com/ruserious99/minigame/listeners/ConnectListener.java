@@ -41,17 +41,14 @@ public class ConnectListener implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    for (Player player : Bukkit.getOnlinePlayers()) {
-                        for (ServerPlayer p : minigame.getNPCs().values()) {
-                            NpcPacketMgr mgr = new NpcPacketMgr(minigame, p);
-                            mgr.removePacket(player);
-                        }
-                        if(DataMgr.getConfig().contains("data")) {
-                            LoadNpcs load = new LoadNpcs(minigame, player);
-                            load.loadNpc();
+                    if(DataMgr.getConfig().contains("data")) {
+                        LoadNpcs load = new LoadNpcs(minigame, e.getPlayer());
+                            if(minigame.getNPCs().isEmpty()){
+                                load.loadOnServerStartNpc();
+                            }
+                            load.loadNPCs();
                         }
                     }
-                }
             }.runTaskLater(minigame, 20);
         }
     }

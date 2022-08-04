@@ -23,55 +23,50 @@ public class LoadNpcs {
 
     private final Minigame minigame;
     private final Player player;
-    private Location location;
-    private String name, textures, signature;
-
 
     public LoadNpcs(Minigame minigame, Player player) {
         this.minigame = minigame;
         this.player = player;
     }
 
-    public void loadNPCs(Location location,String name, String textures, String signature){
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
-
-        MinecraftServer server = serverPlayer.getServer();
-        ServerLevel level = serverPlayer.getLevel();
-
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
-        gameProfile.getProperties().put("textures", new Property("textures", textures , signature));
-
-        ServerPlayer npc = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
-        npc.setPos(location.getX(), location.getY(), location.getZ());
-
-        NpcPacketMgr pm = new NpcPacketMgr(minigame, npc);
-        pm.addNPCPackets();
-
-        minigame.getNPCs().put(npc.getId(), npc);
-        SaveNpcs saveNpcs = new SaveNpcs(npc, textures, signature);
-        saveNpcs.saveNpcData();
+    public void loadNPCs() {
+        for (ServerPlayer npc : minigame.getNPCs().values()) {
+            NpcPacketMgr pm = new NpcPacketMgr(minigame, npc);
+            pm.addNPCPackets();
+        }
     }
 
-    public void loadNpc(){
+    public void loadOnServerStartNpc() {
         FileConfiguration file = DataMgr.getConfig();
         Set<String> id = Objects.requireNonNull(file.getConfigurationSection("data")).getKeys(false);
-        Objects.requireNonNull(file.getConfigurationSection("data")).getKeys(false).forEach(npc ->{
-            location = new Location(Bukkit.getWorld(Objects.requireNonNull(file.getString("data." + npc + ".world"))),
-                    file.getInt("data." + npc + ".x"), file.getInt("data." + npc + ".y"), file.getInt("data." + npc + ".z"));
-            location.setPitch((float) file.getDouble("data." + npc + ".p"));
-            location.setYaw((float) file.getDouble("data." + npc + ".yaw"));
 
-            name = file.getString("data." + npc + ".name");
-            textures = file.getString("data." + npc + ".text");
-            signature = file.getString("data." + npc + ".signature");
+        Objects.requireNonNull(file.getConfigurationSection("data")).getKeys(false).forEach(npc -> {
 
-            loadNPCs(location, name, textures, signature);
+            String name = file.getString("data." + npc + ".name");
+            String textures = file.getString("data." + npc + ".text");
+            String signature = file.getString("data." + npc + ".signature");
+
+            CraftPlayer craftPlayer = (CraftPlayer) player;
+            ServerPlayer serverPlayer = craftPlayer.getHandle();
+
+            MinecraftServer server = serverPlayer.getServer();
+            ServerLevel level = serverPlayer.getLevel();
+
+            GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
+            gameProfile.getProperties().put("textures", new Property("textures", textures, signature));
+
+            ServerPlayer npcToAdd = new ServerPlayer(Objects.requireNonNull(server), level, gameProfile);
+            npcToAdd.setPos(file.getDouble("data." + npc + ".x"), file.getDouble("data." + npc + ".y"), file.getDouble("data." + npc + ".z"));
+
+            minigame.getNPCs().put(npcToAdd.getId(), npcToAdd);
+            SaveNpcs saveNpcs = new SaveNpcs(npcToAdd, textures, signature);
+            saveNpcs.saveNpcData();
         });
 
         for(String idRemove : id) {
             RemoveNpc r = new RemoveNpc(minigame);
             r.removeNpc(Integer.parseInt(idRemove));
         }
+
     }
 }

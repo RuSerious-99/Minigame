@@ -81,9 +81,7 @@ public final class Minigame extends JavaPlugin {
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
         Objects.requireNonNull(getCommand("arena")).setTabCompleter(new ArenaTab());
 
-
         ClickedNPC.listeningForOurNPCs(this);
-
     }
 
     @Override
@@ -101,14 +99,10 @@ public final class Minigame extends JavaPlugin {
     }
 
     public HashMap<Integer, ServerPlayer> getNPCs() {return NPCs;}
-    public GameMap getGameMapArena1() {
-        return gameMapArena1;
-    } //block
+    public GameMap getGameMapArena1() {return gameMapArena1;} //block
     public GameMap getGameMapArena2() { return gameMapArena2; } // pvp
     public GameMap getGameMapArena3() { return gameMapArena3; } // wakAblock
-    public GameMap getGameMapArena4() {
-        return gameMapArena4;
-    } // cod stronghold
+    public GameMap getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr() {return arenaMgr;}
     public BlockTimer getTimer() {return timer;}
 }

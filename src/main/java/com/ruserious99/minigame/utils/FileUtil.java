@@ -37,7 +37,6 @@ public class FileUtil {
             InputStream in = new FileInputStream(sourceLocation);
             OutputStream out = new FileOutputStream(targetLocation);
 
-            // Copy the bits from instream to outstream
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {

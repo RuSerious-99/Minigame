@@ -60,17 +60,34 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage("Only Ops can perform this task");
                 }
+
+
+
             } else if (args.length == 2 && args[0].equalsIgnoreCase("removeNpc")) {
-                for (Player playerR : Bukkit.getOnlinePlayers()) {
-                    for (ServerPlayer p : minigame.getNPCs().values()) {
-                        if (p.getBukkitEntity().getDisplayName().toLowerCase().contains(args[1].toLowerCase())) {
-                            NpcPacketMgr mgr = new NpcPacketMgr(minigame, p);
-                            mgr.removePacket(playerR);
-                            RemoveNpc r = new RemoveNpc(minigame);
-                            r.removeNpc(p.getId(), player);
-                        }
+
+                int id = -1;
+                ServerPlayer sp = null;
+
+                for (ServerPlayer p : minigame.getNPCs().values()) {
+                    if (p.getBukkitEntity().getDisplayName().toLowerCase().contains(args[1].toLowerCase())) {
+                        id = p.getId();
+                        sp = p;
+                        break;
                     }
                 }
+                if(id!=-1) {
+                    RemoveNpc r = new RemoveNpc(minigame);
+                    r.removeNpc(id, player);
+                }
+
+                if(sp != null) {
+                    for (Player playerR : Bukkit.getOnlinePlayers()) {
+                        NpcPacketMgr mgr = new NpcPacketMgr(minigame, sp);
+                        mgr.removePacket(playerR);
+                    }
+                }
+
+
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Arena arena = minigame.getArenaMgr().getArena(player);
@@ -85,24 +102,6 @@ public class ArenaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "You are not in an arena");
             }
 
-
-
-
-            /*else if (args.length == 1 && args[0].equalsIgnoreCase("team")) {
-                Arena arena = minigame.getArenaMgr().getArena(player);
-                if (arena != null) {
-                    if (arena.getId() == 0) {
-                        if (arena.getState() != GameState.LIVE) {
-                            new TeamUI(arena, player);
-                        } else {
-                            player.sendMessage(ChatColor.RED + " you cant select a team at this time");
-                        }
-                    } else {
-                        player.sendMessage(ChatColor.RED + "You are not in an arena with Teams");
-                    }
-                } else {
-                    player.sendMessage(ChatColor.RED + "You are not in an arena");
-                }*/
 
 
         } else if (args.length == 2 && args[0].equalsIgnoreCase("join")) {
@@ -129,6 +128,8 @@ public class ArenaCommand implements CommandExecutor {
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid id given");
             }
+
+
 
         } else {
             if (player.isOp()) {

@@ -17,9 +17,10 @@ public class RemoveNpc {
         if (DataMgr.getConfig().contains("data")) {
             DataMgr.getConfig().set("data." + id, null);
             DataMgr.saveConfig();
-            minigame.getNPCs().remove(id);
-            player.sendMessage(ChatColor.RED + "Success! Npc Has been removed");
         }
+            minigame.getNPCs().remove(id);
+            player.sendMessage(ChatColor.GREEN + "Success! Npc Has been removed");
+
     }
 
     public void removeNpc(int id) {

@@ -48,6 +48,6 @@ public class NpcPacketMgr {
 
     public void removePacket(Player player){
         ServerPlayerConnection playerConnection = ((CraftPlayer)player).getHandle().connection;
-        playerConnection.send(new ClientboundRemoveEntitiesPacket(npc.getBukkitEntity().getEntityId()));
+        playerConnection.send(new ClientboundRemoveEntitiesPacket(npc.getId()));
     }
 }

@@ -30,7 +30,6 @@ public class DataMgr {
 
     public static void saveConfig() {
         try {
-            System.out.println("success saving file!!!!!!!!!!!!!!!!!!!");
             getConfig().save(file);
         } catch (IOException e) {
             System.out.println("'Error saving file");

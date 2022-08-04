@@ -23,10 +23,7 @@ public class NpcGameStartUtil {
         if (joinArena != -1) {
 
             Arena arena = minigame.getArenaMgr().getArena(joinArena);
-
-            System.out.println("joinArena************** = " + joinArena);
             if (minigame.getArenaMgr().getArena(player) != null) {
-                player.sendMessage(ChatColor.RED + " Hey im only an NPC give me a second");
                 return;
             }
             if (arena.getState() == GameState.RECRUITING || arena.getState() == GameState.COUNTDOWN) {
