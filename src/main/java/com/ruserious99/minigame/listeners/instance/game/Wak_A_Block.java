@@ -62,7 +62,6 @@ public class Wak_A_Block extends Game {
         }
     }
 
-
     private void addWak(Player player) {
         int playerpoints = wakedBlocks.get(player.getUniqueId()) + 1;
 
