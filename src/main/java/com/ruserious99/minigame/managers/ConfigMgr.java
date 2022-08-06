@@ -43,6 +43,17 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.yaw"),
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
+
+    public static Location getPiratesSpawn(int id){
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + id + ".world"))),
+                config.getDouble("arenas." + id + ".x"),
+                config.getDouble("arenas." + id + ".y"),
+                config.getDouble("arenas." + id + ".z"),
+                config.getInt("arenas." + id + ".yaw"),
+                config.getInt("arenas." + id + ".pitch"));
+    }
+
     public static Location getPvpExtraSpawnlocations(int id) {
         return new Location(
                 Bukkit.getWorld(Objects.requireNonNull(config.getString("pvp-1on1." + id + ".world"))),

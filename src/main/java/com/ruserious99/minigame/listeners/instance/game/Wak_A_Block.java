@@ -6,14 +6,24 @@ import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.utils.WakABlockEntities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 public class Wak_A_Block extends Game {
@@ -42,6 +52,8 @@ public class Wak_A_Block extends Game {
         }
 
         minigame.getTimer().startGameTimer(arena);
+
+        WakABlockEntities.spawn(minigame, ConfigMgr.getPiratesSpawn(2));
 
     }
 
@@ -91,4 +103,5 @@ public class Wak_A_Block extends Game {
             }
         }
     }
+
 }
