@@ -52,9 +52,9 @@ public class Wak_A_Block extends Game {
         }
 
         minigame.getTimer().startGameTimer(arena);
-
-        WakABlockEntities.spawn(minigame, ConfigMgr.getPiratesSpawn(2));
-
+        for(int i = 0; i<5; i++) {
+            WakABlockEntities.spawn();
+        }
     }
 
     private void endGame() {
