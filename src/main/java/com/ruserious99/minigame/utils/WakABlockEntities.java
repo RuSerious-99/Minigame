@@ -24,7 +24,6 @@ public class WakABlockEntities {
         EntityType et = null;
         Random rand = new Random();
         int n = rand.nextInt((4) + 1) ;
-        System.out.println("random = " + n);
         switch (n) {
             case 0 -> et = EntityType.BLAZE;
             case 1 -> et = EntityType.BAT;
@@ -33,7 +32,6 @@ public class WakABlockEntities {
             case 4 -> et = EntityType.CAVE_SPIDER;
 
         }
-        System.out.println("entiy type = " + et);
         return et;
     }
 }

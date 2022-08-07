@@ -20,7 +20,7 @@ import java.util.UUID;
 
 public class BlockGame extends Game {
 
-    private final HashMap<UUID, Integer> points;
+    public static HashMap<UUID, Integer> points;
 
     public BlockGame(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
         super(minigame, arena, timer, scoreboards);
@@ -33,9 +33,11 @@ public class BlockGame extends Game {
         arena.sendMessage("GAME HAS STARTED! First Player to break " + ConfigMgr.getBlockGameBlocksToBreakInt() + " blocks wins!");
 
         for (UUID uuid : arena.getPlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
             points.put(uuid, 0);
-            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid));
-            Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
+            minigame.getTimer().addPlayer(player);
+            minigame.getScoreboards().updateScoreboard(arena, player);
+            Objects.requireNonNull(player).closeInventory();
         }
 
         for (UUID uuid1 : arena.getKits().keySet()) {
@@ -48,6 +50,7 @@ public class BlockGame extends Game {
 
     public void addPoint(Player player) {
         int playerpoints = points.get(player.getUniqueId()) + 1;
+        minigame.getScoreboards().updateScoreboard(arena, player);
 
         if (playerpoints == ConfigMgr.getBlockGameBlocksToBreakInt()) {
             arena.sendMessage(ChatColor.GOLD + player.getName() + " WINS!!! Thanks for playing.");

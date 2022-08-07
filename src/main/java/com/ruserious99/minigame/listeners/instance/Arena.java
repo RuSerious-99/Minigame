@@ -62,7 +62,6 @@ public class Arena {
     }
 
     private void startNewGameType(int id) {
-        System.out.println("start nrw game type " + id);
         game = null;
         switch (id) {
             case (0) -> this.game = new BlockGame(minigame, this, timer, scoreboards);
