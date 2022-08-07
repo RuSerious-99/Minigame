@@ -14,7 +14,7 @@ public class WakABlockEntities {
         final String s = ChatColor.LIGHT_PURPLE + ChatColor.BOLD.toString()
                 + "M" + ChatColor.GREEN
                 + ChatColor.BOLD + "L"
-                + ChatColor.AQUA + "POLICE";
+                + ChatColor.AQUA + " POLICE";
         Entity et = Objects.requireNonNull(Bukkit.getWorld("arena3")).spawnEntity(ConfigMgr.getPiratesSpawn(2), getEntity());
         et.setCustomName(s);
         et.setCustomNameVisible(true);
@@ -24,13 +24,14 @@ public class WakABlockEntities {
         EntityType et = null;
         Random rand = new Random();
         int n = rand.nextInt((4) + 1) ;
-
         System.out.println("random = " + n);
         switch (n) {
-            case 1 -> et = EntityType.WITHER;
+            case 0 -> et = EntityType.BLAZE;
+            case 1 -> et = EntityType.BAT;
             case 2 -> et = EntityType.SPIDER;
             case 3 -> et = EntityType.SKELETON;
-            case 4 -> et = EntityType.PHANTOM;
+            case 4 -> et = EntityType.CAVE_SPIDER;
+
         }
         System.out.println("entiy type = " + et);
         return et;

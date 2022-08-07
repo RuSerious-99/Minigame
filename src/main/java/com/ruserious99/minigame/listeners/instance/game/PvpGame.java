@@ -3,19 +3,16 @@ package com.ruserious99.minigame.listeners.instance.game;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -25,8 +22,8 @@ public class PvpGame extends Game {
 
     public static final HashMap<UUID, Integer> kills = new HashMap<>();
 
-    public PvpGame(Minigame minigame, Arena arena, BlockTimer timer) {
-        super(minigame, arena, timer);
+    public PvpGame(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
+        super(minigame, arena, timer, scoreboards);
     }
 
     @Override

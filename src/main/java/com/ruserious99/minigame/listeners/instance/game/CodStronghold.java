@@ -4,6 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
@@ -16,31 +17,24 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 
 public class CodStronghold extends Game {
 
-    public HashMap<UUID, Integer> kills;
-    public HashMap<UUID, Integer> deaths;
+    public static  HashMap<UUID, Integer> kills;
+    public static HashMap<UUID, Integer> deaths;
 
     public static int redScore;
     public static int blueScore;
     private final int KillsToWin = ConfigMgr.getWinningKillCount();
 
-    public CodStronghold(Minigame minigame, Arena arena, BlockTimer timer) {
-        super(minigame, arena, timer);
-        this.deaths = new HashMap<>();
-        this.kills = new HashMap<>();
+    public CodStronghold(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
+        super(minigame, arena, timer, scoreboards);
+        deaths = new HashMap<>();
+        kills = new HashMap<>();
     }
 
     @Override
@@ -73,7 +67,8 @@ public class CodStronghold extends Game {
                 int ranTeleport = getRand(ConfigMgr.getBlueSpawnCount());
                 player.teleport(ConfigMgr.getArenaSpawnBlue(ranTeleport));
             }
-            updateScoreboard(player);
+
+            minigame.getScoreboards().updateScoreboard(arena, player);
             player.closeInventory();
         }
 
@@ -99,15 +94,13 @@ public class CodStronghold extends Game {
             blueScore++;
             player.sendMessage("BLUE team plus one point");
         }
-        updateScoreboard(player);
-
+        minigame.getScoreboards().updateScoreboard(arena, player);
     }
 
     public void addDeath(Player player) {
-        int p = this.deaths.get(player.getUniqueId()) + 1;
+        int p = deaths.get(player.getUniqueId()) + 1;
         deaths.replace(player.getUniqueId(), p);
-        updateScoreboard(player);
-
+        minigame.getScoreboards().updateScoreboard(arena, player);
     }
 
     public void gameEnd() {
@@ -128,38 +121,6 @@ public class CodStronghold extends Game {
         blueScore = 0;
 
         arena.reset();
-    }
-
-    private void updateScoreboard(Player player) {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = Objects.requireNonNull(manager).getNewScoreboard();
-        Objective obj = board.registerNewObjective("HubScoreboard-1", "dummy",
-                ChatColor.translateAlternateColorCodes('&', "&a&l<< &2&lTeam DeathMatch &a&l>>"));
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (player == null || !player.isOnline() || !player.getWorld().getName().equals("arena4")) {
-                    Objects.requireNonNull(player).setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-                    cancel();
-                    return;
-                }
-                Set<String> entries;
-                entries = board.getEntries();
-                for (String entry : entries) {
-                    board.resetScores(entry);
-                }
-                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-                obj.getScore("§6§lName:").setScore(5);
-                obj.getScore(player.getName()).setScore(4);
-                obj.getScore(" ").setScore(3);
-                obj.getScore("§6§lPlayers Online: " + ChatColor.WHITE + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
-                obj.getScore("§6§lKills: " + ChatColor.WHITE + kills.get(player.getUniqueId())).setScore(1);
-                obj.getScore("§6§lDeaths: " + ChatColor.WHITE + deaths.get(player.getUniqueId())).setScore(0);
-
-                player.setScoreboard(board);
-            }
-        }.runTaskTimer(arena.getMinigame(), 20, 20);
     }
 
     @EventHandler
@@ -226,7 +187,6 @@ public class CodStronghold extends Game {
     }
 
 
-
     public boolean areFriendly(@NotNull Player one, @NotNull Player two) {
         if ((arena.getTeam(Objects.requireNonNull(one.getPlayer())).getDisplay().equals("RED") && arena.getTeam(Objects.requireNonNull(two.getPlayer())).getDisplay().equals("RED"))) {
             return true;
@@ -263,5 +223,4 @@ public class CodStronghold extends Game {
             }
         }
     }
-
 }

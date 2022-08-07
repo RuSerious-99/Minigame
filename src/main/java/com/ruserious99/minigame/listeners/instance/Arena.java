@@ -14,6 +14,7 @@ import com.ruserious99.minigame.listeners.instance.kit.type.BlockFighterKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.BlockMinerKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.CodHeavyWeaponKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.CodSpeedKit;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
@@ -24,15 +25,13 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.*;
 
-//TODO: MAKE KITS GENERIC HERE
-
 public class Arena {
 
     private final Minigame minigame;
-    private final String gameName;
     private final int id;
     private final Location spawn;
     private final BlockTimer timer;
+    private final Scoreboards scoreboards;
 
     private final HashMap<UUID, Kit> kits;
     private final HashMap<UUID, CodKit> codKits;
@@ -46,10 +45,10 @@ public class Arena {
 
     public Arena(Minigame minigame, int id, Location spawn, String gameName) {
         this.minigame = minigame;
-        this.gameName = gameName;
         this.id = id;
         this.spawn = spawn;
 
+        this.scoreboards = new Scoreboards();
         this.timer = new BlockTimer();
         this.state = GameState.RECRUITING;
         this.players = new ArrayList<>();
@@ -66,10 +65,10 @@ public class Arena {
         System.out.println("start nrw game type " + id);
         game = null;
         switch (id) {
-            case (0) -> this.game = new BlockGame(minigame, this, timer);
-            case (1) -> this.game = new PvpGame(minigame, this, timer);
-            case (2) -> this.game = new Wak_A_Block(minigame, this, timer);
-            case (3) -> this.game = new CodStronghold(minigame, this, timer);
+            case (0) -> this.game = new BlockGame(minigame, this, timer, scoreboards);
+            case (1) -> this.game = new PvpGame(minigame, this, timer, scoreboards);
+            case (2) -> this.game = new Wak_A_Block(minigame, this, timer, scoreboards);
+            case (3) -> this.game = new CodStronghold(minigame, this, timer, scoreboards);
         }
     }
 

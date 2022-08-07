@@ -15,6 +15,7 @@ public class ConfigMgr {
         ConfigMgr.config = minigame.getConfig();
         minigame.saveDefaultConfig();
     }
+    public static String   getWorldName(){return config.getString("main-world-name"); }
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }

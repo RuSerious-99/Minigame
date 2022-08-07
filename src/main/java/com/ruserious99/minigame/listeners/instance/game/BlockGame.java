@@ -4,6 +4,7 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
@@ -21,8 +22,8 @@ public class BlockGame extends Game {
 
     private final HashMap<UUID, Integer> points;
 
-    public BlockGame(Minigame minigame, Arena arena, BlockTimer timer) {
-        super(minigame, arena, timer);
+    public BlockGame(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
+        super(minigame, arena, timer, scoreboards);
         points = new HashMap<>();
     }
 

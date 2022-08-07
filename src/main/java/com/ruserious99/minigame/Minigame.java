@@ -2,6 +2,7 @@ package com.ruserious99.minigame;
 
 import com.ruserious99.minigame.command.ArenaCommand;
 import com.ruserious99.minigame.command.ArenaTab;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.npc.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
@@ -47,6 +48,7 @@ public final class Minigame extends JavaPlugin {
     private GameMap gameMapArena3;
     private GameMap gameMapArena4;
 
+    private Scoreboards scoreboards;
     private BlockTimer timer;
     private ArenaMgr arenaMgr;
     private Plugin plugin;
@@ -71,8 +73,9 @@ public final class Minigame extends JavaPlugin {
         new BukkitRunnable() {
             @Override
             public void run() {
-                arenaMgr = new ArenaMgr((Minigame) plugin);
-                timer    = new BlockTimer();
+                arenaMgr    = new ArenaMgr((Minigame) plugin);
+                timer       = new BlockTimer();
+                scoreboards = new Scoreboards();
             }
         }.runTaskLater(plugin, 20);
 
@@ -105,4 +108,6 @@ public final class Minigame extends JavaPlugin {
     public GameMap getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr() {return arenaMgr;}
     public BlockTimer getTimer() {return timer;}
+    public Scoreboards getScoreboards() {return scoreboards;}
+
 }

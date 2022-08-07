@@ -4,34 +4,27 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
+import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.utils.WakABlockEntities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 public class Wak_A_Block extends Game {
 
     private final HashMap<UUID, Integer> wakedBlocks;
 
-    public Wak_A_Block(Minigame minigame, Arena arena, BlockTimer timer) {
-        super(minigame, arena, timer);
+    public Wak_A_Block(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
+        super(minigame, arena, timer, scoreboards);
         this.wakedBlocks = new HashMap<>();
     }
 
