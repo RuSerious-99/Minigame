@@ -42,8 +42,6 @@ public class Scoreboards {
                     case "arena3" ->  setObjWak(obj, player, board);
                     case "arena4" ->  setObjStronghold(obj, player, board);
                 }
-
-
             }
         }.runTaskTimer(arena.getMinigame(), 20, 20);
     }
@@ -110,7 +108,5 @@ public class Scoreboards {
             case "arena4" -> ChatColor.GOLD +"<<" + ChatColor.WHITE + " Team DeathMatch " + ChatColor.GOLD +">>";
             default -> null;
         };
-
     }
-
 }

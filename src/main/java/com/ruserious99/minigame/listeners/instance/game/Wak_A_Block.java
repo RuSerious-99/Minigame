@@ -82,7 +82,7 @@ public class Wak_A_Block extends Game {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (arena.getId() == 2) {
+        if (arena.getId() == 3) {
             Player player = (Player) event.getWhoClicked();
 
             if (event.getView().getTitle().contains("Kit Selection") && event.getCurrentItem() != null) {
