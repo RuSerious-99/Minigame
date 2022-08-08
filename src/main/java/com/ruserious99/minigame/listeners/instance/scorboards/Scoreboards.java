@@ -60,9 +60,19 @@ public class Scoreboards {
     }
 
     private  void setObjPvp(Objective obj, Player player, Scoreboard board) {
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.getScore(ChatColor.YELLOW + "Name:").setScore(5);
+        obj.getScore(player.getName()).setScore(4);
+        obj.getScore(" ").setScore(3);
+        obj.getScore(ChatColor.DARK_PURPLE + "Players Online: " + ChatColor.GREEN + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
     }
 
     private  void setObjWak(Objective obj, Player player, Scoreboard board) {
+        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+        obj.getScore(ChatColor.YELLOW + "Name:").setScore(5);
+        obj.getScore(player.getName()).setScore(4);
+        obj.getScore(" ").setScore(3);
+        obj.getScore(ChatColor.DARK_PURPLE + "Players Online: " + ChatColor.GREEN + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
     }
 
     private  void setObjStronghold(Objective obj, Player player, Scoreboard board) {
