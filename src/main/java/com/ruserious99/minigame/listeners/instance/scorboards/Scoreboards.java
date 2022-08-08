@@ -67,6 +67,7 @@ public class Scoreboards {
         obj.getScore(ChatColor.DARK_PURPLE + "Players Online: " + ChatColor.GREEN + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
     }
 
+
     private  void setObjWak(Objective obj, Player player, Scoreboard board) {
         obj.setDisplaySlot(DisplaySlot.SIDEBAR);
         obj.getScore(ChatColor.YELLOW + "Name:").setScore(5);
