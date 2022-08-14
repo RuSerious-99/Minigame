@@ -37,7 +37,8 @@ import java.util.Objects;
 * create a new class in the npc folder <Create<game>> copy paste from other Create class and change name and game
 * *** dont forget new texture and signature strings for npc (in Create class)
 * add to command : ArenaCommand and ArenaTab
-* add to NpcGameStartUtil
+* add to NpcGameStartUti
+* *add a timer to game
 * */
 
 
@@ -49,7 +50,6 @@ public final class Minigame extends JavaPlugin {
     private GameMap gameMapArena4;
 
     private Scoreboards scoreboards;
-    private BlockTimer timer;
     private ArenaMgr arenaMgr;
     private Plugin plugin;
 
@@ -74,7 +74,6 @@ public final class Minigame extends JavaPlugin {
             @Override
             public void run() {
                 arenaMgr    = new ArenaMgr((Minigame) plugin);
-                timer       = new BlockTimer();
                 scoreboards = new Scoreboards();
             }
         }.runTaskLater(plugin, 20);
@@ -107,7 +106,6 @@ public final class Minigame extends JavaPlugin {
     public GameMap getGameMapArena3() { return gameMapArena3; } // wakAblock
     public GameMap getGameMapArena4() {return gameMapArena4;} // cod stronghold
     public ArenaMgr getArenaMgr() {return arenaMgr;}
-    public BlockTimer getTimer() {return timer;}
     public Scoreboards getScoreboards() {return scoreboards;}
 
 }

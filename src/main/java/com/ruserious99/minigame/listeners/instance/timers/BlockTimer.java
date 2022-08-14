@@ -20,6 +20,10 @@ public class BlockTimer {
     private Arena arena;
     private final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
 
+    public BlockTimer(Arena arena) {
+        this.arena = arena;
+    }
+
     public void addPlayer(Player player) {
         gameScore.addPlayer(player);
     }
@@ -42,7 +46,10 @@ public class BlockTimer {
             @Override
             public void run() {
                 timeLeft += checkAddTimer(0);
+                System.out.println("cancel timer = in run " + cancelTimer);
+
                 if (timeLeft == 0 || cancelTimer) {
+                    System.out.println("cancel timer = in if statement " + cancelTimer);
                     cancelTimer = false;
                     if (timeLeft == 0) {
                         arena.sendMessage("Aww ran out of time. No clear winner. Thanks for playing");
@@ -83,7 +90,7 @@ public class BlockTimer {
 
     private void setGameScoreTitle(int timeLeft) {
         switch (arena.getId()) {
-            case 0, 2 -> {
+            case 0 -> {
                 gameScore.setTitle(ChatColor.GOLD
                         + " | " + ChatColor.BLUE + getFormattedTime(timeLeft)
                         + ChatColor.GOLD + " | ");
@@ -98,6 +105,13 @@ public class BlockTimer {
                         + " | " + ChatColor.GREEN + getFormattedTime(timeLeft)
                         + ChatColor.GOLD + " | " + ChatColor.WHITE + Objects.requireNonNull(player1).getName() + " kills = " + ChatColor.RED + killsP1);
                 gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimePvp()));
+
+            }
+            case 2 -> {
+                gameScore.setTitle(ChatColor.GOLD
+                        + " || " + ChatColor.BLUE + getFormattedTime(timeLeft)
+                        + ChatColor.GOLD + " || ");
+                gameScore.setProgress(getProgress(timeLeft, gameTime()));
             }
             case 3 -> {
                 gameScore.setTitle(ChatColor.RED + "RED: " + CodStronghold.redScore + ChatColor.GOLD

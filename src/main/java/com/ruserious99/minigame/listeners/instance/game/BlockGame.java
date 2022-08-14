@@ -6,14 +6,18 @@ import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
-import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,9 +25,12 @@ import java.util.UUID;
 public class BlockGame extends Game {
 
     public static HashMap<UUID, Integer> points;
+    private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
+    private boolean cancelTimer;
 
-    public BlockGame(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
-        super(minigame, arena, timer, scoreboards);
+
+    public BlockGame(Minigame minigame, Arena arena, Scoreboards scoreboards) {
+        super(minigame, arena, scoreboards);
         points = new HashMap<>();
     }
 
@@ -32,10 +39,11 @@ public class BlockGame extends Game {
         arena.setState(GameState.LIVE);
         arena.sendMessage("GAME HAS STARTED! First Player to break " + ConfigMgr.getBlockGameBlocksToBreakInt() + " blocks wins!");
 
+
         for (UUID uuid : arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
             points.put(uuid, 0);
-            minigame.getTimer().addPlayer(player);
+            addPlayerToGameScore(player);
             minigame.getScoreboards().updateScoreboard(arena, player);
             Objects.requireNonNull(player).closeInventory();
         }
@@ -45,7 +53,7 @@ public class BlockGame extends Game {
             arena.getKits().get(uuid1).atStart(player);
         }
 
-        minigame.getTimer().startGameTimer(arena);
+        startGameTimer();
     }
 
     public void addPoint(Player player) {
@@ -63,7 +71,8 @@ public class BlockGame extends Game {
     }
 
     private void endGame() {
-        minigame.getTimer().removeAll();
+        removeAllFromGameScore();
+        cancelTimer = true;
         arena.reset();
     }
 
@@ -106,5 +115,72 @@ public class BlockGame extends Game {
                     addPoint(e.getPlayer());
             }
         }
+    }
+    public void addPlayerToGameScore(Player player) {
+        gameScore.addPlayer(player);
+    }
+
+    public static void removePlayerGameScore(Player player) {
+        gameScore.removePlayer(player);
+    }
+
+    public void removeAllFromGameScore() {
+        for (UUID uuid : arena.getPlayers()) {
+            gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
+        }
+    }
+
+    public void startGameTimer() {
+        BukkitRunnable runGame = new BukkitRunnable() {
+            int timeLeft = ConfigMgr.getGameTimeBlock();
+
+            @Override
+            public void run() {
+                timeLeft += checkAddTimer(0);
+                System.out.println("cancel timer = in run " + cancelTimer);
+
+                if (timeLeft == 0 || cancelTimer) {
+                    System.out.println("cancel timer = in if statement " + cancelTimer);
+                    cancelTimer = false;
+                    if (timeLeft == 0) {
+                        arena.sendMessage("Aww ran out of time. No clear winner. Thanks for playing");
+                    }
+                    this.cancel();
+                    arena.reset();
+                    return;
+                }
+                setGameScoreTitle(timeLeft);
+                timeLeft--;
+            }
+        };
+        runGame.runTaskTimer(arena.getMinigame(), 0L, 20L);
+    }
+
+    public int checkAddTimer(int addTime) {
+        return addTime;
+    }
+
+    private void setGameScoreTitle(int timeLeft) {
+        gameScore.setTitle(ChatColor.GOLD
+                        + " | " + ChatColor.BLUE + getFormattedTime(timeLeft)
+                        + ChatColor.GOLD + " | ");
+                gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimeBlock()));
+    }
+
+    private String getFormattedTime(int time) {
+        int seconds;
+        int minutes;
+        minutes = time / 60;
+        seconds = time - (minutes * 60);
+
+        String minutesString, secondsString;
+        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
+        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
+
+        return minutesString + " : " + secondsString;
+    }
+
+    private double getProgress(int timeLeft, int totalTime) {
+        return (double) timeLeft / (double) totalTime;
     }
 }

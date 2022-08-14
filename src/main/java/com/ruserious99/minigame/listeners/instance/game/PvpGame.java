@@ -22,8 +22,8 @@ public class PvpGame extends Game {
 
     public static final HashMap<UUID, Integer> kills = new HashMap<>();
 
-    public PvpGame(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
-        super(minigame, arena, timer, scoreboards);
+    public PvpGame(Minigame minigame, Arena arena, Scoreboards scoreboards) {
+        super(minigame, arena, scoreboards);
     }
 
     @Override
@@ -32,9 +32,13 @@ public class PvpGame extends Game {
 
         arena.sendMessage("GAME HAS STARTED! First Player to kill " + ConfigMgr.getPvpKillCountInt() + " players wins!");
 
+        BlockTimer timer = new BlockTimer(arena);
+
+
         for (UUID uuid : arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
-            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid));
+            minigame.getScoreboards().updateScoreboard(arena, player);
+            timer.addPlayer(Bukkit.getPlayer(uuid));
             kills.put(uuid, 0);
 
             Objects.requireNonNull
@@ -48,12 +52,11 @@ public class PvpGame extends Game {
                     (Bukkit.getPlayer(uuid)).closeInventory();
 
         }
-        minigame.getTimer().startGameTimer(arena);
+        timer.startGameTimer(arena);
     }
 
     private void endGame() {
         kills.clear();
-        minigame.getTimer().removeAll();
         arena.reset();
     }
 
@@ -90,8 +93,7 @@ public class PvpGame extends Game {
         }
         killed.spigot().respawn();
 
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getMinigame(), () -> {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(minigame, () -> {
             if (arena.getState().equals(GameState.LIVE)) {
                 killed.teleport(ConfigMgr.getPvpExtraSpawnlocations(getRand()));
                 killed.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));

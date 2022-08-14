@@ -31,8 +31,8 @@ public class CodStronghold extends Game {
     public static int blueScore;
     private final int KillsToWin = ConfigMgr.getWinningKillCount();
 
-    public CodStronghold(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
-        super(minigame, arena, timer, scoreboards);
+    public CodStronghold(Minigame minigame, Arena arena, Scoreboards scoreboards) {
+        super(minigame, arena, scoreboards);
         deaths = new HashMap<>();
         kills = new HashMap<>();
     }
@@ -43,9 +43,11 @@ public class CodStronghold extends Game {
         arena.sendMessage(ChatColor.GREEN + "Game has started!!" + ChatColor.WHITE + " Objective... " +
                 ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() + ChatColor.RED + " kills Wins!!!");
 
+        BlockTimer timer = new BlockTimer(arena);
+
         for (UUID uuid1 : arena.getCodKits().keySet()) {
             Player player = Bukkit.getPlayer(uuid1);
-            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid1));
+            timer.addPlayer(Bukkit.getPlayer(uuid1));
             arena.getCodKits().get(uuid1).atStart(player);
         }
         redScore = 0;
@@ -72,7 +74,7 @@ public class CodStronghold extends Game {
             player.closeInventory();
         }
 
-        minigame.getTimer().startGameTimer(arena);
+        timer.startGameTimer(arena);
     }
 
     private int getRand(int max) {
@@ -81,8 +83,6 @@ public class CodStronghold extends Game {
     }
 
     public void addkill(Player player) {
-        System.out.println("addkillCalled " + player);
-        System.out.println("team is " + arena.getTeam(player).getDisplay());
 
         int p = kills.get(player.getUniqueId()) + 1;
         kills.replace(player.getUniqueId(), p);
@@ -114,7 +114,6 @@ public class CodStronghold extends Game {
             arena.sendMessage("BLUE team WINS!!!!");
         }
 
-        minigame.getTimer().removeAll();
         kills.clear();
         deaths.clear();
         redScore = 0;
@@ -148,44 +147,44 @@ public class CodStronghold extends Game {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-
         Player killed = e.getEntity();
-        Player killer = null;
-        EntityDamageEvent damageCause = killed.getLastDamageCause();
-        if (damageCause != null) {
-            if (damageCause instanceof EntityDamageByEntityEvent entityDamageCause) {
-                killer = Bukkit.getPlayer(entityDamageCause.getDamager().getUniqueId());
-            }
-        }
         if (killed.getWorld().getName().equals("arena4")) {
-            addDeath(killed);
-            addkill(killer);
+            Player killer = null;
+            EntityDamageEvent damageCause = killed.getLastDamageCause();
+            if (damageCause != null) {
+                if (damageCause instanceof EntityDamageByEntityEvent entityDamageCause) {
+                    killer = Bukkit.getPlayer(entityDamageCause.getDamager().getUniqueId());
+                }
+            }
+            if (killed.getWorld().getName().equals("arena4")) {
+                addDeath(killed);
+                addkill(Objects.requireNonNull(killer));
+            }
+            killed.spigot().respawn();
+
+            for (Integer count : kills.values()) {
+                if (count == KillsToWin) {
+                    gameEnd();
+                    return;
+                }
+            }
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getMinigame(), () -> {
+
+                if (arena.getState().equals(GameState.LIVE)) {
+                    killed.teleport(ConfigMgr.getArenaSpawnRed(getRand(4)));
+                } else {
+                    killed.teleport(ConfigMgr.getArenaSpawnBlue(getRand(4)));
+                }
+                killed.setFoodLevel(20);
+                killed.setHealth(20D);
+
+                if (arena.getCodKits().containsKey(killed.getUniqueId())) {
+                    arena.getCodKits().get(killed.getUniqueId()).atStart((Bukkit.getPlayer(killed.getUniqueId())));
+                }
+            }, 20L);
         }
-        killed.spigot().respawn();
-
-        for (Integer count : kills.values()) {
-            if (count == KillsToWin) {
-                gameEnd();
-                return;
-            }
-        }
-
-        Bukkit.getScheduler().scheduleSyncDelayedTask(arena.getMinigame(), () -> {
-
-            if (arena.getState().equals(GameState.LIVE)) {
-                killed.teleport(ConfigMgr.getArenaSpawnRed(getRand(4)));
-            } else {
-                killed.teleport(ConfigMgr.getArenaSpawnBlue(getRand(4)));
-            }
-            killed.setFoodLevel(20);
-            killed.setHealth(20D);
-
-            if (arena.getCodKits().containsKey(killed.getUniqueId())) {
-                arena.getCodKits().get(killed.getUniqueId()).atStart((Bukkit.getPlayer(killed.getUniqueId())));
-            }
-        }, 20L);
     }
-
 
     public boolean areFriendly(@NotNull Player one, @NotNull Player two) {
         if ((arena.getTeam(Objects.requireNonNull(one.getPlayer())).getDisplay().equals("RED") && arena.getTeam(Objects.requireNonNull(two.getPlayer())).getDisplay().equals("RED"))) {

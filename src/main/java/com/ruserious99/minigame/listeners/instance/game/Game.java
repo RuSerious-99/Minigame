@@ -12,13 +12,11 @@ public abstract class Game implements Listener {
 
     protected final Minigame minigame;
     protected final Arena arena;
-    protected final BlockTimer timer;
     protected final Scoreboards scoreboards;
 
-    public Game(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
+    public Game(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         this.minigame = minigame;
         this.arena = arena;
-        this.timer = timer;
         this.scoreboards = scoreboards;
         Bukkit.getPluginManager().registerEvents(this, minigame);
 

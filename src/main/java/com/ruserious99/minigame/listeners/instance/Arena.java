@@ -16,7 +16,6 @@ import com.ruserious99.minigame.listeners.instance.kit.type.CodHeavyWeaponKit;
 import com.ruserious99.minigame.listeners.instance.kit.type.CodSpeedKit;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
-import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,7 +29,6 @@ public class Arena {
     private final Minigame minigame;
     private final int id;
     private final Location spawn;
-    private final BlockTimer timer;
     private final Scoreboards scoreboards;
 
     private final HashMap<UUID, Kit> kits;
@@ -49,7 +47,6 @@ public class Arena {
         this.spawn = spawn;
 
         this.scoreboards = new Scoreboards();
-        this.timer = new BlockTimer();
         this.state = GameState.RECRUITING;
         this.players = new ArrayList<>();
         this.codKits = new HashMap<>();
@@ -58,16 +55,15 @@ public class Arena {
         this.countdown = new Countdown(minigame, this);
 
         startNewGameType(id);
-
     }
 
     private void startNewGameType(int id) {
         game = null;
         switch (id) {
-            case (0) -> this.game = new BlockGame(minigame, this, timer, scoreboards);
-            case (1) -> this.game = new PvpGame(minigame, this, timer, scoreboards);
-            case (2) -> this.game = new Wak_A_Block(minigame, this, timer, scoreboards);
-            case (3) -> this.game = new CodStronghold(minigame, this, timer, scoreboards);
+            case (0) -> this.game = new BlockGame(minigame, this, scoreboards);
+            case (1) -> this.game = new PvpGame(minigame, this, scoreboards);
+            case (2) -> this.game = new Wak_A_Block(minigame, this, scoreboards);
+            case (3) -> this.game = new CodStronghold(minigame, this, scoreboards);
         }
     }
 
@@ -89,16 +85,13 @@ public class Arena {
                 Objects.requireNonNull(player).getInventory().clear();
                 removeKit(player.getUniqueId());
                 removeTeam(player);
-                minigame.getTimer().removePlayer(player);
             }
-            minigame.getTimer().cancelTimer();
             players.clear();
-
 
             switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
                 case ("arena1") -> minigame.getGameMapArena1().restoreFromSource(); // block game
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource(); // 1vs1 pvp
-                case ("arena3") -> minigame.getGameMapArena3().restoreFromSource(); //
+                case ("arena3") -> minigame.getGameMapArena3().restoreFromSource(); // wak
                 case ("arena4") -> minigame.getGameMapArena4().restoreFromSource(); // team pvp stronghold
 
             }
@@ -179,8 +172,7 @@ public class Arena {
 
         removeKit(player.getUniqueId());
         removeTeam(player);
-
-        minigame.getTimer().removePlayer(player);
+        removeGameTimer(player);
 
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
             Objects.requireNonNull(player).setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());        }
@@ -194,6 +186,15 @@ public class Arena {
         if (state == GameState.LIVE && players.size() < getRequiredPlayerCount()) {
             sendMessage(ChatColor.RED + "AWW! Too many players have left. Game stopping.");
             reset();
+        }
+    }
+
+    private void removeGameTimer(Player player) {
+        switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
+            case "arena1" -> BlockGame.removePlayerGameScore(player);
+            case "arena2" -> ConfigMgr.getRequiredPlayersPvpOneOnOne();
+            case "arena3" -> ConfigMgr.getRequiredPlayersWak_A_Block();
+            case "arena4" -> ConfigMgr.getRequiredPlayersStronghold();
         }
     }
 

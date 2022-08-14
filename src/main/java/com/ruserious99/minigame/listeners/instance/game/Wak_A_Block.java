@@ -23,8 +23,8 @@ public class Wak_A_Block extends Game {
 
     private final HashMap<UUID, Integer> wakedBlocks;
 
-    public Wak_A_Block(Minigame minigame, Arena arena, BlockTimer timer, Scoreboards scoreboards) {
-        super(minigame, arena, timer, scoreboards);
+    public Wak_A_Block(Minigame minigame, Arena arena, Scoreboards scoreboards) {
+        super(minigame, arena, scoreboards);
         this.wakedBlocks = new HashMap<>();
     }
 
@@ -33,9 +33,11 @@ public class Wak_A_Block extends Game {
         arena.setState(GameState.LIVE);
         arena.sendMessage("GAME HAS STARTED! Player who Waks the most Blocks wins!");
 
+        BlockTimer timer = new BlockTimer(arena);
+
         for (UUID uuid : arena.getPlayers()) {
             wakedBlocks.put(uuid, 0);
-            minigame.getTimer().addPlayer(Bukkit.getPlayer(uuid));
+            timer.addPlayer(Bukkit.getPlayer(uuid));
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
         }
 
@@ -44,14 +46,13 @@ public class Wak_A_Block extends Game {
             arena.getKits().get(uuid1).atStart(player);
         }
 
-        minigame.getTimer().startGameTimer(arena);
+        timer.startGameTimer(arena);
         for(int i = 0; i<5; i++) {
             WakABlockEntities.spawn();
         }
     }
 
     private void endGame() {
-        minigame.getTimer().removeAll();
         arena.reset();
     }
 
