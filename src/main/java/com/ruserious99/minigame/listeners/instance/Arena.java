@@ -192,7 +192,7 @@ public class Arena {
     private void removeGameTimer(Player player) {
         switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
             case "arena1" -> BlockGame.removePlayerGameScore(player);
-            case "arena2" -> ConfigMgr.getRequiredPlayersPvpOneOnOne();
+            case "arena2" -> PvpGame.removePlayerGameScore(player);
             case "arena3" -> ConfigMgr.getRequiredPlayersWak_A_Block();
             case "arena4" -> ConfigMgr.getRequiredPlayersStronghold();
         }
