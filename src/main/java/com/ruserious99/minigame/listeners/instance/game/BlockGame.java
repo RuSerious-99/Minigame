@@ -25,7 +25,7 @@ public class BlockGame extends Game {
 
     public static HashMap<UUID, Integer> points;
     private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
-    private boolean cancelTimer;
+    private static boolean cancelTimer;
 
 
     public BlockGame(Minigame minigame, Arena arena, Scoreboards scoreboards) {
@@ -121,12 +121,14 @@ public class BlockGame extends Game {
 
     public static void removePlayerGameScore(Player player) {
         gameScore.removePlayer(player);
+        cancelTimer = true;
     }
 
     public void removeAllFromGameScore() {
         for (UUID uuid : arena.getPlayers()) {
             gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
         }
+        cancelTimer = true;
     }
 
     public void startGameTimer() {

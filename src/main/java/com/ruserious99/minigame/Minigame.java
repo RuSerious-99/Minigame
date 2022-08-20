@@ -3,7 +3,6 @@ package com.ruserious99.minigame;
 import com.ruserious99.minigame.command.ArenaCommand;
 import com.ruserious99.minigame.command.ArenaTab;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
-import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.npc.ClickedNPC;
 import com.ruserious99.minigame.listeners.ConnectListener;
 import com.ruserious99.minigame.managers.ArenaMgr;

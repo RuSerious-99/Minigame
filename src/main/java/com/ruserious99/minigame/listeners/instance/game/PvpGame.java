@@ -25,7 +25,7 @@ public class PvpGame extends Game {
 
     public static final HashMap<UUID, Integer> kills = new HashMap<>();
     private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
-    private boolean cancelTimer;
+    private static boolean cancelTimer;
 
     public PvpGame(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         super(minigame, arena, scoreboards);
@@ -111,12 +111,14 @@ public class PvpGame extends Game {
 
     public static void removePlayerGameScore(Player player) {
         gameScore.removePlayer(player);
+        cancelTimer = true;
     }
 
     public void removeAllFromGameScore() {
         for (UUID uuid : arena.getPlayers()) {
             gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
         }
+        cancelTimer = true;
     }
 
     public void startGameTimer() {

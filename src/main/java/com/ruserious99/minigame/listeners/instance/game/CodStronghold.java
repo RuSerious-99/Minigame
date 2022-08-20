@@ -6,10 +6,12 @@ import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
-import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -17,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Objects;
@@ -30,6 +33,9 @@ public class CodStronghold extends Game {
     public static int redScore;
     public static int blueScore;
     private final int KillsToWin = ConfigMgr.getWinningKillCount();
+    private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
+    private static boolean cancelTimer;
+
 
     public CodStronghold(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         super(minigame, arena, scoreboards);
@@ -43,11 +49,9 @@ public class CodStronghold extends Game {
         arena.sendMessage(ChatColor.GREEN + "Game has started!!" + ChatColor.WHITE + " Objective... " +
                 ChatColor.RED + "Seek and destroy! First Team to " + ChatColor.WHITE + ConfigMgr.getWinningKillCount() + ChatColor.RED + " kills Wins!!!");
 
-        BlockTimer timer = new BlockTimer(arena);
 
         for (UUID uuid1 : arena.getCodKits().keySet()) {
             Player player = Bukkit.getPlayer(uuid1);
-            timer.addPlayer(Bukkit.getPlayer(uuid1));
             arena.getCodKits().get(uuid1).atStart(player);
         }
         redScore = 0;
@@ -55,6 +59,7 @@ public class CodStronghold extends Game {
 
         for (UUID uuid : arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
+            addPlayerToGameScore(player);
 
             Objects.requireNonNull(player).setFoodLevel(20);
             Objects.requireNonNull(player).setHealth(20D);
@@ -74,7 +79,7 @@ public class CodStronghold extends Game {
             player.closeInventory();
         }
 
-        timer.startGameTimer(arena);
+        startGameTimer();
     }
 
     private int getRand(int max) {
@@ -113,6 +118,8 @@ public class CodStronghold extends Game {
         if (blueScore == KillsToWin) {
             arena.sendMessage("BLUE team WINS!!!!");
         }
+        removeAllFromGameScore();
+        cancelTimer = true;
 
         kills.clear();
         deaths.clear();
@@ -221,5 +228,74 @@ public class CodStronghold extends Game {
                 }
             }
         }
+    }
+    public void addPlayerToGameScore(Player player) {
+        gameScore.addPlayer(player);
+    }
+
+    public static void removePlayerGameScore(Player player) {
+        gameScore.removePlayer(player);
+        cancelTimer = true;
+    }
+
+    public void removeAllFromGameScore() {
+        for (UUID uuid : arena.getPlayers()) {
+            gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
+        }
+        cancelTimer = true;
+    }
+
+    public void startGameTimer() {
+        BukkitRunnable runGame = new BukkitRunnable() {
+            int timeLeft = ConfigMgr.getGameTimeBlock();
+
+            @Override
+            public void run() {
+                timeLeft += checkAddTimer(0);
+                System.out.println("cancel timer = in run " + cancelTimer);
+
+                if (timeLeft == 0 || cancelTimer) {
+                    System.out.println("cancel timer = in if statement " + cancelTimer);
+                    cancelTimer = false;
+                    if (timeLeft == 0) {
+                        arena.sendMessage("Aww ran out of time. No clear winner. Thanks for playing");
+                    }
+                    this.cancel();
+                    arena.reset();
+                    return;
+                }
+                setGameScoreTitle(timeLeft);
+                timeLeft--;
+            }
+        };
+        runGame.runTaskTimer(arena.getMinigame(), 0L, 20L);
+    }
+
+    public int checkAddTimer(int addTime) {
+        return addTime;
+    }
+
+    private void setGameScoreTitle(int timeLeft) {
+        gameScore.setTitle(ChatColor.RED + "RED: " + CodStronghold.redScore + ChatColor.GOLD
+                + " | " + ChatColor.GREEN + getFormattedTime(timeLeft)
+                + ChatColor.GOLD + " | " + ChatColor.BLUE + "BLUE: " + CodStronghold.blueScore);
+        gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimeCod()));
+    }
+
+    private String getFormattedTime(int time) {
+        int seconds;
+        int minutes;
+        minutes = time / 60;
+        seconds = time - (minutes * 60);
+
+        String minutesString, secondsString;
+        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
+        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
+
+        return minutesString + " : " + secondsString;
+    }
+
+    private double getProgress(int timeLeft, int totalTime) {
+        return (double) timeLeft / (double) totalTime;
     }
 }

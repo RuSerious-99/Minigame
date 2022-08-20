@@ -13,7 +13,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventHandler; 
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -26,7 +26,7 @@ public class Wak_A_Block extends Game {
 
     private final HashMap<UUID, Integer> wakedBlocks;
     private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
-    private boolean cancelTimer;
+    private static boolean cancelTimer;
 
 
     public Wak_A_Block(Minigame minigame, Arena arena, Scoreboards scoreboards) {
@@ -43,6 +43,7 @@ public class Wak_A_Block extends Game {
             Player player = Bukkit.getPlayer(uuid);
             wakedBlocks.put(uuid, 0);
             addPlayerToGameScore(player);
+            minigame.getScoreboards().updateScoreboard(arena, player);
             Objects.requireNonNull(Bukkit.getPlayer(uuid)).closeInventory();
         }
 
@@ -109,12 +110,14 @@ public class Wak_A_Block extends Game {
 
     public static void removePlayerGameScore(Player player) {
         gameScore.removePlayer(player);
+        cancelTimer = true;
     }
 
     public void removeAllFromGameScore() {
         for (UUID uuid : arena.getPlayers()) {
             gameScore.removePlayer(Objects.requireNonNull(Bukkit.getPlayer(uuid)));
         }
+        cancelTimer = true;
     }
 
     public void startGameTimer() {

@@ -193,8 +193,8 @@ public class Arena {
         switch (Objects.requireNonNull(spawn.getWorld()).getName()) {
             case "arena1" -> BlockGame.removePlayerGameScore(player);
             case "arena2" -> PvpGame.removePlayerGameScore(player);
-            case "arena3" -> ConfigMgr.getRequiredPlayersWak_A_Block();
-            case "arena4" -> ConfigMgr.getRequiredPlayersStronghold();
+            case "arena3" -> Wak_A_Block.removePlayerGameScore(player);
+            case "arena4" -> CodStronghold.removePlayerGameScore(player);
         }
     }
 

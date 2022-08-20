@@ -3,7 +3,6 @@ package com.ruserious99.minigame.listeners.instance.game;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
-import com.ruserious99.minigame.listeners.instance.timers.BlockTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
