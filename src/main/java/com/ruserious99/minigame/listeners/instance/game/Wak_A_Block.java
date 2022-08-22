@@ -6,20 +6,23 @@ import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.utils.TimeUtils;
 import com.ruserious99.minigame.utils.WakABlockEntities;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler; 
-import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 public class Wak_A_Block extends Game {
@@ -56,6 +59,18 @@ public class Wak_A_Block extends Game {
         for(int i = 0; i<5; i++) {
             WakABlockEntities.spawn();
         }
+        spawnTheBlocks(arena.getPlayers().size());
+    }
+
+    private void spawnTheBlocks(int size) {
+        for(int i = 0; i<size; i++) {
+            int newX = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockX() + new Random().nextInt(25 + 25) - 25;
+            int newZ = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockZ() + new Random().nextInt(35 + 35) - 35;
+            int newY = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockY();
+
+            Location spawnLoc = new Location(ConfigMgr.getPiratesSpawn(arena.getId()).getWorld(), newX, newY, newZ);
+            spawnLoc.getBlock().setType(Material.BLUE_WOOL);
+        }
     }
 
     @Override
@@ -64,16 +79,19 @@ public class Wak_A_Block extends Game {
         arena.reset();
     }
 
-
-
     @EventHandler
-    public void onBlockHit(BlockDamageEvent e) {
-        if (arena.getId() == 3) {
+    public void onBlockHit(PlayerInteractEvent e) {
+        if (arena.getId() == 2) {
             if (!arena.getState().equals(GameState.LIVE)) {
                 e.setCancelled(true);
             } else {
                 if (arena.getPlayers().contains(e.getPlayer().getUniqueId()))
-                    addWak(e.getPlayer());
+                    if(Objects.requireNonNull(e.getClickedBlock()).getType().equals(Material.BLUE_WOOL)){
+                        e.getPlayer().sendMessage(ChatColor.GOLD + "Congrats!!!" + ChatColor.GREEN + " you waked a block");
+                        e.getClickedBlock().setType(Material.AIR);
+                        addWak(e.getPlayer());
+                        spawnTheBlocks(1);
+                    }
             }
         }
     }
@@ -87,7 +105,7 @@ public class Wak_A_Block extends Game {
             return;
         }
 
-        player.sendMessage(ChatColor.GREEN + "+1 point");
+        player.sendMessage(ChatColor.GREEN + "+1 wak");
         wakedBlocks.replace(player.getUniqueId(), playerpoints);
     }
 
@@ -155,25 +173,8 @@ public class Wak_A_Block extends Game {
 
     private void setGameScoreTitle(int timeLeft) {
         gameScore.setTitle(ChatColor.GOLD
-                + " || " + ChatColor.BLUE + getFormattedTime(timeLeft)
+                + " || " + ChatColor.BLUE + TimeUtils.getFormattedTime(timeLeft)
                 + ChatColor.GOLD + " || ");
-        gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimeWak()));
-    }
-
-    private String getFormattedTime(int time) {
-        int seconds;
-        int minutes;
-        minutes = time / 60;
-        seconds = time - (minutes * 60);
-
-        String minutesString, secondsString;
-        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
-        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
-
-        return minutesString + " : " + secondsString;
-    }
-
-    private double getProgress(int timeLeft, int totalTime) {
-        return (double) timeLeft / (double) totalTime;
+        gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimeWak()));
     }
 }

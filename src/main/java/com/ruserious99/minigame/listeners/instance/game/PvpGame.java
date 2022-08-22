@@ -5,6 +5,7 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -158,26 +159,9 @@ public class PvpGame extends Game {
         int killsP0 = PvpGame.kills.get(Objects.requireNonNull(player0).getUniqueId());
         int killsP1 = PvpGame.kills.get(Objects.requireNonNull(player1).getUniqueId());
         gameScore.setTitle(Objects.requireNonNull(player0).getName() + " kills = " + ChatColor.RED + killsP0 + ChatColor.GOLD
-                + " | " + ChatColor.GREEN + getFormattedTime(timeLeft)
+                + " | " + ChatColor.GREEN + TimeUtils.getFormattedTime(timeLeft)
                 + ChatColor.GOLD + " | " + ChatColor.WHITE + Objects.requireNonNull(player1).getName() + " kills = " + ChatColor.RED + killsP1);
-        gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimePvp()));
+        gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimePvp()));
 
-    }
-
-    private String getFormattedTime(int time) {
-        int seconds;
-        int minutes;
-        minutes = time / 60;
-        seconds = time - (minutes * 60);
-
-        String minutesString, secondsString;
-        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
-        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
-
-        return minutesString + " : " + secondsString;
-    }
-
-    private double getProgress(int timeLeft, int totalTime) {
-        return (double) timeLeft / (double) totalTime;
     }
 }

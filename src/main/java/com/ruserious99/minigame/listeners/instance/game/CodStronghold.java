@@ -7,6 +7,7 @@ import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -277,25 +278,10 @@ public class CodStronghold extends Game {
 
     private void setGameScoreTitle(int timeLeft) {
         gameScore.setTitle(ChatColor.RED + "RED: " + CodStronghold.redScore + ChatColor.GOLD
-                + " | " + ChatColor.GREEN + getFormattedTime(timeLeft)
+                + " | " + ChatColor.GREEN + TimeUtils.getFormattedTime(timeLeft)
                 + ChatColor.GOLD + " | " + ChatColor.BLUE + "BLUE: " + CodStronghold.blueScore);
-        gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimeCod()));
+        gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimeCod()));
     }
 
-    private String getFormattedTime(int time) {
-        int seconds;
-        int minutes;
-        minutes = time / 60;
-        seconds = time - (minutes * 60);
 
-        String minutesString, secondsString;
-        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
-        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
-
-        return minutesString + " : " + secondsString;
-    }
-
-    private double getProgress(int timeLeft, int totalTime) {
-        return (double) timeLeft / (double) totalTime;
-    }
 }

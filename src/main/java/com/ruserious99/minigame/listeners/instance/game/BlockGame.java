@@ -7,6 +7,7 @@ import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
@@ -164,25 +165,8 @@ public class BlockGame extends Game {
 
     private void setGameScoreTitle(int timeLeft) {
         gameScore.setTitle(ChatColor.GOLD
-                        + " | " + ChatColor.BLUE + getFormattedTime(timeLeft)
+                        + " | " + ChatColor.BLUE + TimeUtils.getFormattedTime(timeLeft)
                         + ChatColor.GOLD + " | ");
-                gameScore.setProgress(getProgress(timeLeft, ConfigMgr.getGameTimeBlock()));
-    }
-
-    private String getFormattedTime(int time) {
-        int seconds;
-        int minutes;
-        minutes = time / 60;
-        seconds = time - (minutes * 60);
-
-        String minutesString, secondsString;
-        minutesString = minutes < 10 ? "0" + minutes : minutes + "";
-        secondsString = seconds < 10 ? "0" + seconds : seconds + "";
-
-        return minutesString + " : " + secondsString;
-    }
-
-    private double getProgress(int timeLeft, int totalTime) {
-        return (double) timeLeft / (double) totalTime;
+                gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimeBlock()));
     }
 }
