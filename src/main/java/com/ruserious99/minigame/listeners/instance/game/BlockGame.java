@@ -69,7 +69,8 @@ public class BlockGame extends Game {
         points.replace(player.getUniqueId(), playerpoints);
     }
 
-    private void endGame() {
+    @Override
+    public void endGame() {
         removeAllFromGameScore();
         cancelTimer = true;
         arena.reset();

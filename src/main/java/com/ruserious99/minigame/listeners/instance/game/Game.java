@@ -4,6 +4,7 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -23,11 +24,12 @@ public abstract class Game implements Listener {
     public void start() {
         onStart();
     }
-
-    public abstract void onStart();
-
     public void unregister(){
         HandlerList.unregisterAll(this);
     }
+
+    public abstract void onStart();
+    public abstract void endGame();
+
 }
 

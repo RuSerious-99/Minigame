@@ -107,8 +107,8 @@ public class CodStronghold extends Game {
         deaths.replace(player.getUniqueId(), p);
         minigame.getScoreboards().updateScoreboard(arena, player);
     }
-
-    public void gameEnd() {
+    @Override
+    public void endGame() {
         if (redScore < KillsToWin && blueScore < KillsToWin) {
             arena.sendMessage("Aww No clear winner. must be a tie. ");
         }
@@ -171,7 +171,7 @@ public class CodStronghold extends Game {
 
             for (Integer count : kills.values()) {
                 if (count == KillsToWin) {
-                    gameEnd();
+                    endGame();
                     return;
                 }
             }

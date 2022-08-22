@@ -58,10 +58,13 @@ public class Wak_A_Block extends Game {
         }
     }
 
-    private void endGame() {
+    @Override
+    public void endGame() {
         removeAllFromGameScore();
         arena.reset();
     }
+
+
 
     @EventHandler
     public void onBlockHit(BlockDamageEvent e) {

@@ -59,7 +59,8 @@ public class PvpGame extends Game {
         startGameTimer();
     }
 
-    private void endGame() {
+    @Override
+    public void endGame() {
         removeAllFromGameScore();
         kills.clear();
         arena.reset();
