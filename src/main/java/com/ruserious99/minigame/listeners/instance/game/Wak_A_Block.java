@@ -27,14 +27,14 @@ import java.util.UUID;
 
 public class Wak_A_Block extends Game {
 
-    private final HashMap<UUID, Integer> wakedBlocks;
+    public static HashMap<UUID, Integer> wakedBlocks;
     private static final BossBar gameScore = Bukkit.createBossBar("Player: 00 | Player: 00", BarColor.BLUE, BarStyle.SOLID);
     private static boolean cancelTimer;
 
 
     public Wak_A_Block(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         super(minigame, arena, scoreboards);
-        this.wakedBlocks = new HashMap<>();
+        wakedBlocks = new HashMap<>();
     }
 
     @Override

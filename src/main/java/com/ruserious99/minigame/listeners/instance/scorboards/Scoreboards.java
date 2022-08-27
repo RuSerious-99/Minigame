@@ -4,6 +4,7 @@ import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.game.BlockGame;
 import com.ruserious99.minigame.listeners.instance.game.CodStronghold;
 import com.ruserious99.minigame.listeners.instance.game.PvpGame;
+import com.ruserious99.minigame.listeners.instance.game.Wak_A_Block;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -75,7 +76,7 @@ public class Scoreboards {
         obj.getScore(player.getName()).setScore(4);
         obj.getScore(" ").setScore(3);
         obj.getScore(ChatColor.DARK_PURPLE + "Players Online: " + ChatColor.GREEN + (Bukkit.getOnlinePlayers().size() + " ")).setScore(2);
-
+        obj.getScore(ChatColor.DARK_PURPLE + "         Waks: " + ChatColor.GREEN + Wak_A_Block.wakedBlocks.get(player.getUniqueId())).setScore(1);
         player.setScoreboard(board);
     }
 

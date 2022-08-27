@@ -25,6 +25,7 @@ public class ArenaTab implements TabCompleter {
             if (player.isOp()) {
                 menu.add("removeNpc");
                 menu.add("createNpc");
+                menu.add("reload");
             }
             menu.add("list");
             menu.add("join");

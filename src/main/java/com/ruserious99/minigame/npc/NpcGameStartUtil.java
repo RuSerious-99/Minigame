@@ -1,4 +1,4 @@
-package com.ruserious99.minigame.utils;
+package com.ruserious99.minigame.npc;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;

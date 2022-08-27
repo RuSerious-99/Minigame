@@ -8,7 +8,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.utils.NpcGameStartUtil;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 

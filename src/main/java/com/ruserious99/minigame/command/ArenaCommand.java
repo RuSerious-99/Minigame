@@ -3,6 +3,7 @@ package com.ruserious99.minigame.command;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
+import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
 import com.ruserious99.minigame.npc.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,6 +39,8 @@ public class ArenaCommand implements CommandExecutor {
                             + ")");
                 }
 
+            }else if(args.length == 1 && args[0].equalsIgnoreCase("reload")){
+                DataMgr.reload();
 
             } else if (args.length == 2 && args[0].equalsIgnoreCase("createNpc")) {
                 if (player.isOp()) {
