@@ -16,10 +16,11 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler; 
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
@@ -56,16 +57,16 @@ public class Wak_A_Block extends Game {
         }
 
         startGameTimer();
-        for(int i = 0; i<5; i++) {
+        for (int i = 0; i < 5; i++) {
             WakABlockEntities.spawn();
         }
         spawnTheBlocks(arena.getPlayers().size());
     }
 
     private void spawnTheBlocks(int size) {
-        for(int i = 0; i<size; i++) {
-            int newX = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockX() + new Random().nextInt(25 + 25) - 25;
-            int newZ = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockZ() + new Random().nextInt(35 + 35) - 35;
+        for (int i = 0; i < size; i++) {
+            int newX = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockX() + new Random().nextInt(25 + 24) - 24;
+            int newZ = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockZ() + new Random().nextInt(35 + 33) - 33;
             int newY = ConfigMgr.getPiratesSpawn(arena.getId()).getBlockY();
 
             Location spawnLoc = new Location(ConfigMgr.getPiratesSpawn(arena.getId()).getWorld(), newX, newY, newZ);
@@ -85,13 +86,17 @@ public class Wak_A_Block extends Game {
             if (!arena.getState().equals(GameState.LIVE)) {
                 e.setCancelled(true);
             } else {
-                if (arena.getPlayers().contains(e.getPlayer().getUniqueId()))
-                    if(Objects.requireNonNull(e.getClickedBlock()).getType().equals(Material.BLUE_WOOL)){
+                if (arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
+                    if(!Objects.requireNonNull(e.getClickedBlock()).getType().equals(Material.BLUE_WOOL)){
+                        return;
+                    }
+                    if (Objects.requireNonNull(e.getClickedBlock()).getType().equals(Material.BLUE_WOOL)) {
                         e.getPlayer().sendMessage(ChatColor.GOLD + "Congrats!!!" + ChatColor.GREEN + " you waked a block");
                         e.getClickedBlock().setType(Material.AIR);
                         addWak(e.getPlayer());
                         spawnTheBlocks(1);
                     }
+                }
             }
         }
     }
@@ -125,13 +130,14 @@ public class Wak_A_Block extends Game {
             }
         }
     }
+
     public void addPlayerToGameScore(Player player) {
         gameScore.addPlayer(player);
     }
 
     public static void removePlayerGameScore(Player player) {
         gameScore.removePlayer(player);
-        cancelTimer = true;
+        //cancelTimer = true;
     }
 
     public void removeAllFromGameScore() {
@@ -148,10 +154,8 @@ public class Wak_A_Block extends Game {
             @Override
             public void run() {
                 timeLeft += checkAddTimer(0);
-                System.out.println("cancel timer = in run " + cancelTimer);
 
                 if (timeLeft == 0 || cancelTimer) {
-                    System.out.println("cancel timer = in if statement " + cancelTimer);
                     cancelTimer = false;
                     if (timeLeft == 0) {
                         arena.sendMessage("Aww ran out of time. No clear winner. Thanks for playing");

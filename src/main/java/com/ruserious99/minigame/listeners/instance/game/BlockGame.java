@@ -140,10 +140,8 @@ public class BlockGame extends Game {
             @Override
             public void run() {
                 timeLeft += checkAddTimer(0);
-                System.out.println("cancel timer = in run " + cancelTimer);
 
                 if (timeLeft == 0 || cancelTimer) {
-                    System.out.println("cancel timer = in if statement " + cancelTimer);
                     cancelTimer = false;
                     if (timeLeft == 0) {
                         arena.sendMessage("Aww ran out of time. No clear winner. Thanks for playing");
