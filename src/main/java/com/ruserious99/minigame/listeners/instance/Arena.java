@@ -1,9 +1,17 @@
 package com.ruserious99.minigame.listeners.instance;
 
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.google.common.collect.TreeMultimap;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.game.*;
+import com.ruserious99.minigame.listeners.instance.game.deadspace.DeadSpace;
+import com.ruserious99.minigame.listeners.instance.game.dungeon.Dungeon;
 import com.ruserious99.minigame.listeners.instance.kit.CodKit;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
 import com.ruserious99.minigame.listeners.instance.kit.enums.CodKitType;
@@ -17,10 +25,31 @@ import com.ruserious99.minigame.listeners.instance.kit.type.CodSpeedKit;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import me.libraryaddict.disguise.DisguiseAPI;
+import me.libraryaddict.disguise.LibsDisguises;
+import me.libraryaddict.disguise.disguisetypes.DisguiseType;
+import me.libraryaddict.disguise.disguisetypes.MobDisguise;
+import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
+import me.libraryaddict.disguise.utilities.DisguiseUtilities;
+import me.libraryaddict.disguise.utilities.reflection.LibsProfileLookup;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.network.protocol.game.*;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerPlayerConnection;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.level.biome.BiomeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -39,7 +68,6 @@ public class Arena {
     private GameState state;
     private Countdown countdown;
     private Game game;
-
 
     public Arena(Minigame minigame, int id, Location spawn, String gameName) {
         this.minigame = minigame;
@@ -64,6 +92,8 @@ public class Arena {
             case (1) -> this.game = new PvpGame(minigame, this, scoreboards);
             case (2) -> this.game = new Wak_A_Block(minigame, this, scoreboards);
             case (3) -> this.game = new CodStronghold(minigame, this, scoreboards);
+            case (4) -> this.game = new Dungeon(minigame, this, scoreboards);
+            case (5) -> this.game = new DeadSpace(minigame, this, scoreboards);
         }
     }
 
@@ -72,7 +102,6 @@ public class Arena {
     }
 
     public void reset() {
-
         if (state == GameState.LIVE) {
             Location location = ConfigMgr.getLobbySpawn();
 
@@ -83,8 +112,10 @@ public class Arena {
             for (UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
                 Objects.requireNonNull(player).getInventory().clear();
+                removeGameTimer(player);
                 removeKit(player.getUniqueId());
                 removeTeam(player);
+
             }
             players.clear();
 
@@ -93,7 +124,8 @@ public class Arena {
                 case ("arena2") -> minigame.getGameMapArena2().restoreFromSource(); // 1vs1 pvp
                 case ("arena3") -> minigame.getGameMapArena3().restoreFromSource(); // wak
                 case ("arena4") -> minigame.getGameMapArena4().restoreFromSource(); // team pvp stronghold
-
+                case ("arena5") -> minigame.getGameMapArena5().restoreFromSource(); // dungeon
+                case ("arena6") -> minigame.getGameMapArena6().restoreFromSource(); // deadspace
             }
             minigame.releaseLoadArena(id);
             game.unregister();
@@ -123,19 +155,31 @@ public class Arena {
     //players
     public void addPlayer(Player player) {
         players.add(player.getUniqueId());
-        player.teleport(spawn);
-        player.getInventory().clear();
 
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
+            player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/last_days.zip/download");
+        }
+        player.getInventory().clear();
+        playerKitSelect(player);
+        countdown.start();
+        player.teleport(spawn);
+    }
+
+
+    private void playerKitSelect(Player player) {
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")) {
             new KitUI(player);
             ImplTeams(player);
-        } else if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
+        }
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena3")) {
+            new KitUI(player);
+        }
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
             new CodKitUI(player);
             ImplTeams(player);
         }
-
-        if (state.equals(GameState.RECRUITING) && players.size() >= getRequiredPlayerCount()) {
-            countdown.start();
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena5")) {
+            new KitUI(player);
         }
     }
 
@@ -145,6 +189,9 @@ public class Arena {
             case "arena2" -> ConfigMgr.getRequiredPlayersPvpOneOnOne();
             case "arena3" -> ConfigMgr.getRequiredPlayersWak_A_Block();
             case "arena4" -> ConfigMgr.getRequiredPlayersStronghold();
+            case "arena5" -> ConfigMgr.getRequiredPlayersDungeon();
+            case "arena6" -> ConfigMgr.getRequiredPlayersDeadSpace();
+
             default -> -1;
         };
     }
@@ -174,8 +221,14 @@ public class Arena {
         removeTeam(player);
         removeGameTimer(player);
 
+        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
+            player.sendMessage("removing Map resource pack");
+            player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/VanillaDefault.zip/download");
+        }
+
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
-            Objects.requireNonNull(player).setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());        }
+            Objects.requireNonNull(player).setScoreboard(Objects.requireNonNull(Bukkit.getScoreboardManager()).getNewScoreboard());
+        }
 
         if (state == GameState.COUNTDOWN && players.size() < getRequiredPlayerCount()) {
             sendMessage(ChatColor.RED + "There are not enough players: Countdown has stopped");
@@ -278,6 +331,4 @@ public class Arena {
     public Minigame getMinigame() {
         return minigame;
     }
-
-
 }

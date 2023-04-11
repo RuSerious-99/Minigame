@@ -110,15 +110,7 @@ public class CodStronghold extends Game {
     }
     @Override
     public void endGame() {
-        if (redScore < KillsToWin && blueScore < KillsToWin) {
-            arena.sendMessage("Aww No clear winner. must be a tie. ");
-        }
-        if (redScore == KillsToWin) {
-            arena.sendMessage("RED team WINS!!!!");
-        }
-        if (blueScore == KillsToWin) {
-            arena.sendMessage("BLUE team WINS!!!!");
-        }
+
         removeAllFromGameScore();
         cancelTimer = true;
 
@@ -172,7 +164,25 @@ public class CodStronghold extends Game {
 
             for (Integer count : kills.values()) {
                 if (count == KillsToWin) {
-                    endGame();
+                    if (redScore < KillsToWin && blueScore < KillsToWin) {
+                        arena.sendMessage("Aww No clear winner. must be a tie. ");
+                    }
+                    if (redScore == KillsToWin) {
+                        arena.sendMessage("RED team WINS!!!!");
+                        arena.sendTitle(ChatColor.BLUE + "Winner is ", "RED team WINS!!!!", 0, 30, 10);
+
+                    }
+                    if (blueScore == KillsToWin) {
+                        arena.sendMessage("BLUE team WINS!!!!");
+                        arena.sendTitle(ChatColor.BLUE + "Winner is ", "BLUE team WINS!!!!", 0, 30, 10);
+
+                    }
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            endGame();
+                        }
+                    }.runTaskLater(minigame, 40);
                     return;
                 }
             }

@@ -18,8 +18,12 @@ public class NpcGameStartUtil {
             case ("PVP Game")   -> joinArena = 1;
             case ("Wak_A_Block Game")   -> joinArena = 2;
             case ("Stronghold PVP")  -> joinArena = 3;
-        }
+            case ("Dungeon")  -> joinArena = 4;
 
+            //todo check player persistant data for chapter start
+            case ("DeadSpace")  -> joinArena = 5;
+
+        }
         if (joinArena != -1) {
 
             Arena arena = minigame.getArenaMgr().getArena(joinArena);
@@ -27,7 +31,6 @@ public class NpcGameStartUtil {
                 return;
             }
             if (arena.getState() == GameState.RECRUITING || arena.getState() == GameState.COUNTDOWN) {
-                player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + joinArena);
                 arena.addPlayer(player);
             } else {
                 player.sendMessage(ChatColor.RED + "You cant join that arena right now.");

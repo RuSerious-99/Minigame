@@ -1,7 +1,7 @@
 name: Minigame
 version: '${project.version}'
 main: com.ruserious99.minigame.Minigame
-api-version: 1.18
+api-version: 1.19
 authors: [ RuSerious99 ]
 description: game shell for any mini game
 depend: [ProtocolLib]

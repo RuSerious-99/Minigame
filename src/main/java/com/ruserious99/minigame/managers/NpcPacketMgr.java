@@ -2,14 +2,17 @@ package com.ruserious99.minigame.managers;
 
 import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.Minigame;
+
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerPlayerConnection;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_18_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -30,7 +33,7 @@ public class NpcPacketMgr {
         for(Player player : Bukkit.getOnlinePlayers()) {
             ServerPlayerConnection playerConnection = ((CraftPlayer)player).getHandle().connection;
 
-            playerConnection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.ADD_PLAYER, npc));
+            playerConnection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER, npc));
             playerConnection.send(new ClientboundAddPlayerPacket(npc));
 
             ItemStack itemInHand = new ItemStack(Material.DIAMOND_SWORD);
@@ -40,7 +43,9 @@ public class NpcPacketMgr {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    playerConnection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc));
+                    MinecraftServer server = ((CraftServer) Bukkit.getServer()).getServer();
+                    server.getPlayerList().broadcastAll(new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID())));
+                   // playerConnection.send(new ClientboundPlayerInfoPacket(ClientboundPlayerInfoPacket.Action.REMOVE_PLAYER, npc));
                 }
             }.runTaskLater(minigame, 20);
         }

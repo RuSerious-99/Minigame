@@ -40,6 +40,7 @@ public class ClickedNPC {
 
                     if (hand == EnumWrappers.Hand.MAIN_HAND && action == EnumWrappers.EntityUseAction.INTERACT) {
                         String finalGame = game;
+
                         new BukkitRunnable() {
                             @Override
                             public void run() {

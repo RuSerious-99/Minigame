@@ -18,6 +18,9 @@ public class ConfigMgr {
     public static String   getWorldName(){return config.getString("main-world-name"); }
     public static int      getPvpKillCountInt(){return config.getInt("pvpgame-player-kill-count"); }
     public static int      getBlockGameBlocksToBreakInt(){return config.getInt("blockgame-blocks-to-break-count"); }
+    public static int      getBlock_Count_to_Win_Wak_A_BlockGame(){
+        return config.getInt("wak_a_block_win_count");
+    }
     public static String   getWorldArenasSource(){return config.getString("world-source-arenas"); }
     public static int      getRequiredPlayersBlockGame(){
         return config.getInt("required-players-block-game");
@@ -28,9 +31,9 @@ public class ConfigMgr {
     public static int      getRequiredPlayersWak_A_Block(){
         return config.getInt("required-players-wak_a_block");
     }
-    public static int      getRequiredPlayersStronghold(){
-        return config.getInt("required-players-stronghold");
-    }
+    public static int      getRequiredPlayersStronghold(){return config.getInt("required-players-stronghold");}
+    public static int      getRequiredPlayersDungeon(){return config.getInt("required-players-dungeon");}
+    public static int      getRequiredPlayersDeadSpace(){return config.getInt("required-players-deadSpace");}
     public static int      getCountdownSeconds(){
         return config.getInt("countdown-seconds");
     }
@@ -45,7 +48,23 @@ public class ConfigMgr {
                 (float) config.getDouble("lobby-spawn.pitch"));
     }
 
+    //wak a block
+    public static int  getEnemiesCount_Wak_a_Block(){
+        return config.getInt("enemies_count");
+    }
+
     public static Location getPiratesSpawn(int id){
+        return new Location(
+                Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + id + ".world"))),
+                config.getDouble("arenas." + id + ".x"),
+                config.getDouble("arenas." + id + ".y"),
+                config.getDouble("arenas." + id + ".z"),
+                config.getInt("arenas." + id + ".yaw"),
+                config.getInt("arenas." + id + ".pitch"));
+    }
+
+
+    public static Location getAfterDeathSpawn(int id){
         return new Location(
                 Bukkit.getWorld(Objects.requireNonNull(config.getString("arenas." + id + ".world"))),
                 config.getDouble("arenas." + id + ".x"),
@@ -73,7 +92,6 @@ public class ConfigMgr {
 
 
     //COD Stronghold
-
     public static int getWinningKillCount() { return config.getInt("kills-to-win"); }
 
     public static Location getWaitingSpawn() {
@@ -111,6 +129,14 @@ public class ConfigMgr {
     }
 
 
+    // dungeon
+    public static int getHangerCountdownSeconds()            { return config.getInt("hanger-countdown-seconds"); }
+    public static int getFirstBossCountdownSeconds()         { return config.getInt("firstboss-countdown-seconds"); }
+    public static int getParkour_1()                         { return config.getInt("parkour_1-seconds"); }
+    public static int getMaze()                              { return config.getInt("maze-seconds"); }
+    public static int getBoss_2()                            { return config.getInt("boss_2-seconds"); }
+    public static int getParkour_2()                         { return config.getInt("parkour_2-seconds"); }
+    public static int getTeleportationRoom()                 { return config.getInt("teleportation-seconds"); }
 }
 
 

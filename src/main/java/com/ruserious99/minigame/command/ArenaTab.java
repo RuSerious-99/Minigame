@@ -35,6 +35,8 @@ public class ArenaTab implements TabCompleter {
         }
 
         if (arguments.isEmpty()) {
+            arguments.add("DeadSpace");
+            arguments.add("Dungeon");
             arguments.add("Stronghold");
             arguments.add("Block");
             arguments.add("Wak_A_Block");
@@ -60,7 +62,8 @@ public class ArenaTab implements TabCompleter {
                 resultNames.add(arguments.get(1));
                 resultNames.add(arguments.get(2));
                 resultNames.add(arguments.get(3));
-
+                resultNames.add(arguments.get(4));
+                resultNames.add(arguments.get(5));
             }
 
         arguments.clear();

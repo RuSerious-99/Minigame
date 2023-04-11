@@ -1,15 +1,21 @@
 # minimum player count for all mini games:
-required-players-block-game: 2
+required-players-block-game: 1
 required-players-stronghold: 2
 required-players-wak_a_block: 1
 required-players-pvp-vs: 2
+required-players-dungeon: 1
+required-players-deadSpace: 1
 
 # countdown in seconds when minimum player count is met this is the countdown before game starts
-countdown-seconds: 30
+countdown-seconds: 10
 
 # specific game counts to win game   NOTE: cod stronghold has its own setting for kills to win in its section
 blockgame-blocks-to-break-count: 4
 pvpgame-player-kill-count: 2
+wak_a_block_win_count: 2
+
+#Wak_A_Block enemies count
+enemies_count: 1
 
 # if you change main-world-name you also have to change lobby-spawn 'world'
 main-world-name: 'world'
@@ -66,6 +72,24 @@ arenas:
     z: 483
     pitch: 0
     yaw: 93
+
+  '4':
+    game: 'DUNGEON'
+    world: 'arena5'
+    x: -27
+    y: 79
+    z: 65
+    pitch: 0
+    yaw: 0
+
+  '5':
+    game: 'DEADSPACE'
+    world: 'arena6'
+    x: 1739.177
+    y: 87.000
+    z: -49.566
+    pitch: 0
+    yaw: -90
 
 # pvp one on one extra game live spawns
 pvp-1on1:
@@ -183,3 +207,17 @@ spawn-red:
     z: 544
     pitch: 0
     yaw: 180
+
+# dungeon room times in seconds
+maxPlayer_count-seconds: 24
+entrance-countdown-seconds: 90
+hanger-countdown-seconds: 180
+firstboss-countdown-seconds: 600
+parkour_1-seconds: 600
+maze-seconds: 240
+boss_2-seconds: 720
+parkour_2-seconds: 480
+teleportation-seconds: 300
+leave_the_dungeon-seconds: 120
+dungeon_cooldown-seconds: 300
+

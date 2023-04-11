@@ -56,6 +56,12 @@ public class ArenaCommand implements CommandExecutor {
                     } else if (args[1].equalsIgnoreCase("Wak_A_Block")) {
                         CreateWak_A_BlockNPC c = new CreateWak_A_BlockNPC(minigame);
                         c.createNpc(player);
+                    } else if (args[1].equalsIgnoreCase("Dungeon")) {
+                        CreateDungeonNPC c = new CreateDungeonNPC(minigame);
+                        c.createNpc(player);
+                    } else if (args[1].equalsIgnoreCase("DeadSpace")) {
+                        CreateDeadSpaceNPC c = new CreateDeadSpaceNPC(minigame);
+                        c.createNpc(player);
                     } else {
                         player.sendMessage("NPC not found");
                         player.sendMessage("usage = /arena createNpc <NPC name>");

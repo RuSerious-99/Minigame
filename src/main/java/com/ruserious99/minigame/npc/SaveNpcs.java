@@ -28,8 +28,8 @@ public class SaveNpcs {
             DataMgr.getConfig().set("data." + var + ".yaw", player.getBukkitEntity().getLocation().getYaw());
             DataMgr.getConfig().set("data." + var + ".world", Objects.requireNonNull(player.getBukkitEntity().getLocation().getWorld()).getName());
             DataMgr.getConfig().set("data." + var + ".name", player.getBukkitEntity().getName());
-            DataMgr.getConfig().set("data." + var + ".text", texture);  //did not work from npc try later
-            DataMgr.getConfig().set("data." + var + ".signature", signature); //same as above
+            DataMgr.getConfig().set("data." + var + ".text", texture);
+            DataMgr.getConfig().set("data." + var + ".signature", signature);
 
             DataMgr.saveConfig();
             DataMgr.reload();

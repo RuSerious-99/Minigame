@@ -4,7 +4,6 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
@@ -15,6 +14,7 @@ public abstract class Game implements Listener {
     protected final Scoreboards scoreboards;
 
     public Game(Minigame minigame, Arena arena, Scoreboards scoreboards) {
+
         this.minigame = minigame;
         this.arena = arena;
         this.scoreboards = scoreboards;

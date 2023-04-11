@@ -90,8 +90,14 @@ public class PvpGame extends Game {
                         if (v == ConfigMgr.getPvpKillCountInt()) {
                             arena.sendMessage(ChatColor.GOLD + Objects.requireNonNull(Bukkit.getEntity(uuid)).getName()
                                     + " WINS!!! with " + ConfigMgr.getPvpKillCountInt() + " kills,  Thanks for playing.");
-                            killed.spigot().respawn();
-                            endGame();
+                            arena.sendTitle(ChatColor.BLUE + "Winner is ", killer.getDisplayName(), 0, 30, 10);
+                            //killed.spigot().respawn();
+                            new BukkitRunnable() {
+                                @Override
+                                public void run() {
+                                    endGame();
+                                }
+                            }.runTaskLater(minigame, 40);
                             return;
                         }
                     }
@@ -125,12 +131,10 @@ public class PvpGame extends Game {
 
     public void startGameTimer() {
         BukkitRunnable runGame = new BukkitRunnable() {
-            int timeLeft = ConfigMgr.getGameTimeBlock();
+            int timeLeft = ConfigMgr.getGameTimePvp();
 
             @Override
             public void run() {
-                timeLeft += checkAddTimer(0);
-
                 if (timeLeft == 0 || cancelTimer) {
                     cancelTimer = false;
                     if (timeLeft == 0) {
@@ -147,9 +151,7 @@ public class PvpGame extends Game {
         runGame.runTaskTimer(arena.getMinigame(), 0L, 20L);
     }
 
-    public int checkAddTimer(int addTime) {
-        return addTime;
-    }
+
 
     private void setGameScoreTitle(int timeLeft) {
         Player player0 = Bukkit.getPlayer(arena.getPlayers().get(0));

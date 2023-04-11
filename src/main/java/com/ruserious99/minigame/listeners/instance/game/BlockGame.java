@@ -7,17 +7,23 @@ import com.ruserious99.minigame.listeners.instance.kit.enums.KitType;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
+import com.ruserious99.minigame.npc.NpcGameStartUtil;
 import com.ruserious99.minigame.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -36,16 +42,13 @@ public class BlockGame extends Game {
 
     @Override
     public void onStart() {
-        arena.setState(GameState.LIVE);
-        arena.sendMessage("GAME HAS STARTED! First Player to break " + ConfigMgr.getBlockGameBlocksToBreakInt() + " blocks wins!");
-
 
         for (UUID uuid : arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
             points.put(uuid, 0);
             addPlayerToGameScore(player);
             minigame.getScoreboards().updateScoreboard(arena, player);
-            Objects.requireNonNull(player).closeInventory();
+            //Objects.requireNonNull(player).closeInventory();
         }
 
         for (UUID uuid1 : arena.getKits().keySet()) {
@@ -53,16 +56,24 @@ public class BlockGame extends Game {
             arena.getKits().get(uuid1).atStart(player);
         }
 
+        arena.setState(GameState.LIVE);
+        arena.sendMessage("GAME HAS STARTED! First Player to break " + ConfigMgr.getBlockGameBlocksToBreakInt() + " blocks wins!");
         startGameTimer();
     }
 
     public void addPoint(Player player) {
         int playerpoints = points.get(player.getUniqueId()) + 1;
         minigame.getScoreboards().updateScoreboard(arena, player);
-
         if (playerpoints == ConfigMgr.getBlockGameBlocksToBreakInt()) {
             arena.sendMessage(ChatColor.GOLD + player.getName() + " WINS!!! Thanks for playing.");
-            endGame();
+            arena.sendTitle(ChatColor.BLUE + "Winner is ", player.getName(), 0, 30, 10);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    endGame();
+                }
+            }.runTaskLater(minigame, 40);
             return;
         }
 
@@ -72,6 +83,7 @@ public class BlockGame extends Game {
 
     @Override
     public void endGame() {
+        points.clear();
         removeAllFromGameScore();
         cancelTimer = true;
         arena.reset();
@@ -107,13 +119,15 @@ public class BlockGame extends Game {
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e) {
-        if (arena.getId() == 0) {
-            if (!arena.getState().equals(GameState.LIVE)) {
-                e.setCancelled(true);
-            } else {
-                if (arena.getPlayers().contains(e.getPlayer().getUniqueId()))
+    public void onBlocKBreak(BlockBreakEvent e) {
+        if (e.getPlayer().getWorld().getName().equals("arena1")) {
+            if (arena.getState().equals(GameState.LIVE)) {
+                if (arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
+                    e.getPlayer().sendMessage(ChatColor.GOLD + "Congrats!!!" + ChatColor.GREEN + " You Broke a block");
                     addPoint(e.getPlayer());
+                }
+            }else{
+                e.setCancelled(true);
             }
         }
     }
@@ -139,7 +153,6 @@ public class BlockGame extends Game {
 
             @Override
             public void run() {
-                timeLeft += checkAddTimer(0);
 
                 if (timeLeft == 0 || cancelTimer) {
                     cancelTimer = false;
@@ -157,14 +170,28 @@ public class BlockGame extends Game {
         runGame.runTaskTimer(arena.getMinigame(), 0L, 20L);
     }
 
-    public int checkAddTimer(int addTime) {
-        return addTime;
-    }
-
     private void setGameScoreTitle(int timeLeft) {
         gameScore.setTitle(ChatColor.GOLD
                         + " | " + ChatColor.BLUE + TimeUtils.getFormattedTime(timeLeft)
                         + ChatColor.GOLD + " | ");
                 gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimeBlock()));
     }
+
+    @EventHandler
+    private void onPlayerDeath(PlayerDeathEvent e){
+
+        Player killed = e.getEntity();
+
+        if (points.containsKey(killed.getUniqueId())){
+            killed.spigot().respawn();
+            killed.teleport(ConfigMgr.getAfterDeathSpawn(arena.getId()));
+        }
+        if(arena.getId() == 0){
+            if(arena.getState().equals(GameState.COUNTDOWN)){
+                killed.spigot().respawn();
+                killed.teleport(ConfigMgr.getAfterDeathSpawn(arena.getId()));
+            }
+        }
+    }
+
 }
