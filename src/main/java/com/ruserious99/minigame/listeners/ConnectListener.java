@@ -1,23 +1,11 @@
 package com.ruserious99.minigame.listeners;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.Arena;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.npc.LoadNpcs;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerPlayerConnection;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,13 +16,12 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 public class ConnectListener implements Listener {
 
     private final Minigame minigame;
+
 
     public ConnectListener(Minigame minigame) {
         this.minigame = minigame;
@@ -78,7 +65,6 @@ public class ConnectListener implements Listener {
         if (arena != null) {
             arena.removePlayer(e.getPlayer());
         }
-
     }
 
     @EventHandler

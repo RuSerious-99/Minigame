@@ -134,5 +134,11 @@
            <classifier>remapped-mojang</classifier> <!-- Comment this out for regular Spigot mappings -->
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

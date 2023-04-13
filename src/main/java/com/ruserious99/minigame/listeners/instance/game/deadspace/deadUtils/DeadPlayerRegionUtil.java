@@ -1,5 +1,6 @@
 package com.ruserious99.minigame.listeners.instance.game.deadspace.deadUtils;
 
+import com.ruserious99.minigame.listeners.instance.game.deadspace.deadUtils.event.DeadBroadcastEvent;
 import com.ruserious99.minigame.listeners.instance.game.dungeon.events.ServerBroadcastEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -38,7 +39,7 @@ public class DeadPlayerRegionUtil implements Listener {
         deadExit.remove(player);
     }
 
-    public static void regionEvents(UUID uuid, String cuboidName) {
+    public static void deadRegionEvents(UUID uuid, String cuboidName) {
 
         // System.out.println("playerregionUtil cubiod name = " + cuboidName);
         if (!deadRegionFirstEnter.containsKey(cuboidName)) {
@@ -67,7 +68,7 @@ public class DeadPlayerRegionUtil implements Listener {
     private static void sendRegionEnter(UUID uuid, String cuboidName) {
         Player player = Bukkit.getPlayer(uuid);
 
-        ServerBroadcastEvent event = new ServerBroadcastEvent(player, cuboidName);
+        DeadBroadcastEvent event = new DeadBroadcastEvent(player, cuboidName);
         Bukkit.getPluginManager().callEvent(event);
 
         if(!event.isCancelled()){

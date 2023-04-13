@@ -1,16 +1,10 @@
 package com.ruserious99.minigame.listeners.instance;
 
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.wrappers.WrappedGameProfile;
 import com.google.common.collect.TreeMultimap;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import com.mojang.authlib.properties.PropertyMap;
-import com.mojang.datafixers.util.Pair;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.listeners.instance.game.*;
-import com.ruserious99.minigame.listeners.instance.game.deadspace.DeadSpace;
+import com.ruserious99.minigame.listeners.instance.game.deadspace.deadUtils.SuitsUtil;
 import com.ruserious99.minigame.listeners.instance.game.dungeon.Dungeon;
 import com.ruserious99.minigame.listeners.instance.kit.CodKit;
 import com.ruserious99.minigame.listeners.instance.kit.Kit;
@@ -25,29 +19,15 @@ import com.ruserious99.minigame.listeners.instance.kit.type.CodSpeedKit;
 import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.listeners.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import me.libraryaddict.disguise.DisguiseAPI;
-import me.libraryaddict.disguise.LibsDisguises;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.MobDisguise;
-import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import me.libraryaddict.disguise.utilities.DisguiseUtilities;
-import me.libraryaddict.disguise.utilities.reflection.LibsProfileLookup;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerPlayerConnection;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.biome.BiomeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
@@ -157,14 +137,36 @@ public class Arena {
         players.add(player.getUniqueId());
 
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
+            minigame.getDisguiseManager().applyDisguise(player,"Isac Clark", SuitsUtil.startSuitValue(), SuitsUtil.startSuitSignature());
             player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/last_days.zip/download");
         }
+
         player.getInventory().clear();
         playerKitSelect(player);
         countdown.start();
         player.teleport(spawn);
-    }
 
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                applySuit(player);
+            }
+        }.runTaskLater(Minigame.getInstance(), 40);
+    }
+    private void applySuit(Player player) {
+        ServerPlayer sp = ((CraftPlayer)player).getHandle();
+        sp.connection.send(new ClientboundRespawnPacket(
+                sp.getLevel().dimensionTypeId(),
+                sp.getLevel().dimension(),
+                BiomeManager.obfuscateSeed(sp.getLevel().getSeed()),
+                sp.gameMode.getGameModeForPlayer(),
+                sp.gameMode.getPreviousGameModeForPlayer(),
+                sp.getLevel().isDebug(),
+                sp.getLevel().isFlat(),
+                (byte) 1,
+                Optional.of(GlobalPos.of(sp.getLevel().dimension(), sp.getOnPos()))
+        ));
+    }
 
     private void playerKitSelect(Player player) {
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")) {
@@ -224,6 +226,13 @@ public class Arena {
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
             player.sendMessage("removing Map resource pack");
             player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/VanillaDefault.zip/download");
+            minigame.getDisguiseManager().deleteDisguise(player);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    applySuit(player);
+                }
+            }.runTaskLater(Minigame.getInstance(), 40);
         }
 
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {
