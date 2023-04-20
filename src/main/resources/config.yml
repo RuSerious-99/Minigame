@@ -89,7 +89,7 @@ arenas:
     y: 87.000
     z: -49.566
     pitch: 0
-    yaw: -90
+    yaw: 0
 
 # pvp one on one extra game live spawns
 pvp-1on1:

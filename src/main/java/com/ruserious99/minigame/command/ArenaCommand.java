@@ -2,7 +2,7 @@ package com.ruserious99.minigame.command;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.listeners.instance.Arena;
+import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
 import com.ruserious99.minigame.npc.*;
@@ -130,7 +130,11 @@ public class ArenaCommand implements CommandExecutor {
                 if (arena.getState() == GameState.RECRUITING ||
                         arena.getState() == GameState.COUNTDOWN) {
                     player.sendMessage(ChatColor.GOLD + "You are now playing in Arena " + id + ".");
-                    arena.addPlayer(player);
+                    try {
+                        arena.addPlayer(player);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     player.sendMessage(ChatColor.RED + "You cant join that arena right now.");
                 }

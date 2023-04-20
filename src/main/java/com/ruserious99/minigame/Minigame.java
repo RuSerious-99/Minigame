@@ -2,10 +2,10 @@ package com.ruserious99.minigame;
 
 import com.ruserious99.minigame.command.ArenaCommand;
 import com.ruserious99.minigame.command.ArenaTab;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.listeners.Listeners;
 import com.ruserious99.minigame.listeners.ConnectListener;
-import com.ruserious99.minigame.listeners.instance.game.deadspace.deadUtils.DisguiseListener;
-import com.ruserious99.minigame.listeners.instance.game.deadspace.playerskin.DisguiseManager;
-import com.ruserious99.minigame.listeners.instance.scorboards.Scoreboards;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils.DisguiseManager;
+import com.ruserious99.minigame.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.managers.ArenaMgr;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
@@ -93,7 +93,7 @@ public final class Minigame extends JavaPlugin implements Listener {
 
         Bukkit.getPluginManager().registerEvents(this, this);
 
-        Bukkit.getPluginManager().registerEvents(new DisguiseListener(disguiseManager), this);
+        Bukkit.getPluginManager().registerEvents(new Listeners(), this);
         Bukkit.getPluginManager().registerEvents(new ConnectListener(this), this);
         Bukkit.getServer().getPluginManager().registerEvents(new NpcPlayerMoveEvent(this), this);
         Objects.requireNonNull(getCommand("arena")).setExecutor(new ArenaCommand(this));
@@ -128,7 +128,6 @@ public final class Minigame extends JavaPlugin implements Listener {
     public Scoreboards getScoreboards() {return scoreboards;}
     public Plugin getPlugin() {return plugin;}
     public static Minigame getInstance() {return instance;}
-
     public DisguiseManager getDisguiseManager() {
         return disguiseManager;
     }

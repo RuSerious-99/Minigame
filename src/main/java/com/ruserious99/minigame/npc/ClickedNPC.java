@@ -11,6 +11,8 @@ import com.ruserious99.minigame.Minigame;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
+
 
 public class ClickedNPC {
 
@@ -44,7 +46,11 @@ public class ClickedNPC {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                NpcGameStartUtil.joinGame((Minigame) plugin, event.getPlayer(), finalGame);
+                                try {
+                                    NpcGameStartUtil.joinGame((Minigame) plugin, event.getPlayer(), finalGame);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }.runTaskLater(minigame, 40);
                     }
