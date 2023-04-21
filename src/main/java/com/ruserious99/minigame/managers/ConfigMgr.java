@@ -34,9 +34,9 @@ public class ConfigMgr {
     public static int      getRequiredPlayersStronghold(){return config.getInt("required-players-stronghold");}
     public static int      getRequiredPlayersDungeon(){return config.getInt("required-players-dungeon");}
     public static int      getRequiredPlayersDeadSpace(){return config.getInt("required-players-deadSpace");}
-    public static int      getCountdownSeconds(){
-        return config.getInt("countdown-seconds");
-    }
+    public static int      getCountdownSeconds(){return config.getInt("countdown-seconds");}
+    public static int      getDeadCountdownSeconds(){return config.getInt("dead-countdown-seconds");}
+
 
     public static Location getLobbySpawn(){
         return new Location(

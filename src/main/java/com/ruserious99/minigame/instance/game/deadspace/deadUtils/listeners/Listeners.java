@@ -2,7 +2,8 @@ package com.ruserious99.minigame.instance.game.deadspace.deadUtils.listeners;
 
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.SerializeInventory;
-import com.ruserious99.minigame.instance.game.deadspace.gameItems.PersistentData;
+import com.ruserious99.minigame.PersistentData;
+import com.ruserious99.minigame.utils.ActionBarMessage;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -16,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -77,6 +77,7 @@ public class Listeners implements Listener {
             }
         }
         player.getInventory().clear(slot);
+        ActionBarMessage.actionMessage(player, "Successfully used Health Pack");
     }
 
     @EventHandler

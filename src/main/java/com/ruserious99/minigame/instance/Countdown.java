@@ -17,7 +17,12 @@ public class Countdown extends BukkitRunnable implements Listener {
     public Countdown(Minigame miniGame, Arena arena) {
         this.minigame = miniGame;
         this.arena = arena;
-        this.countdownSeconds = ConfigMgr.getCountdownSeconds();
+        if(arena.getId() == 5){
+            this.countdownSeconds = ConfigMgr.getDeadCountdownSeconds();
+        }else{
+            this.countdownSeconds = ConfigMgr.getCountdownSeconds();
+        }
+
     }
 
     public void start() {

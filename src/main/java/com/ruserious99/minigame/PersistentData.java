@@ -1,6 +1,5 @@
-package com.ruserious99.minigame.instance.game.deadspace.gameItems;
+package com.ruserious99.minigame;
 
-import com.ruserious99.minigame.Minigame;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -59,14 +58,12 @@ public class PersistentData {
 
     //Player methods
     public void deadPlayerSetCustomDataTags(Player player, String theKey, String tag) {
-        System.out.println("persistant data setTags  " + tag + " " + theKey);
         NamespacedKey key = new NamespacedKey(Minigame.getInstance(), theKey);
         PersistentDataContainer data = player.getPersistentDataContainer();
         data.set(key, PersistentDataType.STRING, tag);
     }
 
     public String deadPlayerGetCustomDataTag(Player player, String theKey){
-        System.out.println("persistant data getTags  " + theKey);
         PersistentDataContainer container = player.getPersistentDataContainer();
         NamespacedKey key = new NamespacedKey(Minigame.getInstance(), theKey);
         if(container.has(key, PersistentDataType.STRING)){

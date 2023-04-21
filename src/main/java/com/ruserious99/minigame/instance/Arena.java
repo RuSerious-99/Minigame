@@ -4,11 +4,7 @@ import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.game.*;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.SerializeInventory;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.SaveStations;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils.SuitsConfig;
-import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
-import com.ruserious99.minigame.instance.game.deadspace.gameItems.PersistentData;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
 import com.ruserious99.minigame.instance.game.dungeon.Dungeon;
 import com.ruserious99.minigame.instance.kit.CodKit;
 import com.ruserious99.minigame.instance.kit.Kit;
@@ -23,20 +19,10 @@ import com.ruserious99.minigame.instance.kit.type.CodSpeedKit;
 import com.ruserious99.minigame.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.instance.team.Team;
 import com.ruserious99.minigame.managers.ConfigMgr;
-import net.minecraft.core.GlobalPos;
-import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.biome.BiomeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import java.io.IOException;
 import java.util.*;
 
@@ -44,7 +30,7 @@ public class Arena {
 
     private final Minigame minigame;
     private final int id;
-    private Location spawn;
+    private final Location spawn;
     private final Scoreboards scoreboards;
 
     private final HashMap<UUID, Kit> kits;
@@ -142,63 +128,20 @@ public class Arena {
         player.getInventory().clear();
 
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-            addPlayerToDeadSpace(player);
+            GameInit.addPlayerToDeadSpace(player, spawn);
+            if(GameInit.getSpawnPoint(player) != null) {
+                player.teleport(Objects.requireNonNull(GameInit.getSpawnPoint(player)));
+            }else{
+                player.teleport(spawn);
+            }
+        }else {
+            playerKitSelect(player);
+            player.teleport(spawn);
         }
-
-        playerKitSelect(player);
         countdown.start();
-        player.teleport(spawn);
     }
 
-    private void addPlayerToDeadSpace(Player player) throws IOException {
-        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-            ItemsManager.init();
-            savePlayerBasicInfo(player);
-            loadPlayer(player);
-            SuitsConfig.setSuitparams(player);
-            player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/last_days.zip/download");
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    applySuit(player);
-                }
-            }.runTaskLater(Minigame.getInstance(), 40);
-        }
-    }
 
-    private void loadPlayer(Player player) throws IOException {
-        PersistentData persistentData = new PersistentData();
-        if (persistentData.hasPlayerData(player, "deadInfoSaveStation")) {
-            String spawnLocation = persistentData.deadPlayerGetCustomDataTag(player, "deadInfoSaveStation");
-            spawn = SaveStations.getSpawnLocation(spawnLocation);
-        }
-    }
-
-    private void savePlayerBasicInfo(Player player) {
-        PersistentData persistentData = new PersistentData();
-        if(!persistentData.hasPlayerData(player, "deadInfoChapter")){
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoChapter", "chapter1");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSuit", "startSuit");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0.0");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", "spawn");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
-        }
-    }
-
-    private void applySuit(Player player) {
-        ServerPlayer sp = ((CraftPlayer)player).getHandle();
-        sp.connection.send(new ClientboundRespawnPacket(
-                sp.getLevel().dimensionTypeId(),
-                sp.getLevel().dimension(),
-                BiomeManager.obfuscateSeed(sp.getLevel().getSeed()),
-                sp.gameMode.getGameModeForPlayer(),
-                sp.gameMode.getPreviousGameModeForPlayer(),
-                sp.getLevel().isDebug(),
-                sp.getLevel().isFlat(),
-                (byte) 1,
-                Optional.of(GlobalPos.of(sp.getLevel().dimension(), sp.getOnPos()))
-        ));
-    }
 
     private void playerKitSelect(Player player) {
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena1")) {
@@ -257,17 +200,7 @@ public class Arena {
 
         //deadspace
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-            player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/VanillaDefault.zip/download");
-            minigame.getDisguiseManager().deleteDisguise(player);
-            AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            assert maxHealthAttribute != null;
-            maxHealthAttribute.setBaseValue(20.0);
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    applySuit(player);
-                }
-            }.runTaskLater(Minigame.getInstance(), 40);
+            GameInit.removePlayer(player);
             reset();
             return;
         }

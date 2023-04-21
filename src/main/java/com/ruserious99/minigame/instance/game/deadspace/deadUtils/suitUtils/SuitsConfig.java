@@ -1,7 +1,7 @@
 package com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils;
 
 import com.ruserious99.minigame.Minigame;
-import com.ruserious99.minigame.instance.game.deadspace.gameItems.PersistentData;
+import com.ruserious99.minigame.PersistentData;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;

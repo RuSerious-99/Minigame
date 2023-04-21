@@ -2,6 +2,7 @@ package com.ruserious99.minigame.instance.game.deadspace.gameItems;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import com.ruserious99.minigame.PersistentData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

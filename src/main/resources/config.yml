@@ -8,6 +8,7 @@ required-players-deadSpace: 1
 
 # countdown in seconds when minimum player count is met this is the countdown before game starts
 countdown-seconds: 10
+dead-countdown-seconds: 0
 
 # specific game counts to win game   NOTE: cod stronghold has its own setting for kills to win in its section
 blockgame-blocks-to-break-count: 4

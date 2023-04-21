@@ -2,6 +2,7 @@ package com.ruserious99.minigame.instance.game;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadTitlesUtil;
@@ -11,7 +12,6 @@ import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.Wall
 import com.ruserious99.minigame.instance.game.deadspace.event.DeadBroadcastEvent;
 import com.ruserious99.minigame.instance.game.deadspace.gameEntities.ChestConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameEntities.EntityConfig;
-import com.ruserious99.minigame.instance.game.deadspace.gameItems.PersistentData;
 import com.ruserious99.minigame.instance.scorboards.Scoreboards;
 import com.ruserious99.minigame.utils.Cuboid;
 import org.bukkit.Bukkit;
@@ -39,19 +39,14 @@ public class DeadSpace extends Game {
     }
 
     @Override
-    public void onStart()  {
+    public void onStart() {
         gameAreas.createRegions();
         walls.createWalls();
         arena.setState(GameState.LIVE);
 
-        try {
-            loadInventory();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         DeadPlayerRegionUtil.reset();
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -66,6 +61,17 @@ public class DeadSpace extends Game {
                 }
             }
         }.runTaskTimer(Minigame.getInstance(), 20L, 40L);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    loadInventory();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskLater(Minigame.getInstance(), 80L);
+
     }
 
     private void loadInventory() throws IOException {
@@ -83,6 +89,7 @@ public class DeadSpace extends Game {
         }
     }
 
+
     @EventHandler
     public void onResourceStatus(PlayerResourcePackStatusEvent e) throws IOException {
         if (e.getStatus().equals(PlayerResourcePackStatusEvent.Status.DECLINED)) {
@@ -99,21 +106,18 @@ public class DeadSpace extends Game {
 
         //this is why you are placing chests as you progress rather than all at start
         //todo: implement randon system to fill chests to balance game
-        if(message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding")){
-            System.out.println("DeadSpace: in boarding called");
+        if(message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")){
             arena.sendMessage("Welcome to the Ishamura.");
             new DeadTitlesUtil(ChatColor.BLUE + "Chapter 1; NEW ARRIVALS", ChatColor.YELLOW + "Objective: get to the Medical Bay", arena);
             ChestConfig.spawnChest(ChestConfig.boarding(), ChestConfig.boardingStack());
         }
 
         if(message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")){
-            System.out.println("DeadSpace: in enterBoarding called");
             ChestConfig.spawnChest(ChestConfig.enterIshamura1(), ChestConfig.enterIshamuraStack1());
             ChestConfig.spawnChest(ChestConfig.enterIshamura2(), ChestConfig.enterIshamuraStack2());
         }
 
         if(message.equals("c1Computer") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("c1Computer")){
-            System.out.println("DeadSpace: in c1Computer called");
             EntityConfig.spawnEntity(EntityConfig.c1ComputerLocation(), EntityConfig.c1ComputerEntity());
         }
     }
