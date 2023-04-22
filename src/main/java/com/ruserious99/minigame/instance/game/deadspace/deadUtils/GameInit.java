@@ -1,24 +1,20 @@
 package com.ruserious99.minigame.instance.game.deadspace.deadUtils;
 
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.SaveStations;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils.SuitsConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
-import com.ruserious99.minigame.PersistentData;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.network.protocol.game.ClientboundRespawnPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.biome.BiomeManager;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,9 +50,6 @@ public class GameInit {
                     applySuit(player);
                 }
             }.runTaskLater(Minigame.getInstance(), 40);
-
-
-
         }
     }
 
@@ -74,7 +67,7 @@ public class GameInit {
         if(!persistentData.hasPlayerData(player, "deadInfoChapter")){
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoChapter", "chapter1");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSuit", "startSuit");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0.0");
+            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", "spawn");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
         }

@@ -26,6 +26,10 @@ public class ItemsManager {
     public static ItemStack mediumHealthPack;
     public static ItemStack largeHealthPack;
 
+    public static String balance = "0";
+    public static ItemStack bankAccount;
+
+
     public static void init() {
         gameItems = new HashMap<>();
         persistentData = new PersistentData();
@@ -33,6 +37,42 @@ public class ItemsManager {
         createSmallHealthPack();
         createMediumHealthPack();
         createLargeHealthPack();
+        createBankAccount(balance);
+    }
+
+    private static void createBankAccount(String balance) {
+        ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.DARK_RED + "BANK ACCOUNT");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "Balance");
+        lore.add(ChatColor.GREEN + "       " + balance);
+        lore.add("");
+
+        meta.setLore(lore);
+
+        tempSkull.setItemMeta(meta);
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDRkYjI0YTAwYWZkMTFjNTQyYjVmZWVlMDBjN2I0MTZkNzhhNjhiNmYwMzY3YTllMTAyNWYwYTJmY2FkMTNhNiJ9fX0="));
+        Field field;
+        try {
+            field = meta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(meta, profile);
+        }catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException x){
+            x.printStackTrace();
+        }
+        tempSkull.setAmount(1);
+        tempSkull.setItemMeta(meta);
+        bankAccount = tempSkull;
+        bankAccount = persistentData.setCustomDataTag(tempSkull, "bank_account", balance);
+
+        gameItems.put(bankAccount, false);
     }
 
     private static void createSmallHealthPack() {
@@ -48,7 +88,7 @@ public class ItemsManager {
 
         lore.add("");
         lore.add(ChatColor.GRAY + "Replenishes you 2 hearts");
-        lore.add(ChatColor.GRAY + "Double right click to use");
+        lore.add(ChatColor.GRAY + "Right click to use");
         lore.add("");
 
         meta.setLore(lore);
@@ -88,7 +128,7 @@ public class ItemsManager {
 
         lore.add("");
         lore.add(ChatColor.GRAY + "Replenishes you 4 hearts");
-        lore.add(ChatColor.GRAY + "Double right click to use");
+        lore.add(ChatColor.GRAY + "Right click to use");
         lore.add("");
 
         meta.setLore(lore);
@@ -127,7 +167,7 @@ public class ItemsManager {
 
         lore.add("");
         lore.add(ChatColor.GRAY + "Replenishes you 6 hearts");
-        lore.add(ChatColor.GRAY + "right click to use");
+        lore.add(ChatColor.GRAY + "Right click to use");
         lore.add("");
 
         meta.setLore(lore);

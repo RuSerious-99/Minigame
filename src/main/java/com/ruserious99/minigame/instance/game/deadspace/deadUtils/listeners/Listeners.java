@@ -1,9 +1,14 @@
 package com.ruserious99.minigame.instance.game.deadspace.deadUtils.listeners;
 
+import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.SerializeInventory;
-import com.ruserious99.minigame.PersistentData;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.Walls;
+import com.ruserious99.minigame.instance.game.deadspace.gameEntities.EntityConfig;
 import com.ruserious99.minigame.utils.ActionBarMessage;
+import com.ruserious99.minigame.utils.Cuboid;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -14,7 +19,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,7 +26,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Listeners implements Listener {
-
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
@@ -33,11 +36,17 @@ public class Listeners implements Listener {
         if (!player.getWorld().getName().equals("arena6")) {
             return;
         }
-        if (e.getSlotType() == InventoryType.SlotType.ARMOR || clickedItem == null || !e.isRightClick()) {
+        if (clickedItem == null) {
+            return;
+        }
+        if (clickedItem.getItemMeta() == null) {
             return;
         }
 
-        if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("HEALTH PACK")) {
+        if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("BANK ACCOUNT")) {
+            e.setCancelled(true);
+        }
+        if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("HEALTH PACK") && e.isRightClick()) {
             setHealth(player, clickedItem, slot);
         }
     }
@@ -46,8 +55,7 @@ public class Listeners implements Listener {
         if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("SMALL HEALTH PACK")) {
             double currentHealth = player.getHealth();
             double maxHealth = player.getMaxHealth();
-            if (currentHealth  < maxHealth -4) {
-                System.out.println(" small new health " );
+            if (currentHealth < maxHealth - 4) {
                 double newHealth = currentHealth + 4.0;
                 player.setHealth(newHealth);
             } else {
@@ -58,7 +66,7 @@ public class Listeners implements Listener {
         if (clickedItem.getItemMeta().getDisplayName().contains("MEDIUM HEALTH PACK")) {
             double currentHealth = player.getHealth();
             double maxHealth = player.getMaxHealth();
-            if (currentHealth < maxHealth - 8 ){
+            if (currentHealth < maxHealth - 8) {
                 double newHealth = currentHealth + 8.0;
                 player.setHealth(newHealth);
             } else {
@@ -82,29 +90,22 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-
-        if (!event.getPlayer().getWorld().getName().equals("arena6")) {
-            return;
-        }
-
-        if (event.getClickedBlock() == null) {
-            return;
-        }
-
+        if (!event.getPlayer().getWorld().getName().equals("arena6")) {return;}
+        if (event.getClickedBlock() == null) {return;}
         Player player = event.getPlayer();
         Block block = event.getClickedBlock();
 
+        //after interact with computer chap1
+        if (block.getLocation().equals(new Location(Bukkit.getWorld("arena6"), 1783, 87, -54))) {
+            EntityConfig.spawnEntity(EntityConfig.c1ComputerLocation(), EntityConfig.c1ComputerEntity());
+        }
+
         //chests
-        if (block != null && block.getType() == Material.CHEST) {
-            breakChestAndDropItem(block);
-        }
-
+        if(block.getType()==Material.CHEST) {breakChestAndDropItem(block);}
         //save station
-        if (Objects.requireNonNull(block).getType().equals(Material.LIME_WOOL) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            savePlayer(player);
-        }
+        if(Objects.requireNonNull(block).getType().equals(Material.LIME_WOOL) &&event.getAction()==Action.RIGHT_CLICK_BLOCK) {savePlayer(player);}
 
-    }
+}
 
     private void breakChestAndDropItem(Block block) {
         BlockState state = block.getState();
