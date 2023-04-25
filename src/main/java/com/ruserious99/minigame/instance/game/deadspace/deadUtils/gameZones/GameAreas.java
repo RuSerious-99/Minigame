@@ -60,6 +60,7 @@ public class GameAreas {
         cuboids.put(stairsDown, "stairsDown");
 
     }
+
     public static HashMap<Cuboid, String> getCuboids() {return cuboids;}
 
     public static void removeWall(String cuboid) {

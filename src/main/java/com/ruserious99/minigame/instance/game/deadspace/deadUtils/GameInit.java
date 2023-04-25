@@ -34,15 +34,11 @@ public class GameInit {
             }
         }.runTaskLater(Minigame.getInstance(), 40);
     }
-
-
     public static void addPlayerToDeadSpace(Player player, Location spawn){
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-
             ItemsManager.init();
             savePlayerBasicInfo(player);
             SuitsConfig.setSuitparams(player);
-
             player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/last_days.zip/download");
             new BukkitRunnable() {
                 @Override
@@ -52,7 +48,6 @@ public class GameInit {
             }.runTaskLater(Minigame.getInstance(), 40);
         }
     }
-
     public static Location getSpawnPoint(Player player) {
         PersistentData persistentData = new PersistentData();
         if (persistentData.hasPlayerData(player, "deadInfoSaveStation")) {
@@ -65,6 +60,7 @@ public class GameInit {
     private static void savePlayerBasicInfo(Player player) {
         PersistentData persistentData = new PersistentData();
         if(!persistentData.hasPlayerData(player, "deadInfoChapter")){
+            System.out.println("saving player basic info");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoChapter", "chapter1");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSuit", "startSuit");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0");

@@ -30,9 +30,6 @@ import java.util.UUID;
 
 public class DeadSpace extends Game {
 
-
-
-
     public DeadSpace(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         super(minigame, arena, scoreboards);
 
@@ -72,7 +69,6 @@ public class DeadSpace extends Game {
             }
         }.runTaskLater(Minigame.getInstance(), 80L);
     }
-
     private void fillWalls() {
         Walls.fillWall("loadingDockWall1");
         Walls.fillWall("loadingDockWall2");
@@ -81,28 +77,30 @@ public class DeadSpace extends Game {
         Walls.fillWall("blockDoorComputer");
         Walls.fillWall("blockDoorInteractComputer");
     }
-
     private void loadInventory() throws IOException {
         Player player = Bukkit.getPlayer(arena.getPlayers().get(0));
         PersistentData persistentData = new PersistentData();
         String convertFrom = persistentData.deadPlayerGetCustomDataTag(Objects.requireNonNull(player), "deadInfoInventory");
         if (!convertFrom.equals("inventory") ) {
             ItemStack[] items = SerializeInventory.itemStackArrayFromBase64(persistentData.deadPlayerGetCustomDataTag(player, "deadInfoInventory"));
+            int slotSpot = 9;
             for (ItemStack i : items) {
                 if(i!=null) {
                     if(i.getItemMeta() != null && i.getItemMeta().getDisplayName().contains("BANK ACCOUNT")){
                         continue;
                     }
-                    player.getInventory().addItem(i);
+                    if(slotSpot >= 34){
+                        player.sendMessage(ChatColor.RED + "Your inventory is full");
+                    }
+                    player.getInventory().setItem(slotSpot, i);
+                    slotSpot++;
                 }
             }
+            player.getInventory().setItem(35, ItemsManager.createBankAccount(persistentData.deadPlayerGetCustomDataTag(Objects.requireNonNull(player), "deadInfoMoney")));
+        }else{
+            player.getInventory().setItem(35, ItemsManager.bankAccount);
         }
-
-        ItemsManager.balance = persistentData.deadPlayerGetCustomDataTag(Objects.requireNonNull(player), "deadInfoMoney");
-        player.getInventory().setItem(17, ItemsManager.bankAccount);
     }
-
-
     @EventHandler
     public void onResourceStatus(PlayerResourcePackStatusEvent e) throws IOException {
         if (e.getStatus().equals(PlayerResourcePackStatusEvent.Status.DECLINED)) {
@@ -113,36 +111,41 @@ public class DeadSpace extends Game {
         }
     }
 
+
     @EventHandler
     public void onRegionEnter(DeadBroadcastEvent event) {
         String message = event.getMessage();
-
         //this is why you are placing chests as you progress rather than all at start
         //todo: implement randon system to fill chests to balance game
-        if(message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")){
-            arena.sendMessage("Welcome to the Ishamura.");
+        if (message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
+            arena.sendMessage(ChatColor.YELLOW + "Welcome to the Ishamura.");
             new DeadTitlesUtil(ChatColor.BLUE + "Chapter 1; NEW ARRIVALS", ChatColor.YELLOW + "Objective: get to the Medical Bay", arena);
             ChestConfig.spawnChest(ChestConfig.boarding(), ChestConfig.boardingStack());
             ChestConfig.spawnChest(ChestConfig.enterIshamura1(), ChestConfig.enterIshamuraStack1());
             ChestConfig.spawnChest(ChestConfig.enterIshamura2(), ChestConfig.enterIshamuraStack2());
         }
-
-        if(message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")){
-            arena.sendMessage(ChatColor.WHITE + "Objective: " + ChatColor.BLUE + "Interact with computer");
-        }
-
-        if(message.equals("firstPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("firstPartHall")){
+        if (message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {arena.sendMessage(ChatColor.WHITE + "Objective: " + ChatColor.BLUE + "Interact with computer");}
+        if (message.equals("firstPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("firstPartHall")) {
             for (Map.Entry<Cuboid, String> entry : GameAreas.getCuboids().entrySet()) {
                 String value = entry.getValue();
                 if (value.equals(message)) {
                     GameAreas.fillWall("c1Computer");
                 }
             }
-            EntityConfig.spawnEntity(EntityConfig.firstPartHallLocation(), EntityConfig.firstPartHallEntity());
+            EntityConfig.spawnEntityChapter1(EntityConfig.firstPartHallLocation(), EntityConfig.firstPartHallEntity());
         }
-
-
+        if (message.equals("secondPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("secondPartHall")) {
+            EntityConfig.spawnEntityChapter1(EntityConfig.secondPartHallLocation(), EntityConfig.secondPartHallEntity());}
+        if (message.equals("thirdPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("thirdPartHall")) {
+            EntityConfig.spawnEntityChapter1(EntityConfig.thirdPartHallLocation(), EntityConfig.thirdPartHallEntity());
+        }
+        if (message.equals("forthPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("forthPartHall")) {
+            EntityConfig.spawnEntityChapter1(EntityConfig.forthPartHallLocation(), EntityConfig.forthPartHallEntity());
+        }
+        if (message.equals("stairsDown")) {GameAreas.fillWall("forthPartHall");}
     }
+
+
 
     @Override
     public void endGame() {
