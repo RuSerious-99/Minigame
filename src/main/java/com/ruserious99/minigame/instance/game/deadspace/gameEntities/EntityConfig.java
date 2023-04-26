@@ -31,8 +31,6 @@ public class EntityConfig {
 
     public static void spawnEntityChapter1(Location location, EntityType entity) {
         chapter1_zombie = (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, entity);
-        chapter1_zombie.setCustomNameVisible(false);
-        chapter1_zombie.setCustomName("chapter1_zombie");
     }
 
 }

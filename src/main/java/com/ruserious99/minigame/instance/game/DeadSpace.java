@@ -115,8 +115,7 @@ public class DeadSpace extends Game {
     @EventHandler
     public void onRegionEnter(DeadBroadcastEvent event) {
         String message = event.getMessage();
-        //this is why you are placing chests as you progress rather than all at start
-        //todo: implement randon system to fill chests to balance game
+
         if (message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
             arena.sendMessage(ChatColor.YELLOW + "Welcome to the Ishamura.");
             new DeadTitlesUtil(ChatColor.BLUE + "Chapter 1; NEW ARRIVALS", ChatColor.YELLOW + "Objective: get to the Medical Bay", arena);
@@ -126,12 +125,7 @@ public class DeadSpace extends Game {
         }
         if (message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {arena.sendMessage(ChatColor.WHITE + "Objective: " + ChatColor.BLUE + "Interact with computer");}
         if (message.equals("firstPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("firstPartHall")) {
-            for (Map.Entry<Cuboid, String> entry : GameAreas.getCuboids().entrySet()) {
-                String value = entry.getValue();
-                if (value.equals(message)) {
-                    GameAreas.fillWall("c1Computer");
-                }
-            }
+            GameAreas.fillWall("c1Computer");
             EntityConfig.spawnEntityChapter1(EntityConfig.firstPartHallLocation(), EntityConfig.firstPartHallEntity());
         }
         if (message.equals("secondPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("secondPartHall")) {

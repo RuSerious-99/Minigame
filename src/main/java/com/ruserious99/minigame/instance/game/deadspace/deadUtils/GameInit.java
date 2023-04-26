@@ -56,7 +56,6 @@ public class GameInit {
         }
         return null;
     }
-
     private static void savePlayerBasicInfo(Player player) {
         PersistentData persistentData = new PersistentData();
         if(!persistentData.hasPlayerData(player, "deadInfoChapter")){
@@ -68,7 +67,6 @@ public class GameInit {
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
         }
     }
-
     private static void applySuit(Player player) {
         ServerPlayer sp = ((CraftPlayer)player).getHandle();
         sp.connection.send(new ClientboundRespawnPacket(

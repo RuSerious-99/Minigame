@@ -24,6 +24,9 @@ public class ItemsManager {
     public static ItemStack smallHealthPack;
     public static ItemStack mediumHealthPack;
     public static ItemStack largeHealthPack;
+    public static ItemStack save;
+    public static ItemStack restartChapter;
+    public static ItemStack exit;
 
     public static int creditAdded = 100;
     public static ItemStack credits;
@@ -38,9 +41,13 @@ public class ItemsManager {
         createSmallHealthPack();
         createMediumHealthPack();
         createLargeHealthPack();
+        createSave();
+        createExit();
+        createRestartChapter();
         createCredits();
         createBankAccount("0");
     }
+
     private static void createCredits() {
         ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
 
@@ -226,5 +233,113 @@ public class ItemsManager {
         largeHealthPack = persistentData.setCustomDataTag(tempSkull, "healthPack", "large");
 
         gameItems.put(largeHealthPack, false);
+    }
+    private static void createSave() {
+        ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.DARK_RED + "SAVE PROGRESS");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "=============");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "saves location and inventory");
+        lore.add(ChatColor.GRAY + "Right click to use");
+        lore.add("");
+
+        meta.setLore(lore);
+
+        tempSkull.setItemMeta(meta);
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODk0MjgyN2Q0MzRmYWE4MWU4NGZkMDY4ODJmOWExNTUzY2I3YzIwYTExM2Q1NzM0ZjM3ZWY0ODBlMGMyYTU5YSJ9fX0="));
+        Field field;
+        try {
+            field = meta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(meta, profile);
+        }catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException x){
+            x.printStackTrace();
+        }
+        tempSkull.setAmount(1);
+        tempSkull.setItemMeta(meta);
+        save = tempSkull;
+        save = persistentData.setCustomDataTag(tempSkull, "save", "progress");
+
+        gameItems.put(save, false);
+    }
+    private static void createRestartChapter() {
+        ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.DARK_RED + "RESTART");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "=============");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "Restarts location and inventory");
+        lore.add(ChatColor.GRAY + "Right click to use");
+        lore.add("");
+
+        meta.setLore(lore);
+
+        tempSkull.setItemMeta(meta);
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTc3NDIwMzRmNTlkYjg5MGM4MDA0MTU2YjcyN2M3N2NhNjk1YzQzOTlkOGUwZGE1Y2U5MjI3Y2Y4MzZiYjhlMiJ9fX0="));
+        Field field;
+        try {
+            field = meta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(meta, profile);
+        }catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException x){
+            x.printStackTrace();
+        }
+        tempSkull.setAmount(1);
+        tempSkull.setItemMeta(meta);
+        restartChapter = tempSkull;
+        restartChapter = persistentData.setCustomDataTag(tempSkull, "restart", "progress");
+
+        gameItems.put(restartChapter, false);
+    }
+    private static void createExit() {
+        ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.DARK_RED + "EMERGENCY EXIT");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "=============");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "Exit this menu inventory");
+        lore.add(ChatColor.GRAY + "Right click to use");
+        lore.add("");
+
+        meta.setLore(lore);
+
+        tempSkull.setItemMeta(meta);
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGYwMzQwYTc4YzA2ZjNjZTg4ZjRkNDdiYTgwYzQ4MDEwNjMyMzY3MDQ0MjQ3ZGZkYmNmZmRhYzc3ODllZTZhMyJ9fX0="));
+        Field field;
+        try {
+            field = meta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(meta, profile);
+        }catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException x){
+            x.printStackTrace();
+        }
+        tempSkull.setAmount(1);
+        tempSkull.setItemMeta(meta);
+        exit = tempSkull;
+        exit = persistentData.setCustomDataTag(tempSkull, "exit", "menu");
+
+        gameItems.put(exit, false);
     }
 }
