@@ -3,9 +3,13 @@ package com.ruserious99.minigame.listeners;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.Arena;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.npc.LoadNpcs;
+import com.ruserious99.minigame.npc.NpcGameStartUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -84,20 +88,35 @@ public class ConnectListener implements Listener {
     }
 
     @EventHandler
-    private void onPlayerDeath(PlayerDeathEvent e){
-        Player killed = e.getEntity();
-        String world = killed.getWorld().getName();
+    private void onPlayerDeath(PlayerDeathEvent e) throws IOException {
+        Player player = e.getEntity();
+        String world = player.getWorld().getName();
         if ("arena1".equals(world) && minigame.getArenaMgr().getArena(0).equals(GameState.LIVE)) {
-            killed.spigot().respawn();
-            killed.teleport(ConfigMgr.getAfterDeathSpawn(0)); // 5 is arena id
+            player.spigot().respawn();
+            player.teleport(ConfigMgr.getAfterDeathSpawn(0));
         }
+
         if ("arena6".equals(world)) {
-            AttributeInstance maxHealthAttribute = killed.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            maxHealthAttribute.setBaseValue(20.0);
-            killed.spigot().respawn();
-            killed.teleport(ConfigMgr.getAfterDeathSpawn(5)); // 5 is arena id
+            Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
+            player.spigot().respawn();
+            arena.reset();
+
+            player.getInventory().clear();
+            GameInit.removePlayer(player);
+
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Minigame.getInstance(),
+                    () -> {
+                        try {
+                            AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+                            assert maxHealthAttribute != null;
+                            maxHealthAttribute.setBaseValue(20.0);
+                            NpcGameStartUtil.joinGame(Minigame.getInstance(), player, "DeadSpace");
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }, 1L);
         }
+
     }
-
-
 }
+

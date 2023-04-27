@@ -29,8 +29,6 @@ public class ChestConfig {
     public static ItemStack enterIshamuraStack2() {return new ItemStack(Objects.requireNonNull(getItemStack()));}
 
 
-
-
     //utils
     public static void spawnChest(Location location, ItemStack item) {
         System.out.println("chestConfig: called ");
@@ -84,10 +82,7 @@ public class ChestConfig {
             case "credits" -> {
                 Random randomCredit = new Random();
                 int randomNumberCredit = randomCredit.nextInt(5) + 1;
-                ItemsManager.creditAdded = (randomNumberCredit * 100);
-                System.out.println("ChestConfig: " + ItemsManager.creditAdded );
-                return  ItemsManager.credits;
-
+                return ItemsManager.createCredits(randomNumberCredit * 100);
             }
             case "diamond sword" -> {
                 return new ItemStack(Material.DIAMOND_SWORD);

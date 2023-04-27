@@ -26,6 +26,7 @@ public class ArenaTab implements TabCompleter {
                 menu.add("removeNpc");
                 menu.add("createNpc");
                 menu.add("reload");
+                menu.add("deadspace_reset");
             }
             menu.add("list");
             menu.add("join");
@@ -41,6 +42,8 @@ public class ArenaTab implements TabCompleter {
             arguments.add("Block");
             arguments.add("Wak_A_Block");
             arguments.add("Pvp");
+            arguments.add("deadspace_reset");
+
             arguments.add("0");
             arguments.add("1");
             arguments.add("2");

@@ -111,7 +111,6 @@ public class DeadSpace extends Game {
         }
     }
 
-
     @EventHandler
     public void onRegionEnter(DeadBroadcastEvent event) {
         String message = event.getMessage();

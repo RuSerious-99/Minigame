@@ -2,6 +2,7 @@ package com.ruserious99.minigame.instance.game.deadspace.deadUtils.listeners;
 
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.PersistentData;
+import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.instance.game.DeadSpace;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
@@ -10,6 +11,7 @@ import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.Game
 import com.ruserious99.minigame.instance.game.deadspace.gameEntities.ChestConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameEntities.EntityConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
+import com.ruserious99.minigame.npc.NpcGameStartUtil;
 import com.ruserious99.minigame.utils.ActionBarMessage;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -29,6 +31,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,7 +47,7 @@ public class Listeners implements Listener {
         Inventory inventory = player.getInventory();
         ItemStack itemStack = event.getItem().getItemStack();
 
-        if (itemStack.getItemMeta().getDisplayName().contains("CREDITS")) {
+        if (Objects.requireNonNull(itemStack.getItemMeta()).getDisplayName().contains("CREDITS")) {
             PersistentData persistentData = new PersistentData();
             int bankAccountTotal = Integer.parseInt(persistentData.getCustomDataTag(player.getInventory().getItem(35), "bank_account"));
             int creditTotal = Integer.parseInt(persistentData.getCustomDataTag(itemStack, "credits"));
@@ -60,24 +63,17 @@ public class Listeners implements Listener {
             }.runTaskLater(Minigame.getInstance(), 20L);
             player.getInventory().setItem(35, ItemsManager.createBankAccount(String.valueOf((bankAccountTotal + creditTotal))));
         }
-
-        if (itemStack.getItemMeta().getDisplayName().contains("HEALTH PACK")) {
-            int firstEmptySlot = inventory.firstEmpty();
-            if (firstEmptySlot != -1) {
-                inventory.setItem(firstEmptySlot, itemStack);
-            }
-        }
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent e) {
+    public void onInventoryClick(InventoryClickEvent e) throws IOException {
         Player player = (Player) e.getWhoClicked();
         ItemStack clickedItem = e.getCurrentItem();
         int slot = e.getSlot();
         if (!player.getWorld().getName().equals("arena6")) {
             return;
         }
-        if (clickedItem == null) {
+        if (clickedItem == null || e.isShiftClick()) {
             return;
         }
         if (clickedItem.getItemMeta() == null) {
@@ -85,7 +81,10 @@ public class Listeners implements Listener {
         }
 
         if(e.getView().getTitle().contains("Save Station")){
-            saveStationClicked(player, e.getRawSlot());
+            if (!e.isRightClick()){
+                e.setCancelled(true);
+                saveStationClicked(player, e.getRawSlot());
+            }
         }
 
         if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("BANK ACCOUNT")) {
@@ -198,34 +197,49 @@ public class Listeners implements Listener {
         }
         //save stations
         if (Objects.requireNonNull(block).getType().equals(Material.LIME_WOOL) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-           openCustomInventory(player);
+           openCustomInventorySaveStation(player);
         }
 
     }
 
-    private void openCustomInventory(Player player) {
+    private void openCustomInventorySaveStation(Player player) {
         Inventory customInventory = Bukkit.createInventory(null, 27, ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "Save Station");
         customInventory.setItem(0, ItemsManager.exit);
+        customInventory.setItem(8, ItemsManager.leaveArena);
         customInventory.setItem(11, ItemsManager.restartChapter);
         customInventory.setItem(15, ItemsManager.save);
         player.openInventory(customInventory);
     }
 
-    private void saveStationClicked(Player player, int rawSlot) {
+    private void saveStationClicked(Player player, int rawSlot) throws IOException {
         switch (rawSlot) {
             case 0 -> {
             }
+            case 8 -> {
+                Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
+                arena.removePlayer(player);
+            }
             case 11 -> {
+                Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
+
                 player.getInventory().clear();
-                AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-                maxHealthAttribute.setBaseValue(20.0);
                 player.sendMessage(ChatColor.GREEN + "Restarting game");
+                GameInit.removePlayer(player);
                 player.setHealth(0.0);
+                arena.reset();
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Minigame.getInstance(),
-                        () -> GameInit.addPlayerToDeadSpace(player, Objects.requireNonNull(GameInit.getSpawnPoint(player))), 1L);
+                        () -> {
+                            try {
+                                NpcGameStartUtil.joinGame(Minigame.getInstance(), player, "DeadSpace");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }, 1L);
             }
             case 15 -> savePlayer(player);
+            default -> {return;}
         }
+
         player.closeInventory();
     }
 }

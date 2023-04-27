@@ -2,6 +2,7 @@ package com.ruserious99.minigame.command;
 
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
+import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.managers.NpcPacketMgr;
@@ -84,19 +85,28 @@ public class ArenaCommand implements CommandExecutor {
                         break;
                     }
                 }
-                if(id!=-1) {
+                if (id != -1) {
                     RemoveNpc r = new RemoveNpc(minigame);
                     r.removeNpc(id, player);
                 }
 
-                if(sp != null) {
+                if (sp != null) {
                     for (Player playerR : Bukkit.getOnlinePlayers()) {
                         NpcPacketMgr mgr = new NpcPacketMgr(minigame, sp);
                         mgr.removePacket(playerR);
                     }
                 }
 
-
+            }else if(args.length == 1 && args[0].equalsIgnoreCase("deadspace_reset")) {
+                PersistentData persistentData = new PersistentData();
+                if(persistentData.hasPlayerData(player, "deadInfoChapter")){
+                    System.out.println("resetting player basic info");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoChapter", "chapter1");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSuit", "startSuit");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", "spawn");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
+                }
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
             Arena arena = minigame.getArenaMgr().getArena(player);

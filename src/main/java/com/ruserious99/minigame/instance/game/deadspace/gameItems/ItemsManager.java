@@ -27,11 +27,8 @@ public class ItemsManager {
     public static ItemStack save;
     public static ItemStack restartChapter;
     public static ItemStack exit;
-
-    public static int creditAdded = 100;
+    public static ItemStack leaveArena;
     public static ItemStack credits;
-
-    public static String balance = "0";
     public static ItemStack bankAccount;
 
     public static void init() {
@@ -43,17 +40,18 @@ public class ItemsManager {
         createLargeHealthPack();
         createSave();
         createExit();
+        createLeaveArena();
         createRestartChapter();
-        createCredits();
+        createCredits(100);
         createBankAccount("0");
     }
 
-    private static void createCredits() {
+    public static ItemStack createCredits(int amount) {
         ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + "" + creditAdded + "CREDITS");
+        meta.setDisplayName(ChatColor.DARK_RED + "" + amount + "CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -79,8 +77,9 @@ public class ItemsManager {
         tempSkull.setItemMeta(meta);
 
         credits = tempSkull;
-        credits = persistentData.setCustomDataTag(tempSkull, "credits", String.valueOf(creditAdded));
+        credits = persistentData.setCustomDataTag(tempSkull, "credits", String.valueOf(amount));
         gameItems.put(credits, false);
+        return credits;
     }
     public static ItemStack createBankAccount(String balance) {
         ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
@@ -342,4 +341,41 @@ public class ItemsManager {
 
         gameItems.put(exit, false);
     }
+    private static void createLeaveArena() {
+        ItemStack tempSkull = new ItemStack(Material.PLAYER_HEAD);
+
+        SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
+        assert meta != null;
+        meta.setDisplayName(ChatColor.DARK_RED + "LEAVE GAME");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "=============");
+        lore.add("");
+        lore.add(ChatColor.GRAY + "returns you to lobby");
+        lore.add(ChatColor.GRAY + "Right click to use");
+        lore.add("");
+
+        meta.setLore(lore);
+
+        tempSkull.setItemMeta(meta);
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures",
+                "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzE4OWM5OTdkYjdjYmZkNjMyYzIyOThmNmRiMGMwYTNkZDRmYzRjYmJiMjc4YmU3NTQ4NGZjODJjNmI4MDZkNCJ9fX0="));
+        Field field;
+        try {
+            field = meta.getClass().getDeclaredField("profile");
+            field.setAccessible(true);
+            field.set(meta, profile);
+        }catch(NoSuchFieldException | IllegalArgumentException | IllegalAccessException x){
+            x.printStackTrace();
+        }
+        tempSkull.setAmount(1);
+        tempSkull.setItemMeta(meta);
+        leaveArena = tempSkull;
+        leaveArena = persistentData.setCustomDataTag(tempSkull, "leave", "game");
+
+        gameItems.put(leaveArena, false);
+    }
+
 }
