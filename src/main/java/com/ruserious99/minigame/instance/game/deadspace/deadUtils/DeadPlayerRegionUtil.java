@@ -3,10 +3,8 @@ package com.ruserious99.minigame.instance.game.deadspace.deadUtils;
 import com.ruserious99.minigame.instance.game.deadspace.event.DeadBroadcastEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -20,16 +18,6 @@ public class DeadPlayerRegionUtil implements Listener {
         deadEntered.clear();
         deadExit.clear();
         deadRegionFirstEnter.clear();
-    }
-
-    @EventHandler
-    public void deathEvent(PlayerDeathEvent event) {
-        reset();
-    }
-
-    @EventHandler
-    public void quitEvent(PlayerQuitEvent event) {
-       reset();
     }
 
     public static void deadRegionEvents(UUID uuid, String cuboidName) {

@@ -1,24 +1,25 @@
-package com.ruserious99.minigame.instance.game.deadspace.deadUtils.listeners;
+package com.ruserious99.minigame.instance.game.deadspace.listeners;
 
+import com.mysql.cj.x.protobuf.MysqlxExpr;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
-import com.ruserious99.minigame.instance.game.DeadSpace;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.SerializeInventory;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.gameZones.GameAreas;
-import com.ruserious99.minigame.instance.game.deadspace.gameEntities.ChestConfig;
-import com.ruserious99.minigame.instance.game.deadspace.gameEntities.EntityConfig;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInitUtil;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.SerializeInventoryutil;
+import com.ruserious99.minigame.instance.game.deadspace.gameEntities.chapterItems.AudioLogs;
+import com.ruserious99.minigame.instance.game.deadspace.gameEntities.chestsConfig.ChestConfigChap1;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
+import com.ruserious99.minigame.instance.game.deadspace.gameZones.GameAreas;
 import com.ruserious99.minigame.npc.NpcGameStartUtil;
 import com.ruserious99.minigame.utils.ActionBarMessage;
+import com.ruserious99.minigame.utils.Cuboid;
+import net.minecraft.sounds.SoundEvent;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,13 +30,19 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+import static java.lang.System.getLogger;
+
 public class Listeners implements Listener {
+
+    private final String SOUND_ID = "your_plugin_name.your_sound_id";
 
     @EventHandler
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
@@ -43,9 +50,44 @@ public class Listeners implements Listener {
         if (!player.getWorld().getName().equals("arena6")) {
             return;
         }
-
-        Inventory inventory = player.getInventory();
+        PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = event.getItem().getItemStack();
+
+        if (Objects.requireNonNull(itemStack.getItemMeta()).getDisplayName().contains("HEALTH")) {
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    inventory.remove(itemStack);
+                }
+            }.runTaskLater(Minigame.getInstance(), 20L);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    for (int i = 9; i < 34; i++) {
+                        if (inventory.getItem(i) == null) {
+                            inventory.setItem(i, itemStack);
+                            break;
+                        }
+                    }
+                }
+            }.runTaskLater(Minigame.getInstance(), 30L);
+        }
+
+        if (Objects.requireNonNull(itemStack.getItemMeta()).getDisplayName().contains("STASIS")) {
+            player.sendMessage(ChatColor.BLUE + "STASIS Mod " + ChatColor.YELLOW + "Use in left hand");
+            ActionBarMessage.actionMessage(player, ChatColor.BLUE + "STASIS Mod " + ChatColor.YELLOW + "Use in left hand");
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.setMetadata("stasis", new FixedMetadataValue(Minigame.getInstance(), "true"));
+                    inventory.remove(itemStack);
+                    ItemStack itemStack = new ItemStack(Material.SNOWBALL, 3);
+                    inventory.addItem(itemStack);
+                }
+            }.runTaskLater(Minigame.getInstance(), 2L);
+        }
 
         if (Objects.requireNonNull(itemStack.getItemMeta()).getDisplayName().contains("CREDITS")) {
             PersistentData persistentData = new PersistentData();
@@ -60,10 +102,40 @@ public class Listeners implements Listener {
                 public void run() {
                     inventory.remove(itemStack);
                 }
-            }.runTaskLater(Minigame.getInstance(), 20L);
+            }.runTaskLater(Minigame.getInstance(), 2L);
             player.getInventory().setItem(35, ItemsManager.createBankAccount(String.valueOf((bankAccountTotal + creditTotal))));
         }
+
+        if (Objects.requireNonNull(itemStack.getItemMeta()).getDisplayName().contains("AUDIO LOG")) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    inventory.remove(itemStack);
+                }
+            }.runTaskLater(Minigame.getInstance(), 2L);
+            playAudiofile(player);
+        }
     }
+
+    private void playAudiofile(Player player) {
+        Sound theAudioFile = null;
+        for (Cuboid c : GameAreas.cuboids.keySet()) {
+            if (c.contains(player.getLocation())) {
+                String targetAudio = GameAreas.cuboids.get(c);
+                switch (targetAudio) {
+                    case ("hallAfterDataBoard") -> theAudioFile = Sound.ENTITY_CAT_HISS; //benson
+                    case ("fterDataBoard") -> theAudioFile = Sound.ENTITY_CAT_HISS;
+                }
+            }
+        }
+        if(theAudioFile!=null){
+            System.out.println("audio file playing "  + theAudioFile);
+            player.playSound(player.getLocation(), theAudioFile, SoundCategory.PLAYERS,1f, 1f);
+        }else{
+            System.out.println("audio file is null");
+        }
+    }
+
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) throws IOException {
@@ -80,21 +152,24 @@ public class Listeners implements Listener {
             return;
         }
 
-        if(e.getView().getTitle().contains("Save Station")){
-            if (!e.isRightClick()){
+        if (e.getView().getTitle().contains("Save Station")) {
+            if (!e.isRightClick()) {
                 e.setCancelled(true);
                 saveStationClicked(player, e.getRawSlot());
             }
         }
+        if(Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("LEAVE GAME")){
+            Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
+            arena.removePlayer(player);
+        }
 
-        if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("BANK ACCOUNT")) {
+        if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("BANK ACCOUNT")){
             e.setCancelled(true);
         }
         if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("HEALTH PACK") && e.isRightClick()) {
             setHealth(player, clickedItem, slot);
         }
     }
-
     private void setHealth(Player player, ItemStack clickedItem, int slot) {
         if (Objects.requireNonNull(clickedItem.getItemMeta()).getDisplayName().contains("SMALL HEALTH PACK")) {
             double currentHealth = player.getHealth();
@@ -131,7 +206,53 @@ public class Listeners implements Listener {
         player.getInventory().clear(slot);
         ActionBarMessage.actionMessage(player, "Successfully used Health Pack");
     }
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (!event.getEntity().getWorld().getName().equals("arena6")) {
+            return;
+        }
+        // todo add 50 percent chance of a drop
+        event.getDrops().clear();
+        event.getDrops().add(ChestConfigChap1.getItemStack());
+    }
+    private void savePlayer(Player player) {
+        UUID uuid = player.getUniqueId();
+        PersistentData persistentData = new PersistentData();
+        if (DeadPlayerRegionUtil.deadEntered.containsKey(uuid)) {
+            String value = DeadPlayerRegionUtil.deadEntered.get(uuid);
+            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", value);
 
+            ItemStack[] items = player.getInventory().getContents();
+            String saveInventory = SerializeInventoryutil.itemStackArrayToBase64(items);
+            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", saveInventory);
+
+            ItemStack bankAccount = player.getInventory().getItem(35);
+            String money = persistentData.getCustomDataTag(bankAccount, "bank_account");
+            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", money);
+
+            ActionBarMessage.actionMessage(player, ChatColor.GREEN + "Successfully Saved game!!");
+        }
+    }
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+
+        if (!event.getPlayer().getWorld().getName().equals("arena6")) {
+            return;
+        }
+        if (event.getClickedBlock() == null) {
+            return;
+        }
+
+        Player player = event.getPlayer();
+        Block block = event.getClickedBlock();
+
+
+        //chests
+        if (block.getType() == Material.CHEST) {breakChestAndDropItem(block);}
+
+        //save stations
+        if (Objects.requireNonNull(block).getType().equals(Material.LIME_WOOL) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {openCustomInventorySaveStation(player);}
+    }
     private void breakChestAndDropItem(Block block) {
         BlockState state = block.getState();
         Chest chest = (Chest) state;
@@ -144,64 +265,6 @@ public class Listeners implements Listener {
             block.setType(Material.AIR);
         }
     }
-
-    private void savePlayer(Player player) {
-        UUID uuid = player.getUniqueId();
-        PersistentData persistentData = new PersistentData();
-        if (DeadPlayerRegionUtil.deadEntered.containsKey(uuid)) {
-            String value = DeadPlayerRegionUtil.deadEntered.get(uuid);
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", value);
-
-            ItemStack[] items = player.getInventory().getContents();
-            String saveInventory = SerializeInventory.itemStackArrayToBase64(items);
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", saveInventory);
-
-            ItemStack bankAccount = player.getInventory().getItem(35);
-            String money = persistentData.getCustomDataTag(bankAccount, "bank_account");
-            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", money);
-
-            ActionBarMessage.actionMessage(player, ChatColor.GREEN + "Successfully Saved game!!");
-        }
-    }
-
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        if (!event.getEntity().getWorld().getName().equals("arena6")) {
-            return;
-        }
-        // todo add 50 percent chance of a drop
-        event.getDrops().clear();
-        event.getDrops().add(ChestConfig.getItemStack());
-    }
-
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        if (!event.getPlayer().getWorld().getName().equals("arena6")) {
-            return;
-        }
-        if (event.getClickedBlock() == null) {
-            return;
-        }
-        Player player = event.getPlayer();
-        Block block = event.getClickedBlock();
-
-        //after interact with computer chapter1
-        if (block.getLocation().equals(new Location(Bukkit.getWorld("arena6"), 1783, 87, -54))) {
-            GameAreas.fillWall("enterBoarding");
-            EntityConfig.spawnEntityChapter1(EntityConfig.c1ComputerLocation(), EntityConfig.c1ComputerEntity());
-        }
-
-        //chests
-        if (block.getType() == Material.CHEST) {
-            breakChestAndDropItem(block);
-        }
-        //save stations
-        if (Objects.requireNonNull(block).getType().equals(Material.LIME_WOOL) && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-           openCustomInventorySaveStation(player);
-        }
-
-    }
-
     private void openCustomInventorySaveStation(Player player) {
         Inventory customInventory = Bukkit.createInventory(null, 27, ChatColor.DARK_PURPLE.toString() + ChatColor.BOLD + "Save Station");
         customInventory.setItem(0, ItemsManager.exit);
@@ -210,21 +273,21 @@ public class Listeners implements Listener {
         customInventory.setItem(15, ItemsManager.save);
         player.openInventory(customInventory);
     }
-
-    private void saveStationClicked(Player player, int rawSlot) throws IOException {
+    private void saveStationClicked(Player player, int rawSlot) {
         switch (rawSlot) {
             case 0 -> {
             }
             case 8 -> {
                 Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
-                arena.removePlayer(player);
+                GameInitUtil.removePlayer(player);
+                arena.reset();
             }
             case 11 -> {
                 Arena arena = Minigame.getInstance().getArenaMgr().getArena(player);
 
                 player.getInventory().clear();
                 player.sendMessage(ChatColor.GREEN + "Restarting game");
-                GameInit.removePlayer(player);
+                GameInitUtil.removePlayer(player);
                 player.setHealth(0.0);
                 arena.reset();
                 Bukkit.getScheduler().scheduleSyncDelayedTask(Minigame.getInstance(),
@@ -237,13 +300,17 @@ public class Listeners implements Listener {
                         }, 1L);
             }
             case 15 -> savePlayer(player);
-            default -> {return;}
+            default -> {
+                return;
+            }
         }
-
         player.closeInventory();
     }
+
+
+
 }
-    
+
 
 
 

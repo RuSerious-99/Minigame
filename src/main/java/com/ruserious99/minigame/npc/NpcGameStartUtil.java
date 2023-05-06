@@ -21,8 +21,6 @@ public class NpcGameStartUtil {
             case ("Wak_A_Block Game")   -> joinArena = 2;
             case ("Stronghold PVP")  -> joinArena = 3;
             case ("Dungeon")  -> joinArena = 4;
-
-            //todo check player persistant data for chapter start
             case ("DeadSpace")  -> joinArena = 5;
 
 

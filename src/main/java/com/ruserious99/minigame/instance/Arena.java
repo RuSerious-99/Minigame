@@ -4,7 +4,7 @@ import com.google.common.collect.TreeMultimap;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.game.*;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInitUtil;
 import com.ruserious99.minigame.instance.game.dungeon.Dungeon;
 import com.ruserious99.minigame.instance.kit.CodKit;
 import com.ruserious99.minigame.instance.kit.Kit;
@@ -127,10 +127,10 @@ public class Arena {
         players.add(player.getUniqueId());
         player.getInventory().clear();
 
-        if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-            GameInit.addPlayerToDeadSpace(player, spawn);
-            if(GameInit.getSpawnPoint(player) != null) {
-                player.teleport(Objects.requireNonNull(GameInit.getSpawnPoint(player)));
+       if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
+            GameInitUtil.addPlayerToDeadSpace(player, spawn);
+            if(GameInitUtil.getSpawnPoint(player) != null) {
+                player.teleport(Objects.requireNonNull(GameInitUtil.getSpawnPoint(player)));//saveStation locations
             }else{
                 player.teleport(spawn);
             }
@@ -200,9 +200,9 @@ public class Arena {
 
         //deadspace
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena6")) {
-            GameInit.removePlayer(player);
+            System.out.println("Arena: called in remove player for arena6");
+            GameInitUtil.removePlayer(player);
             reset();
-            return;
         }
 
         if (Objects.requireNonNull(spawn.getWorld()).getName().equals("arena4")) {

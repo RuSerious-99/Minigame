@@ -3,13 +3,12 @@ package com.ruserious99.minigame.listeners;
 import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.instance.Arena;
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInit;
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInitUtil;
 import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.managers.DataMgr;
 import com.ruserious99.minigame.npc.LoadNpcs;
 import com.ruserious99.minigame.npc.NpcGameStartUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -88,7 +87,7 @@ public class ConnectListener implements Listener {
     }
 
     @EventHandler
-    private void onPlayerDeath(PlayerDeathEvent e) throws IOException {
+    private void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
         String world = player.getWorld().getName();
         if ("arena1".equals(world) && minigame.getArenaMgr().getArena(0).equals(GameState.LIVE)) {
@@ -102,7 +101,7 @@ public class ConnectListener implements Listener {
             arena.reset();
 
             player.getInventory().clear();
-            GameInit.removePlayer(player);
+            GameInitUtil.removePlayer(player);
 
             Bukkit.getScheduler().scheduleSyncDelayedTask(Minigame.getInstance(),
                     () -> {

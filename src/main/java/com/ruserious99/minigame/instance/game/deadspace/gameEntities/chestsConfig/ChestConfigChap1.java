@@ -1,5 +1,6 @@
-package com.ruserious99.minigame.instance.game.deadspace.gameEntities;
+package com.ruserious99.minigame.instance.game.deadspace.gameEntities.chestsConfig;
 
+import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -7,39 +8,50 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Dispenser;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import java.util.Objects;
 import java.util.Random;
 
-public class ChestConfig {
+public class ChestConfigChap1 {
 
     private static final World world = Bukkit.getServer().getWorld("arena6");
 
-    private ChestConfig() {
+    private ChestConfigChap1() {
     }
 
     //Chapter1
+
     public static Location boarding() {return new Location(world, 1775, 86, -57);}
-    public static ItemStack boardingStack() {return new ItemStack(Objects.requireNonNull(getItemStack()));}
-
     public static Location enterIshamura1() {return new Location(world, 1779, 86, -58);}
-    public static ItemStack enterIshamuraStack1() {return new ItemStack(Objects.requireNonNull(getItemStack()));}
-
     public static Location enterIshamura2() {return new Location(world, 1789, 86, -66);}
-    public static ItemStack enterIshamuraStack2() {return new ItemStack(Objects.requireNonNull(getItemStack()));}
-
+    public static Location firstWeaponRoom1() {return new Location(world, 1789, 78, -36);}
+    public static Location firstWeaponRoom2() {return new Location(world, 1789, 78, -38);}
+    public static Location firstWeaponRoom3() {return new Location(world, 1783, 77, -38);}
+    public static Location firstWeaponRoom4() {return new Location(world, 1783, 77, -37);}
+    public static Location HallwayDownStairsLeft() {return new Location(world, 1782, 73, -50);}
+    public static Location dataBoardDispencer() {return new Location(world, 1799, 75, -55);}
+    public static Location dataBoardLocker1() {return new Location(world, 1781, 75, -52);}
+    public static Location dataBoardLocker2() {return new Location(world, 1781, 74, -52);}
+    public static Location hallwayAfterDataBoard() {return new Location(world, 1777, 74, -50);}
 
     //utils
-    public static void spawnChest(Location location, ItemStack item) {
-        System.out.println("chestConfig: called ");
-
+    public static void spawnLockerItems(Location location){
+        Block dispenser = Objects.requireNonNull(world).getBlockAt(location);
+        if (dispenser.getType() == Material.DISPENSER) {
+            Inventory dispenserInventory = ((Dispenser) dispenser.getState()).getInventory();
+            dispenserInventory.addItem(getItemStack());
+        }
+    }
+    public static void spawnChest(Location location) {
         World world = Bukkit.getServer().getWorld("arena6");
         Block block = Objects.requireNonNull(world).getBlockAt(location);
         block.setType(Material.CHEST);
 
         Chest chest = (Chest) block.getState();
         chest.getBlockInventory().clear();
-        chest.getInventory().addItem(item);
+        chest.getInventory().addItem(getItemStack());
     }
     public static ItemStack getItemStack() {
         //define
@@ -63,7 +75,7 @@ public class ChestConfig {
             cumulativeChance += chances[i];
             if (randomNumber <= cumulativeChance) {
                 selectedItem = items[i];
-                System.out.println("ChestConfig in loop; " + selectedItem);
+                //System.out.println("ChestConfig in loop; " + selectedItem);
                 break;
             }
         }
@@ -82,7 +94,24 @@ public class ChestConfig {
             case "credits" -> {
                 Random randomCredit = new Random();
                 int randomNumberCredit = randomCredit.nextInt(5) + 1;
-                return ItemsManager.createCredits(randomNumberCredit * 100);
+                switch (randomNumberCredit) {
+                    case 1 -> {
+                        return ItemsManager.credits100;
+                    }
+                    case 2 -> {
+                        return ItemsManager.credits200;
+                    }
+                    case 3 -> {
+                        return ItemsManager.credits300;
+                    }
+                    case 4 -> {
+                        return ItemsManager.credits400;
+                    }
+                    case 5 -> {
+                        return ItemsManager.credits500;
+                    }
+                }
+
             }
             case "diamond sword" -> {
                 return new ItemStack(Material.DIAMOND_SWORD);

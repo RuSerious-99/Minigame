@@ -173,22 +173,5 @@ public class BlockGame extends Game {
                         + ChatColor.GOLD + " | ");
                 gameScore.setProgress(TimeUtils.getProgress(timeLeft, ConfigMgr.getGameTimeBlock()));
     }
-/*
-    @EventHandler
-    private void onPlayerDeath(PlayerDeathEvent e){
-
-        Player killed = e.getEntity();
-
-        if (points.containsKey(killed.getUniqueId())){
-            killed.spigot().respawn();
-            killed.teleport(ConfigMgr.getAfterDeathSpawn(arena.getId()));
-        }
-        if(arena.getId() == 0){
-            if(arena.getState().equals(GameState.COUNTDOWN)){
-                killed.spigot().respawn();
-                killed.teleport(ConfigMgr.getAfterDeathSpawn(arena.getId()));
-            }
-        }
-    }*/
 
 }
