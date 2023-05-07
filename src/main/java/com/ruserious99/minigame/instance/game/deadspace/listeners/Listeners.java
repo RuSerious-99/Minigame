@@ -116,7 +116,6 @@ public class Listeners implements Listener {
             playAudiofile(player);
         }
     }
-
     private void playAudiofile(Player player) {
         Sound theAudioFile = null;
         for (Cuboid c : GameAreas.cuboids.keySet()) {
@@ -135,8 +134,6 @@ public class Listeners implements Listener {
             System.out.println("audio file is null");
         }
     }
-
-
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) throws IOException {
         Player player = (Player) e.getWhoClicked();

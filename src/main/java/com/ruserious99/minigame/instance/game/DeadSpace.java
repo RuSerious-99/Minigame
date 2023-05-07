@@ -4,7 +4,8 @@ import com.ruserious99.minigame.GameState;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
-import com.ruserious99.minigame.instance.game.deadspace.ChapterEnum.ChapterEnum;
+import com.ruserious99.minigame.instance.game.deadspace.deadEnums.ChapterEnum;
+import com.ruserious99.minigame.instance.game.deadspace.deadEnums.GameProgress;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadTitlesUtil;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.GameInitUtil;
@@ -47,7 +48,9 @@ import java.util.UUID;
 public class DeadSpace extends Game {
 
     private boolean stasis;
-    private boolean c1CompInteractedWith;
+    private boolean c1CompInteracted;
+    private boolean stasisTramInteract;
+    private GameProgress progress;
 
     public DeadSpace(Minigame minigame, Arena arena, Scoreboards scoreboards) {
         super(minigame, arena, scoreboards);
@@ -59,6 +62,8 @@ public class DeadSpace extends Game {
         arena.setState(GameState.LIVE);
         registerListeners();
         GameInitUtil.setupChapter();
+
+        progress = GameProgress.START;
 
         DeadPlayerRegionUtil.reset();
         new BukkitRunnable() {
@@ -109,6 +114,8 @@ public class DeadSpace extends Game {
         Block save2 = Objects.requireNonNull(world).getBlockAt(new Location(world, 1785, 75, -52));
         save2.setType(Material.LIME_WOOL);
 
+        Block save3 = Objects.requireNonNull(world).getBlockAt(new Location(world, 1770, 75, -81));
+        save3.setType(Material.LIME_WOOL);
 
         // dispencer in DataBoard tram room
         Location location = new Location(world, 1799, 75, -55);
@@ -120,8 +127,13 @@ public class DeadSpace extends Game {
         directional.setFacing(BlockFace.WEST);
         block.setBlockData(directional);
 
+        //set to look like a computer monitor kinda
+        //databoard room
         Block dataCardTram = Objects.requireNonNull(world).getBlockAt(new Location(world, 1787, 74, -59));
         dataCardTram.setType(Material.JACK_O_LANTERN);
+        //stasis tram room
+        Block stasisTramRoom = Objects.requireNonNull(world).getBlockAt(new Location(world, 1756, 76, -79));
+        stasisTramRoom.setType(Material.JACK_O_LANTERN);
 
         // iron door 1779 72 -72
     }
@@ -170,7 +182,9 @@ public class DeadSpace extends Game {
 
     @Override
     public void endGame() {
-        c1CompInteractedWith = false;
+        progress = GameProgress.START;
+        stasisTramInteract = false;
+        c1CompInteracted = false;
         stasis = false;
         DeadPlayerRegionUtil.reset();
         arena.reset();
@@ -179,79 +193,100 @@ public class DeadSpace extends Game {
     @EventHandler
     public void onRegionEnter(DeadBroadcastEvent event) {
         if (GameInitUtil.chapterState != ChapterEnum.CHAPTER1) {
-            return;
-        }
+            return;}
+
         Player player = event.getPlayer();
         World world = Objects.requireNonNull(player).getWorld();
         Arena arena = Minigame.getInstance().getArenaMgr().getArena(5);
         String message = event.getMessage();
 
-        if (!DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("dataBoard")) {
-            if (message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
-                arena.sendMessage(ChatColor.YELLOW + "Welcome to the Ishamura.");
-                new DeadTitlesUtil(ChatColor.BLUE + "Chapter 1; NEW ARRIVALS", ChatColor.YELLOW + "Objective: get to the Medical Bay", arena);
-                ChestConfigChap1.spawnChest(ChestConfigChap1.boarding());
-                ChestConfigChap1.spawnChest(ChestConfigChap1.enterIshamura1());
-                ChestConfigChap1.spawnChest(ChestConfigChap1.enterIshamura2());
-            }
-            if (message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
-                GameAreas.fillWall("firstPartHall");
-                arena.sendMessage(ChatColor.WHITE + "Objective: " + ChatColor.BLUE + "Interact with computer");
-            }
-            if (message.equals("firstPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("firstPartHall")) {
-                GameAreas.fillWall("c1Computer");
-                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.firstPartHallLocation());
-            }
-            if (message.equals("secondPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("secondPartHall")) {
-                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.secondPartHallLocation());
-            }
-            if (message.equals("thirdPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("thirdPartHall")) {
-                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.thirdPartHallLocation());
-            }
-            if (message.equals("forthPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("forthPartHall")) {
-                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.forthPartHallLocation());
-            }
-            if (message.equals("stairsDown")) {
-                ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom1());
-                ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom2());
-                ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom3());
-                ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom4());
-
-                SpawnItemsChap1.spawnItems(SpawnItemsChap1.firstWeaponLocation(), ItemsManager.iron_sword);
-                GameAreas.fillWall("forthPartHall");
-            }
-            if (message.equals("preHallwayAfter")) {
-                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.firstWeaponLocation());
-            }
-            if (message.equals("hallwayAfterFirstWeaponRoom2")) {
-                ChestConfigChap1.spawnChest(ChestConfigChap1.HallwayDownStairsLeft());
-            }
-        }
-
-        if (message.equals("dataBoard")) {
-            GameAreas.fillWall("elevatorDownToDataBoard");
-
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardDispencer());
-                    ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardLocker1());
-                    ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardLocker2());
+        //On the way to fix Tram system
+        if(progress == GameProgress.START) {
+            if (!DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("dataBoard")) {
+                if (message.equals("boarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("boarding") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
+                    arena.sendMessage(ChatColor.YELLOW + "Welcome to the Ishamura.");
+                    new DeadTitlesUtil(ChatColor.BLUE + "Chapter 1; NEW ARRIVALS", ChatColor.YELLOW + "Objective: get to the Medical Bay", arena);
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.boarding());
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.enterIshamura1());
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.enterIshamura2());
                 }
-            }.runTaskLater(Minigame.getInstance(), 20L);
+                if (message.equals("enterBoarding") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("enterBoarding")) {
+                    GameAreas.fillWall("firstPartHall");
+                    arena.sendMessage(ChatColor.WHITE + "Objective: " + ChatColor.BLUE + "Interact with computer");
+                }
+                if (message.equals("firstPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("firstPartHall")) {
+                    GameAreas.fillWall("c1Computer");
+                    EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.firstPartHallLocation());
+                }
+                if (message.equals("secondPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("secondPartHall")) {
+                    EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.secondPartHallLocation());
+                }
+                if (message.equals("thirdPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("thirdPartHall")) {
+                    EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.thirdPartHallLocation());
+                }
+                if (message.equals("forthPartHall") && DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("forthPartHall")) {
+                    EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.forthPartHallLocation());
+                }
+                if (message.equals("stairsDown")) {
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom1());
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom2());
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom3());
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.firstWeaponRoom4());
 
-        }
-        if (message.equals("hallAfterDataBoard")) {
-            AudioLogs.audioLog(AudioLogs.bensonAudioLog(), ItemsManager.audioLog);
-            SpawnItemsChap1.spawnItems(SpawnItemsChap1.smallHealthAfterFirstWeapon(), ItemsManager.smallHealthPack);
-            ChestConfigChap1.spawnChest(ChestConfigChap1.hallwayAfterDataBoard());
-            EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.hallwayAfterDataBoardLocation());
-        }
-        if (message.equals("fastDoorTram")) {
-            SpawnItemsChap1.spawnItems(SpawnItemsChap1.stasisLocation(), ItemsManager.stasis);
-            GameAreas.fillWall("blockFastDoorGoing");
-            Block block = new Location(world, 1779, 72, -72).getBlock();
-            startToggleDoor(block);
+                    SpawnItemsChap1.spawnItems(SpawnItemsChap1.firstWeaponLocation(), ItemsManager.iron_sword);
+                    GameAreas.fillWall("forthPartHall");
+                }
+                if (message.equals("preHallwayAfter")) {
+                    EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.firstWeaponLocation());
+                }
+                if (message.equals("hallwayAfterFirstWeaponRoom2")) {
+                    ChestConfigChap1.spawnChest(ChestConfigChap1.HallwayDownStairsLeft());
+                }
+            }
+            if (message.equals("dataBoard")) {
+                GameAreas.fillWall("elevatorDownToDataBoard");
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardDispencer());
+                        ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardLocker1());
+                        ChestConfigChap1.spawnLockerItems(ChestConfigChap1.dataBoardLocker2());
+                        SpawnItemsChap1.spawnItems(SpawnItemsChap1.smallHealthAfterFirstWeapon(), ItemsManager.smallHealthPack);
+                        ChestConfigChap1.spawnChest(ChestConfigChap1.hallwayAfterDataBoard());
+                    }
+                }.runTaskLater(Minigame.getInstance(), 20L);
+
+            }
+            if (message.equals("hallAfterDataBoard")) {
+                AudioLogs.audioLog(AudioLogs.bensonAudioLog(), ItemsManager.audioLog);
+                EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.hallwayAfterDataBoardLocation());
+                ChestConfigChap1.spawnChest(ChestConfigChap1.ByFastdoorSnowball());
+            }
+            if (message.equals("fastDoorTram")) {
+                SpawnItemsChap1.spawnItems(SpawnItemsChap1.stasisLocation(), ItemsManager.stasis);
+                GameAreas.fillWall("hallToUpStairsAfterFastDoor");
+                GameAreas.fillWall("HallDownToFastDoor");
+                Block block = new Location(world, 1779, 72, -72).getBlock();
+                startToggleDoor(block);
+            }
+            if (message.equals("hallToUpStairsAfterFastDoor") && !DeadPlayerRegionUtil.deadRegionFirstEnter.containsKey("mainHallTopOfStairsAfterFastDoor")) {
+                GameAreas.fillWall("fastDoorTram");
+                GameAreas.fillWall("flightDeckTramArea");
+                GameAreas.fillWall("elevatorDownToCargoBay");
+                SpawnItemsChap1.spawnItems(SpawnItemsChap1.mainHallwayToTramStationCredit(), ItemsManager.credits200);
+                ChestConfigChap1.spawnChest(ChestConfigChap1.infrontOfelevatorToCargoBay());
+                //spawnItemsTramStasisRoom
+                 SpawnItemsChap1.spawnItems(SpawnItemsChap1.heathInStasisTramRoom(), ItemsManager.smallHealthPack);
+            }
+            if (message.equals("repairTramWithStasis")) {
+                EntityConfigChap1.spawnEntity(EntityConfigChap1.stasisTramOnFirstEnter());
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        EntityConfigChap1.spawnEntity(EntityConfigChap1.stasisTramSecondDelayed());
+                    }
+                }.runTaskLater(Minigame.getInstance(), 10 * 20L);
+            }
         }
     }
 
@@ -267,23 +302,33 @@ public class DeadSpace extends Game {
         Block block = event.getClickedBlock();
 
         //interact with computer chapter1
+        //boarding just entered ishimura
         if (block.getLocation().equals(new Location(Bukkit.getWorld("arena6"), 1783, 87, -54))) {
             c1ComputerInteract();
         }
-
+        //stasis tram room
+        if (block.getLocation().equals(new Location(Bukkit.getWorld("arena6"), 1756, 76, -79))) {
+            stasisTramRoom();
+        }
         //interact with dataBoard repair
         if (block.getLocation().equals(new Location(Bukkit.getWorld("arena6"), 1797, 75, -58))) {
             dataBoardCheck(player);
         }
+    }
 
+    private void stasisTramRoom() {
+        if (progress == GameProgress.START) {
+            EntityConfigChap1.spawnEntity(EntityConfigChap1.stasisTramAfterInteract());
+            progress = GameProgress.TO_DATA_BOARD;
+        }
     }
 
     private void c1ComputerInteract() {
-        if (!c1CompInteractedWith) {
+        if (!c1CompInteracted) {
             GameAreas.fillWall("enterBoarding");
             GameAreas.removeWall("firstPartHall");
             EntityConfigChap1.spawnEntityZombie(EntityConfigChap1.c1ComputerLocation());
-            c1CompInteractedWith = true;
+            c1CompInteracted = true;
         }
     }
 
@@ -356,7 +401,7 @@ public class DeadSpace extends Game {
             if (hitBlock != null) {
                 if (Objects.requireNonNull(event.getHitBlock()).getLocation().equals(new Location(world, 1779, 72, -72))) {
                     stasis = true;
-                    GameAreas.removeWall("blockFastDoorGoing");
+                    GameAreas.removeWall("hallToUpStairsAfterFastDoor");
                     slowMeDown(hitBlock);
                 }
             }
@@ -380,7 +425,7 @@ public class DeadSpace extends Game {
                 public void run() {
                     stasis = false;
                     startToggleDoor(block);
-                    GameAreas.fillWall("blockFastDoorGoing");
+                    GameAreas.fillWall("fastDoorTram");
                 }
             }.runTaskLater(Minigame.getInstance(), 80L);
         }

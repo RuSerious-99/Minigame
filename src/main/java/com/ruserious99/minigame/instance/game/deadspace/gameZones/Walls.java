@@ -65,6 +65,12 @@ public class Walls {
         walls.put("fastDoor1", fastDoor1);
         fillWall("fastDoor1");
 
+        Cuboid repairTramWithStasisWall = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1753, 78, -78),
+                new Location(Bukkit.getWorld(("arena6")), 1760, 70, -68));
+        walls.put("repairTramWithStasisWall", repairTramWithStasisWall);
+        fillWall("repairTramWithStasisWall");
+
     }
     public static void createWallsChapter2() {
     }

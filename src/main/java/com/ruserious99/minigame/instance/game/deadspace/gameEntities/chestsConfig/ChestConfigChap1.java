@@ -35,6 +35,9 @@ public class ChestConfigChap1 {
     public static Location dataBoardLocker1() {return new Location(world, 1781, 75, -52);}
     public static Location dataBoardLocker2() {return new Location(world, 1781, 74, -52);}
     public static Location hallwayAfterDataBoard() {return new Location(world, 1777, 74, -50);}
+    public static Location ByFastdoorSnowball() {return new Location(world, 1781, 70, -69);}
+    public static Location infrontOfelevatorToCargoBay() {return new Location(world, 1766, 73, -84);}
+
 
     //utils
     public static void spawnLockerItems(Location location){

@@ -22,12 +22,18 @@ public class EntityConfigChap1 {
     // after first weapon
     public static Location firstWeaponLocation(){return new Location(Bukkit.getWorld("arena6"), 1791.217,77,-32.466);}
 
-    //hallway after databoard
+    //hallway after dataBoard
     public static Location hallwayAfterDataBoardLocation(){return new Location(Bukkit.getWorld("arena6"), 1776.817,74,-45.642);}
 
+    //Stasis tram room
+    public static Location stasisTramOnFirstEnter(){return new Location(Bukkit.getWorld("arena6"), 1751.155,74,-78.835);}
+    public static Location stasisTramSecondDelayed(){return new Location(Bukkit.getWorld("arena6"), 1751.928,74,-75.723);}
+    public static Location stasisTramAfterInteract(){return new Location(Bukkit.getWorld("arena6"), 1762.393,74,-79.799);}
 
     public static void spawnEntityZombie(Location location) {
         (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.ZOMBIE);
     }
-
+    public static void spawnEntity(Location location) {
+        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.SKELETON);
+    }
 }

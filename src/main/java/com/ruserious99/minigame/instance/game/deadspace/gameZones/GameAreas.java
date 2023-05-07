@@ -92,20 +92,41 @@ public class GameAreas {
                 new Location(Bukkit.getWorld(("arena6")), 1773, 73, -42));
         cuboids.put(hallAfterDataBoard, "hallAfterDataBoard");
 
+        Cuboid HallDownToFastDoor = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1775, 76, -56),
+                new Location(Bukkit.getWorld(("arena6")), 1766, 70, -59));
+        cuboids.put(HallDownToFastDoor, "HallDownToFastDoor");
+
         Cuboid fastDoorTram = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1765, 70, -61),
                 new Location(Bukkit.getWorld(("arena6")), 1781, 75, -71));
         cuboids.put(fastDoorTram, "fastDoorTram");
 
-        Cuboid blockFastDoorGoing = new Cuboid(
+        Cuboid hallToUpStairsAfterFastDoor = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1779, 70, -73),
-                new Location(Bukkit.getWorld(("arena6")), 1779, 73, -73));
-        cuboids.put(blockFastDoorGoing, "blockFastDoorGoing");
+                new Location(Bukkit.getWorld(("arena6")), 1769, 76, -77));
+        cuboids.put(hallToUpStairsAfterFastDoor, "hallToUpStairsAfterFastDoor");
 
-        Cuboid blockFastDoorReturning = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1779, 70, -71),
-                new Location(Bukkit.getWorld(("arena6")), 1779, 73, -71));
-        cuboids.put(blockFastDoorReturning, "blockFastDoorReturning");
+        Cuboid mainHallTopOfStairsAfterFastDoor = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1783, 73, -78),
+                new Location(Bukkit.getWorld(("arena6")), 1766, 76, -86));
+        cuboids.put(mainHallTopOfStairsAfterFastDoor, "mainHallTopOfStairsAfterFastDoor");
+
+        Cuboid elevatorDownToCargoBay = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1768, 69, -90),
+                new Location(Bukkit.getWorld(("arena6")), 1766, 76, -85));
+        cuboids.put(elevatorDownToCargoBay, "elevatorDownToCargoBay");
+
+        Cuboid flightDeckTramArea = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1784, 77, -80),
+                new Location(Bukkit.getWorld(("arena6")), 1793, 73, -67));
+        cuboids.put(flightDeckTramArea, "flightDeckTramArea");
+
+        Cuboid repairTramWithStasis = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1763, 78, -72),
+                new Location(Bukkit.getWorld(("arena6")), 1750, 73, -81));
+        cuboids.put(repairTramWithStasis, "repairTramWithStasis");
+
 
         Cuboid elevatorDownToDataBoard = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1770, 76, -44),

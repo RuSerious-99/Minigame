@@ -3,7 +3,7 @@ package com.ruserious99.minigame.instance.game.deadspace.deadUtils;
 import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
-import com.ruserious99.minigame.instance.game.deadspace.ChapterEnum.ChapterEnum;
+import com.ruserious99.minigame.instance.game.deadspace.deadEnums.ChapterEnum;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils.SuitsConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
 import com.ruserious99.minigame.instance.game.deadspace.gameZones.GameAreas;
@@ -20,7 +20,6 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import java.util.Objects;
 import java.util.Optional;
 
