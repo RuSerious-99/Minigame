@@ -1,9 +1,10 @@
 package com.ruserious99.minigame.instance.game.deadspace.gameEntities.chapterItems;
 
+import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
+
 import java.util.Objects;
 
 public class AudioLogs {
@@ -14,11 +15,13 @@ public class AudioLogs {
     private AudioLogs() {
     }
 
-    public static void audioLog(Location location, ItemStack itemStack) {
+    public static Location ventWarning(){return new Location(world,1797.993, 74, -49.046);}
+    public static Location shoot_the_limbs(){return new Location(world,1774.874, 74, -43.142);}// after tram hall
+
+    public static void dropAudioLog(Location location) {
         World world = Bukkit.getServer().getWorld("arena6");
-        (Objects.requireNonNull(world)).dropItem(location, itemStack);
+        (Objects.requireNonNull(world)).dropItem(location, ItemsManager.audioLog);
     }
 
-    public static Location bensonAudioLog(){return new Location(world,1775, 73, -42);}// after tram hall
 
 }

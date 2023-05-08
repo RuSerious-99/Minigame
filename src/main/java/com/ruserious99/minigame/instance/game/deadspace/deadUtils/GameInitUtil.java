@@ -4,6 +4,7 @@ import com.ruserious99.minigame.Minigame;
 import com.ruserious99.minigame.PersistentData;
 import com.ruserious99.minigame.instance.Arena;
 import com.ruserious99.minigame.instance.game.deadspace.deadEnums.ChapterEnum;
+import com.ruserious99.minigame.instance.game.deadspace.deadEnums.GameProgress;
 import com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils.SuitsConfig;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
 import com.ruserious99.minigame.instance.game.deadspace.gameZones.GameAreas;
@@ -26,14 +27,21 @@ import java.util.Optional;
 public class GameInitUtil {
 
     public static ChapterEnum chapterState;
+    public static GameProgress progress;
 
     public static void setupChapter() {
         Arena arena = Minigame.getInstance().getArenaMgr().getArena(5);
         Player player = Bukkit.getPlayer(arena.getPlayers().get(0));
 
+        //get what chapter the player is in and were in the chapter they are.
         PersistentData persistentData = new PersistentData();
         assert player != null;
         String chap = persistentData.deadPlayerGetCustomDataTag(player, "deadInfoChapter");
+        String dataTag = persistentData.deadPlayerGetCustomDataTag(Objects.requireNonNull(player), "deadInfoGameProgress");
+        switch (dataTag) {
+            case ("start") -> progress = GameProgress.START;
+            case ("to_data_board") -> progress = GameProgress.TO_DATA_BOARD;
+        }
         switch (chap) {
             case "chapter1" -> {
                 chapterState = ChapterEnum.CHAPTER1;
@@ -47,6 +55,8 @@ public class GameInitUtil {
             }
         }
     }
+
+    //todo turn on datapack download
     public static void removePlayer(Player player){
         Minigame minigame = Minigame.getInstance();
        // player.setResourcePack("https://sourceforge.net/projects/mcresoursepacks/files/VanillaDefault.zip/download");
@@ -75,6 +85,7 @@ public class GameInitUtil {
             }.runTaskLater(Minigame.getInstance(), 40);
         }
     }
+
     public static Location getSpawnPoint(Player player) {
         PersistentData persistentData = new PersistentData();
         if (persistentData.hasPlayerData(player, "deadInfoSaveStation")) {
@@ -86,12 +97,12 @@ public class GameInitUtil {
     private static void savePlayerBasicInfo(Player player) {
         PersistentData persistentData = new PersistentData();
         if(!persistentData.hasPlayerData(player, "deadInfoChapter")){
-            System.out.println("saving player basic info");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoChapter", "chapter1");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSuit", "startSuit");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", "spawn");
             persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
+            persistentData.deadPlayerSetCustomDataTags(player, "deadInfoGameProgress", "start");
         }
     }
     private static void applySuit(Player player) {

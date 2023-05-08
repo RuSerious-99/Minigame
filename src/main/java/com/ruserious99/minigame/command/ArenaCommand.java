@@ -106,6 +106,7 @@ public class ArenaCommand implements CommandExecutor {
                     persistentData.deadPlayerSetCustomDataTags(player, "deadInfoMoney", "0");
                     persistentData.deadPlayerSetCustomDataTags(player, "deadInfoSaveStation", "spawn");
                     persistentData.deadPlayerSetCustomDataTags(player, "deadInfoInventory", "inventory");
+                    persistentData.deadPlayerSetCustomDataTags(player, "deadInfoGameProgress", "start");
                 }
 
         } else if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {

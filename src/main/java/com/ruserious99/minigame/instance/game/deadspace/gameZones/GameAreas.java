@@ -82,6 +82,11 @@ public class GameAreas {
                 new Location(Bukkit.getWorld(("arena6")), 1788, 79, -46));
         cuboids.put(hallwayAfterFirstWeaponRoom2, "hallwayAfterFirstWeaponRoom2");
 
+        Cuboid beforeDataBoardComputer = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1792, 76, -49),
+                new Location(Bukkit.getWorld(("arena6")), 1798, 73, -51));
+        cuboids.put(beforeDataBoardComputer, "beforeDataBoardComputer");
+
         Cuboid dataBoard = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1798, 73, -53),
                 new Location(Bukkit.getWorld(("arena6")), 1781, 77, -59));
@@ -117,6 +122,7 @@ public class GameAreas {
                 new Location(Bukkit.getWorld(("arena6")), 1766, 76, -85));
         cuboids.put(elevatorDownToCargoBay, "elevatorDownToCargoBay");
 
+        //todo fixMe
         Cuboid flightDeckTramArea = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1784, 77, -80),
                 new Location(Bukkit.getWorld(("arena6")), 1793, 73, -67));

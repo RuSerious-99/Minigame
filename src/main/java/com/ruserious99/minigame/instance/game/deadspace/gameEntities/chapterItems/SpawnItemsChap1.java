@@ -14,10 +14,10 @@ public class SpawnItemsChap1 {
     }
 
     public static Location firstWeaponLocation(){return new Location(world, 1789, 79, -36);}
-    public static Location stasisLocation(){return new Location(world, 1778, 70, -70);}
-    public static Location smallHealthAfterFirstWeapon(){return new Location(world,1774, 73, -47);};
+    public static Location stasisLocation(){return new Location(world, 1778.709, 71, -67.851);}
+    public static Location smallHealthAfterFirstWeapon(){return new Location(world,1791, 76, -50);}
     public static Location mainHallwayToTramStationCredit(){return new Location(world,1780, 73, -79);}
-    public static Location heathInStasisTramRoom(){return new Location(world,1751.733, 74, -74.803);}
+    public static Location heathInStasisTramRoom(){return new Location(world,1751, 73, -78);}
 
     public static void spawnItems(Location location, ItemStack itemStack) {
         World world = Bukkit.getServer().getWorld("arena6");

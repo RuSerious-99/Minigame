@@ -21,6 +21,9 @@ public class SaveStations {
             case "dataBoard" -> {
                 return new Location(Bukkit.getWorld("arena6"),  1785.689, 74, -53.040);
             }
+            case "mainHallTopOfStairsAfterFastDoor" -> {
+                return new Location(Bukkit.getWorld("arena6"),  1770.397, 74, -78.836);
+            }
         }
         return null;
     }

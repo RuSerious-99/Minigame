@@ -30,13 +30,13 @@ public class ChestConfigChap1 {
     public static Location firstWeaponRoom2() {return new Location(world, 1789, 78, -38);}
     public static Location firstWeaponRoom3() {return new Location(world, 1783, 77, -38);}
     public static Location firstWeaponRoom4() {return new Location(world, 1783, 77, -37);}
-    public static Location HallwayDownStairsLeft() {return new Location(world, 1782, 73, -50);}
+    public static Location HallwayDownStairsLeft() {return new Location(world, 1782, 74, -50);}
     public static Location dataBoardDispencer() {return new Location(world, 1799, 75, -55);}
     public static Location dataBoardLocker1() {return new Location(world, 1781, 75, -52);}
     public static Location dataBoardLocker2() {return new Location(world, 1781, 74, -52);}
     public static Location hallwayAfterDataBoard() {return new Location(world, 1777, 74, -50);}
-    public static Location ByFastdoorSnowball() {return new Location(world, 1781, 70, -69);}
-    public static Location infrontOfelevatorToCargoBay() {return new Location(world, 1766, 73, -84);}
+    public static Location ByFastdoorSnowball() {return new Location(world, 1781, 71, -69);}
+    public static Location infrontOfelevatorToCargoBay() {return new Location(world, 1766, 74, -84);}
 
 
     //utils

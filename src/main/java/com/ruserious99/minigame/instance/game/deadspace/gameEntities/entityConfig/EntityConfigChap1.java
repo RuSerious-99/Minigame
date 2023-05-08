@@ -33,7 +33,7 @@ public class EntityConfigChap1 {
     public static void spawnEntityZombie(Location location) {
         (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.ZOMBIE);
     }
-    public static void spawnEntity(Location location) {
-        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.SKELETON);
+    public static void spawnEntityVillager(Location location) {
+        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.VILLAGER);
     }
 }
