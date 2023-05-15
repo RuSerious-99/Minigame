@@ -30,10 +30,18 @@ public class EntityConfigChap1 {
     public static Location stasisTramSecondDelayed(){return new Location(Bukkit.getWorld("arena6"), 1751.928,74,-75.723);}
     public static Location stasisTramAfterInteract(){return new Location(Bukkit.getWorld("arena6"), 1762.393,74,-79.799);}
 
+    //fast door to dataBoard
+    public static Location fastDoortoDataBoardZombie(){return new Location(Bukkit.getWorld("arena6"), 1767.470,71,-63.968);}
+    public static Location fastDoortoDataBoardSpider(){return new Location(Bukkit.getWorld("arena6"), 1766.056,71,-67.339);}
+
+
     public static void spawnEntityZombie(Location location) {
         (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.ZOMBIE);
     }
-    public static void spawnEntityVillager(Location location) {
-        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.VILLAGER);
+    public static void spawnEntityCreeper(Location location) {
+        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.CREEPER);
+    }
+    public static void spawnEntitySpider(Location location) {
+        (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.SPIDER);
     }
 }

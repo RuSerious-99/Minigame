@@ -8,6 +8,6 @@ import org.bukkit.entity.Player;
 public class ActionBarMessage {
 
     public static void actionMessage(Player player, String text){
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text, ChatColor.AQUA));
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(text, ChatColor.YELLOW));
     }
 }

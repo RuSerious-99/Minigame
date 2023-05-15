@@ -139,6 +139,7 @@ public class GameAreas {
                 new Location(Bukkit.getWorld(("arena6")), 1768, 68, -42));
         cuboids.put(elevatorDownToDataBoard, "elevatorDownToDataBoard");
 
+
     }
     public static void createRegionsChapter2() {}
     public static void removeWall(String cuboid) {

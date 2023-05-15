@@ -18,6 +18,8 @@ public class SpawnItemsChap1 {
     public static Location smallHealthAfterFirstWeapon(){return new Location(world,1791, 76, -50);}
     public static Location mainHallwayToTramStationCredit(){return new Location(world,1780, 73, -79);}
     public static Location heathInStasisTramRoom(){return new Location(world,1751, 73, -78);}
+    public static Location maintenanceKey(){return new Location(world,1765, 72, -51);}
+
 
     public static void spawnItems(Location location, ItemStack itemStack) {
         World world = Bukkit.getServer().getWorld("arena6");

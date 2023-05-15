@@ -11,9 +11,11 @@ import com.ruserious99.minigame.managers.ConfigMgr;
 import com.ruserious99.minigame.utils.TimeUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -79,7 +81,11 @@ public class BlockGame extends Game {
     }
 
     @Override
-    public void endGame() {
+    public void endGame(){
+        World world = Bukkit.getWorld("arena1");
+        for (Entity entity : Objects.requireNonNull(world).getEntities()) {
+            if(entity != null) entity.remove();
+        }
         points.clear();
         removeAllFromGameScore();
         cancelTimer = true;

@@ -212,7 +212,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + " " + 500 + " CREDITS");
+        meta.setDisplayName(ChatColor.WHITE + " " + 500 + " CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -246,7 +246,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + " " + 400 + " CREDITS");
+        meta.setDisplayName(ChatColor.WHITE + " " + 400 + " CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -280,7 +280,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + " " + 300 + " CREDITS");
+        meta.setDisplayName(ChatColor.WHITE + " " + 300 + " CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -314,7 +314,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + " " + 200 + " CREDITS");
+        meta.setDisplayName(ChatColor.WHITE + " " + 200 + " CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -348,7 +348,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + " " + 100 + " CREDITS");
+        meta.setDisplayName(ChatColor.WHITE + " " + 100 + " CREDITS");
 
         List<String> lore = new ArrayList<>();
         lore.add("");
@@ -420,7 +420,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + "SMALL HEALTH PACK");
+        meta.setDisplayName(ChatColor.WHITE + "SMALL HEALTH PACK");
 
         List<String> lore = new ArrayList<>();
         lore.add("ReGain the upper Hand");
@@ -459,7 +459,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + "MEDIUM HEALTH PACK");
+        meta.setDisplayName(ChatColor.WHITE + "MEDIUM HEALTH PACK");
 
         List<String> lore = new ArrayList<>();
         lore.add("ReGain the upper Hand");
@@ -498,7 +498,7 @@ public class ItemsManager {
 
         SkullMeta meta = (SkullMeta) tempSkull.getItemMeta();
         assert meta != null;
-        meta.setDisplayName(ChatColor.DARK_RED + "LARGE HEALTH PACK");
+        meta.setDisplayName(ChatColor.WHITE + "LARGE HEALTH PACK");
 
         List<String> lore = new ArrayList<>();
         lore.add("ReGain the upper Hand");
