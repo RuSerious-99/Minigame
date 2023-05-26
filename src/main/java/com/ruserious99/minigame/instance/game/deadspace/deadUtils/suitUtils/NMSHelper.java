@@ -2,6 +2,7 @@ package com.ruserious99.minigame.instance.game.deadspace.deadUtils.suitUtils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+
 import lombok.Getter;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;

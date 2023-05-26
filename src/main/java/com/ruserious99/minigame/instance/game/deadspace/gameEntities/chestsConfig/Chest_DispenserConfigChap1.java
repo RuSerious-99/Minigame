@@ -1,6 +1,5 @@
 package com.ruserious99.minigame.instance.game.deadspace.gameEntities.chestsConfig;
 
-import com.ruserious99.minigame.instance.game.deadspace.deadUtils.DeadPlayerRegionUtil;
 import com.ruserious99.minigame.instance.game.deadspace.gameItems.ItemsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,15 +13,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Objects;
 import java.util.Random;
 
-public class ChestConfigChap1 {
+public class Chest_DispenserConfigChap1 {
 
     private static final World world = Bukkit.getServer().getWorld("arena6");
 
-    private ChestConfigChap1() {
+    private Chest_DispenserConfigChap1() {
     }
 
-    //Chapter1
-
+    //Chapter1 chests
     public static Location boarding() {return new Location(world, 1775, 86, -57);}
     public static Location enterIshamura1() {return new Location(world, 1779, 86, -58);}
     public static Location enterIshamura2() {return new Location(world, 1789, 86, -66);}
@@ -31,12 +29,17 @@ public class ChestConfigChap1 {
     public static Location firstWeaponRoom3() {return new Location(world, 1783, 77, -38);}
     public static Location firstWeaponRoom4() {return new Location(world, 1783, 77, -37);}
     public static Location HallwayDownStairsLeft() {return new Location(world, 1782, 74, -50);}
-    public static Location dataBoardDispencer() {return new Location(world, 1799, 75, -55);}
-    public static Location dataBoardLocker1() {return new Location(world, 1781, 75, -52);}
-    public static Location dataBoardLocker2() {return new Location(world, 1781, 74, -52);}
     public static Location hallwayAfterDataBoard() {return new Location(world, 1777, 74, -50);}
     public static Location ByFastdoorSnowball() {return new Location(world, 1781, 71, -69);}
     public static Location infrontOfelevatorToCargoBay() {return new Location(world, 1766, 74, -84);}
+    public static Location bayEnter() {return new Location(world, 1763, 69, -44);}
+    public static Location bayEnterBackCorner() {return new Location(world, 1747, 64, -37);}
+
+    //chapter1 dispensers
+    public static Location dataBoardDispencer() {return new Location(world, 1799, 75, -55);}
+    public static Location dataBoardLocker1() {return new Location(world, 1781, 75, -52);}
+    public static Location dataBoardLocker2() {return new Location(world, 1781, 74, -52);}
+    public static Location tramStasisRoom() {return new Location(world, 1749, 75, -78);}
 
 
     //utils
@@ -78,7 +81,6 @@ public class ChestConfigChap1 {
             cumulativeChance += chances[i];
             if (randomNumber <= cumulativeChance) {
                 selectedItem = items[i];
-                //System.out.println("ChestConfig in loop; " + selectedItem);
                 break;
             }
         }

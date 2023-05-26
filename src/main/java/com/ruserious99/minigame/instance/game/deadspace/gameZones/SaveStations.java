@@ -27,6 +27,9 @@ public class SaveStations {
             case "repairTramWithStasis" -> {
                 return new Location(Bukkit.getWorld("arena6"),  1756.505, 76, -79.626);
             }
+            case "hallAfterDataBoard" -> {
+                return new Location(Bukkit.getWorld("arena6"),  1775.040, 74, -45.744);
+            }
         }
         return null;
     }

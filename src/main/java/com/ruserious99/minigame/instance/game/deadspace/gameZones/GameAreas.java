@@ -139,7 +139,20 @@ public class GameAreas {
                 new Location(Bukkit.getWorld(("arena6")), 1768, 68, -42));
         cuboids.put(elevatorDownToDataBoard, "elevatorDownToDataBoard");
 
+        Cuboid maintenanceBay = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1766, 60, -52),
+                new Location(Bukkit.getWorld(("arena6")), 1746, 75, -42));
+        cuboids.put(maintenanceBay, "maintenanceBay");
 
+        Cuboid dataBoardRoom = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1745, 69, -37),
+                new Location(Bukkit.getWorld(("arena6")), 1752, 72, -32));
+        cuboids.put(dataBoardRoom, "dataBoardRoom");
+
+        Cuboid dataBoardRoomSpawnEnemiesAfterBoardMain = new Cuboid(
+                new Location(Bukkit.getWorld("arena6"), 1765, 67, -47),
+                new Location(Bukkit.getWorld(("arena6")), 1766, 72, -53));
+        cuboids.put(dataBoardRoomSpawnEnemiesAfterBoardMain, "dataBoardRoomSpawnEnemiesAfterBoardMain");
     }
     public static void createRegionsChapter2() {}
     public static void removeWall(String cuboid) {

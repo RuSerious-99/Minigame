@@ -34,6 +34,12 @@ public class EntityConfigChap1 {
     public static Location fastDoortoDataBoardZombie(){return new Location(Bukkit.getWorld("arena6"), 1767.470,71,-63.968);}
     public static Location fastDoortoDataBoardSpider(){return new Location(Bukkit.getWorld("arena6"), 1766.056,71,-67.339);}
 
+    public static Location bayEnterStraightAHead(){return new Location(Bukkit.getWorld("arena6"), 1757.449,70,-39.334);}
+    public static Location bayEnterRightBack(){return new Location(Bukkit.getWorld("arena6"), 1758.264,67,-49.595);}
+    public static Location bayAfterBoardRoomEnter(){return new Location(Bukkit.getWorld("arena6"), 1757.581,70,-37.392);}
+    public static Location bayTurnRightAhead(){return new Location(Bukkit.getWorld("arena6"), 1765.661,68,-52.700);}
+    public static Location bayEnterRightLeft(){return new Location(Bukkit.getWorld("arena6"), 1756.973,67,-49.448);}
+
 
     public static void spawnEntityZombie(Location location) {
         (Objects.requireNonNull(Bukkit.getWorld("arena6"))).spawnEntity(location, EntityType.ZOMBIE);

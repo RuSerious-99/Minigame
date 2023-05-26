@@ -139,14 +139,14 @@ public class Walls {
         fillWall("data11");
 
         Cuboid data12 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1751, 72, -44),
-                new Location(Bukkit.getWorld(("arena6")), 1751, 63, -39));
+                new Location(Bukkit.getWorld("arena6"), 1752, 72, -43),
+                new Location(Bukkit.getWorld(("arena6")), 1752, 63, -40));
         walls.put("data12", data12);
         fillWall("data12");
 
         Cuboid data13 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1751, 63, -39),
-                new Location(Bukkit.getWorld(("arena6")), 1754, 69, -39));
+                new Location(Bukkit.getWorld("arena6"), 1752, 63, -40),
+                new Location(Bukkit.getWorld(("arena6")), 1752, 72, -43));
         walls.put("data13", data13);
         fillWall("data13");
 
@@ -156,31 +156,18 @@ public class Walls {
         walls.put("data14", data14);
         fillWall("data14");
 
-        ///set striaght ahead back
-
         Cuboid data15 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1747, 63, -39),
-                new Location(Bukkit.getWorld(("arena6")), 1749, 69, -39));
+                new Location(Bukkit.getWorld("arena6"), 1747, 63, -40),
+                new Location(Bukkit.getWorld(("arena6")), 1748, 72, -43));
         walls.put("data15", data15);
         fillWall("data15");
 
         Cuboid data16 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1754, 63, -40),
-                new Location(Bukkit.getWorld(("arena6")), 1749, 72, -44));
+                new Location(Bukkit.getWorld("arena6"), 1752, 63, -40),
+                new Location(Bukkit.getWorld(("arena6")), 1754, 69, -40));
         walls.put("data16", data16);
         fillWall("data16");
 
-        Cuboid data17 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1749, 72, -44),
-                new Location(Bukkit.getWorld(("arena6")), 1747, 66, -44));
-        walls.put("data17", data17);
-        fillWall("data17");
-
-        Cuboid data18 = new Cuboid(
-                new Location(Bukkit.getWorld("arena6"), 1747, 66, -44),
-                new Location(Bukkit.getWorld(("arena6")), 1747, 76, -40));
-        walls.put("data18", data18);
-        fillWall("data18");
 
         Cuboid data19 = new Cuboid(
                 new Location(Bukkit.getWorld("arena6"), 1749, 72, -44),
